@@ -1,6 +1,6 @@
 # TODO Sample
 
-Hybrid Web + Mobile Framework ~~using VS.Net~~ (JUL 6, 2015)
+Hybrid Web + Mobile Framework v0.2.0 ~~using VS.Net~~ (JUL 10, 2015)
 
 _For use in my company, Excent One, starting with NCC NOAH._
 

@@ -4,17 +4,16 @@
 	Common.Model = Backbone.Model.extend({
 		noIoBind: false
 		, initialize: function () {
-			var self = this;
 			this.socket = AppManager.connect({
 				socket: this.socket
-				, callback: function () {
+				, callback: $.proxy(function () {
 					// Only bind new models from the server because the server assigns the id.
-					if (!self.noIoBind) {
-						_.bindAll(self, "serverChange", "serverDelete", "modelCleanup");
-						self.ioBind("update", self.serverChange, self);
-						self.ioBind("delete", self.serverDelete, self);
+					if (!this.noIoBind) {
+						_.bindAll(this, "serverChange", "serverDelete", "modelCleanup");
+						this.ioBind("update", this.serverChange, this);
+						this.ioBind("delete", this.serverDelete, this);
 					}
-				}
+				}, this)
 			});
 
 			this.on("after:save", function () {
@@ -41,20 +40,19 @@
 			//// Move attrs to options
 			//options.attrs = attrs;
 
-			var self = this;
 			var success = options.success;
-			options.success = function (model, response) {
-				self.trigger("after:save");
+			options.success = $.proxy(function (model, response) {
+				this.trigger("after:save");
 
 				if (success) success(model, response);
-			};
+			}, this);
 
 			var error = options.error;
-			options.error = function (model, response) {
-				self.trigger("after:save");
+			options.error = $.proxy(function (model, response) {
+				this.trigger("after:save");
 
 				if (error) error(model, response);
-			};
+			}, this);
 
 			this.trigger("before:save");
 			// Call super with attrs moved to options
@@ -89,17 +87,16 @@
 		noIoBind: false
 		, initialize: function () {
 			this.on("before:fetch", function () {
-				var self = this;
 				this.socket = AppManager.connect({
 					socket: this.socket
-					, callback: function () {
-						if (!self.noIoBind) {
-							_.bindAll(self, "serverCreate", "collectionCleanup");
-							self.ioBind("create", self.serverCreate, self);
+					, callback: $.proxy(function () {
+						if (!this.noIoBind) {
+							_.bindAll(this, "serverCreate", "collectionCleanup");
+							this.ioBind("create", this.serverCreate, this);
 						}
 
-						self.model = self.model.extend({ socket: self.socket });
-					}
+						this.model = this.model.extend({ socket: this.socket });
+					}, this)
 				});
 			});
 			this.on("after:fetch", function () {
@@ -109,21 +106,20 @@
 		, fetch: function () {
 			var args = arguments;
 			if (!args || args.length === 0) args = [{}];
-			var self = this;
 
 			var success = args[0].success;
-			args[0].success = function (data) {
-				self.trigger("after:fetch");
+			args[0].success = $.proxy(function (data) {
+				this.trigger("after:fetch");
 
 				if (success) success(data);
-			};
+			}, this);
 
 			var error = args[0].error;
-			args[0].error = function (data) {
-				self.trigger("after:fetch");
+			args[0].error = $.proxy(function (data) {
+				this.trigger("after:fetch");
 
 				if (error) error(data);
-			};
+			}, this);
 
 			this.trigger("before:fetch");
 			return Backbone.Collection.prototype.fetch.apply(this, args);

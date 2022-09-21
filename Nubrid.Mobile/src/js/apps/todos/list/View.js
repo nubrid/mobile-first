@@ -46,11 +46,10 @@ define(
 			this.setState(attrs);
 		}
 		, componentDidMount: function () {
-			var self = this;
 			var fetchingTodos = AppManager.request("todo:entities");
-			$.when(fetchingTodos).done(function (todos) {
-				self.setState({ collection: todos });
-			});
+			$.when(fetchingTodos).done($.proxy(function (todos) {
+				this.setState({ collection: todos });
+			}, this));
 		}
 		, componentWillUnmount: function () {
 			this.state.collection.close();
@@ -132,17 +131,15 @@ define(
 			else if (!prevState.isRequesting && this.wrapper.nextState) {
 				var nextCollection = this.wrapper.nextState.collection;
 				var checkbox = null;
-				var self = this;
-
 				_.each(_.filter(nextCollection, function (model) {
 					return !_.isEqual(model.completed, _.findWhere(prevState.collection, { id: model.id }).completed);
 					// TODO: If you need to compare all attributes.
 					//return !_.isEqual(model, _.findWhere(prevState.collection, { id: model.id }));
-				}), function (model) {
-					checkbox = $(React.findDOMNode(self.refs["chk_" + model.id]));
+				}), $.proxy(function (model) {
+					checkbox = $(React.findDOMNode(this.refs["chk_" + model.id]));
 					checkbox[0].checked = model.completed;
 					checkbox.checkboxradio("refresh");
-				});
+				}, this));
 			}
 		}
 		, createItem: function (item) {

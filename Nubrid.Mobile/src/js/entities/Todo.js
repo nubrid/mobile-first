@@ -16,23 +16,22 @@
 		, url: "todos"
 		, noIoBind: false
 		, initialize: function () {
-			var self = this;
-			this.listenTo(_dispatcher, "dispatch", function (payload) {
+			this.listenTo(_dispatcher, "dispatch", $.proxy(function (payload) {
 				switch (payload.actionType) {
 					case _actionType.CREATE:
-						self.create(payload.attrs, { wait: true });
+						this.create(payload.attrs, { wait: true });
 
 						break;
 					case _actionType.UPDATE:
-						self.get(payload.attrs.id).save(payload.attrs);
+						this.get(payload.attrs.id).save(payload.attrs);
 
 						break;
 					case _actionType.DELETE:
-						self.get(payload.attrs.id).destroy();
+						this.get(payload.attrs.id).destroy();
 
 						break;
 				}
-			});
+			}, this));
 
 			return Entities.Common.Collection.prototype.initialize.apply(this, arguments);
 		}
