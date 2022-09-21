@@ -8,6 +8,7 @@ Hybrid Web + Mobile using VS.Net (JUL 29, 2014)
 - Cordova `PhoneGap`
 - Express
 - jQuery & jQuery Mobile
+- OAuth
 - Passport `w/ Facebook, Twitter, LinkedIn SSO`
 - Postgres
 - RequireJS

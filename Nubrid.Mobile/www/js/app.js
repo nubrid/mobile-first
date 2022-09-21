@@ -2,12 +2,18 @@ define([], function () {
 	return { init: app_init };
 
 	function app_init() {
-		require(["cordova.loader"], function (navigator) {
-			$(function () {
-				document.addEventListener(Event.DeviceReady, onDeviceReady, false);
+		require(["detectmobilebrowser"], function () {
+			if (!window.mobile) {
+				start();
+			}
+
+			require(["cordova.loader"], function (navigator) {
+				$(function () {
+					document.addEventListener(Event.DeviceReady, start, false);
+				});
 			});
 
-			function onDeviceReady() {
+			function start() {
 				require(["routers/MobileRouter"], function (MobileRouter) {
 					this.router = new MobileRouter();
 				});

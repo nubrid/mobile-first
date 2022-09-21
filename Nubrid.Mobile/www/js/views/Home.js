@@ -4,6 +4,7 @@ define(
 		App.Views.Home = Backbone.View.extend({
 			events: {
 				"click #btnOpenBrowser": "openBrowser"
+				, "click .social-media": "login"
 			}
 			, initialize: function () {
 				this.render();
@@ -23,6 +24,28 @@ define(
 						ref.close();
 					}, 5000);
 				});
+			}
+			, login: function (event) {
+				var provider = $(event.target).attr("href").substring(1);
+
+				net(function () {
+					var loginWindow = window.open(Url.Web + "/auth/" + provider, "_blank", "location=no");
+
+					loginWindow.addEventListener("loadstop", function (event) {
+						if (event.url.indexOf(Url.Web) == 0) {
+							if (event.url.indexOf(Url.Web + "/#failed") == 0) {
+								alert("Login failed!");
+							}
+							else if (event.url.indexOf(Url.Web + "/") == 0) {
+								alert("Login succeeded! See console for profile.");
+							}
+
+							loginWindow.close();
+						}
+					});
+				});
+
+				return false;
 			}
 		});
 

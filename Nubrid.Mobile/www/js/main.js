@@ -23,6 +23,7 @@ require.config({
 		, "backbone.modelbinder": "libs/backbone/backbone.modelbinder"
 		, "cordova": "../cordova"
 		, "cordova.loader": "libs/cordova/cordova.loader"
+		, "detectmobilebrowser": "libs/detectmobilebrowser"
 		, "jquery": "libs/jquery/jquery"
 		, "jquery.mobile": "libs/jquery/jquery.mobile"
 		, "socket.io": "http://socket.nubrid.com/socket.io/socket.io"
@@ -37,17 +38,17 @@ require.config({
 			]
 			, exports: "Backbone"
 		}
+		, "backbone.collectionbinder": {
+			deps: [
+				"backbone"
+				, "backbone.modelbinder"
+			]
+		}
 		, "backbone.iobind": {
 			deps: [
 				"socket.io"
 				, "backbone"
 				, "backbone.iosync"
-			]
-		}
-		, "backbone.collectionbinder": {
-			deps: [
-				"backbone"
-				, "backbone.modelbinder"
 			]
 		}
 		, "jquery": {
@@ -75,7 +76,7 @@ require(["jquery"], function () {
 	});
 
 	require(["socket.io", "backbone.iobind", "backbone.collectionbinder", "jquery.mobile"], function (io) {
-		window.io = io;
+		window.io = io; // HACK: For socket.io 1.0.x
 		require(["app"], function (app) {
 			app.init();
 		});
