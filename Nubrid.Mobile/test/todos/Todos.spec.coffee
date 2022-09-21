@@ -1,4 +1,4 @@
-define ["apps/AppManager", "apps/todos/App", "apps/todos/list/Controller", "apps/common/View", "apps/todos/list/View", "apps/common/Dispatcher"], (AppManager, App, Controller, CommonView, View, Dispatcher) ->
+define ["apps/AppManager", "apps/todos/App", "apps/todos/show/Controller", "apps/common/View", "apps/todos/show/View", "apps/common/Dispatcher"], (AppManager, App, Controller, CommonView, View, Dispatcher) ->
 	describe "Todos", ->
 		before ->
 			@options =
@@ -19,8 +19,7 @@ define ["apps/AppManager", "apps/todos/App", "apps/todos/list/Controller", "apps
 			it "creates a controller", ->
 				Controller.should.exist
 			it "list todos when started", ->
-				Controller.start()
-				AppManager.trigger "todos:list"
+				Controller.show()
 
 				@changePage.should.have.been.calledOnce
 				@changePage.should.have.been.calledWithMatch @options
@@ -62,11 +61,11 @@ define ["apps/AppManager", "apps/todos/App", "apps/todos/list/Controller", "apps
 					return fetch: defer.promise(), actionType: @actionType, dispatcher: new Dispatcher()
 				, @)
 				@submitForm = (form, inputValue, actionType) ->
-					input = $(React.findDOMNode form).find "input[type='text']"
+					input = $(ReactDOM.findDOMNode form).find "input[type='text']"
 
 					@react.Simulate.change input[0], target: value: inputValue
 
-					submit = React.findDOMNode form.refs.btnSubmit
+					submit = ReactDOM.findDOMNode form.refs.btnSubmit
 					$(submit).click()
 
 					@trigger.should.have.been.calledOnce
@@ -112,7 +111,7 @@ define ["apps/AppManager", "apps/todos/App", "apps/todos/list/Controller", "apps
 						todo.find("#btnEditTodo").click()
 						
 						@form = @react.findRenderedComponentWithType @view.page, View.React.TodosForm
-						form = React.findDOMNode @form
+						form = ReactDOM.findDOMNode @form
 						input = $(form).find "input[type='text']"
 						input.should.have.value "Todo 1"
 

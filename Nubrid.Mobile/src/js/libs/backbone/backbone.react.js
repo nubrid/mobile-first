@@ -1,9 +1,9 @@
 // Backbone React Component
 // ========================
 //
-//     Backbone.React.Component v0.8.1
+//     Backbone.React.Component v0.10.0
 //
-//     (c) 2014 "Magalhas" José Magalhães <magalhas@gmail.com>
+//     (c) 2014, 2015 "Magalhas" José Magalhães <magalhas@gmail.com>
 //     Backbone.React.Component can be freely distributed under the MIT license.
 //
 //
@@ -21,22 +21,22 @@
 //     var MyComponent = React.createClass({
 //       mixins: [Backbone.React.Component.mixin],
 //       render: function () {
-//         return <div>{this.state.foo}</div>;
+//         return <div>{this.state.model.foo}</div>;
 //       }
 //     });
 //     var model = new Backbone.Model({foo: 'bar'});
-//     React.render(<MyComponent model={model} />, document.body);
+//     ReactDOM.render(<MyComponent model={model} />, document.body);
 
 (function (root, factory) {
   // Universal module definition
   if (typeof define === 'function' && define.amd) {
-    define(['react', 'backbone', 'underscore'], factory);
+    define(['react', 'react-dom', 'backbone', 'underscore'], factory);
   } else if (typeof module !== 'undefined' && module.exports) {
-    module.exports = factory(require('react'), require('backbone'), require('underscore'));
+    module.exports = factory(require('react'), require('react-dom'), require('backbone'), require('underscore'));
   } else {
-    factory(root.React, root.Backbone, root._);
+    factory(root.React, root.ReactDOM, root.Backbone, root._);
   }
-}(this, function (React, Backbone, _) {
+}(this, function (React, ReactDOM, Backbone, _) {
   'use strict';
   if (!Backbone.React) {
     Backbone.React = {};
@@ -70,11 +70,11 @@
     },
     // Sets `this.el` and `this.$el` when the component mounts.
     componentDidMount: function () {
-      this.setElement(React.findDOMNode(this));
+      this.setElement(ReactDOM.findDOMNode(this));
     },
     // Sets `this.el` and `this.$el` when the component updates.
     componentDidUpdate: function () {
-      this.setElement(React.findDOMNode(this));
+      this.setElement(ReactDOM.findDOMNode(this));
     },
     // When the component gets the initial state, instance a `Wrapper` to take
     // care of models and collections binding with `this.state`.
@@ -134,7 +134,7 @@
       if (this.$el) {
         els = this.$el.find.apply(this.$el, arguments);
       } else {
-        var el = React.findDOMNode(this);
+        var el = ReactDOM.findDOMNode(this);
         els = el.querySelector.apply(el, arguments);
       }
 
@@ -240,9 +240,20 @@
     // Check if `models` is a `Backbone.Model` or an hashmap of them, sets them
     // to the component state and binds to update on any future changes
     setModels: function (models, initialState, isDeferred) {
-      if (typeof models !== 'undefined' && (models.attributes ||
-          typeof models === 'object' && _.values(models)[0].attributes)) {
-        // The model(s) bound to this component
+      var isValid = typeof models !== 'undefined';
+
+      if (isValid) {
+        if (!models.attributes) {
+          if (typeof models === 'object') {
+            var _values = _.values(models);
+            isValid = _values.length > 0 && _values[0].attributes;
+          } else {
+            isValid = false;
+          }
+        }
+      }
+
+      if (isValid) {
         this.model = models;
         // Set model(s) attributes on `initialState` for the first render
         this.setStateBackbone(models, void 0, initialState, isDeferred);
@@ -262,7 +273,7 @@
       }
     },
     // Used internally to set `this.collection` or `this.model` on `this.state`. Delegates to
-    // `this.setState`. It listens to `Backbone.Collection` events such as `add`, `remove`,
+    // `this.setState`. It listens to `Backbone.Collection` events such as `update`,
     // `change`, `sort`, `reset` and to `Backbone.Model` `change`.
     setStateBackbone: function (modelOrCollection, key, target, isDeferred) {
       if (!(modelOrCollection.models || modelOrCollection.attributes)) {
@@ -272,10 +283,24 @@
       }
       this.setState.apply(this, arguments);
     },
+    // Get the attributes for the collection or model as array or hash
+    getAttributes: function (modelOrCollection){
+      var attrs = [];
+
+      // if a collection, get the attributes of each, otherwise return modelOrCollection
+      if (modelOrCollection instanceof Backbone.Collection) {
+        for (var i = 0; i < modelOrCollection.models.length; i++) {
+          attrs.push(modelOrCollection.models[i].attributes);
+        }
+        return attrs;
+      } else {
+        return modelOrCollection.attributes
+      }
+    },
     // Sets a model, collection or object into state by delegating to `this.component.setState`.
     setState: function (modelOrCollection, key, target, isDeferred) {
       var state = {};
-      var newState = modelOrCollection.toJSON ? modelOrCollection.toJSON() : modelOrCollection;
+      var newState = this.getAttributes(modelOrCollection);
 
       if (key) {
         state[key] = newState;
@@ -305,7 +330,7 @@
       if (collection) {
         if (collection.models)
           this
-            .listenTo(collection, 'add remove change sort reset',
+            .listenTo(collection, 'update change sort reset',
               _.partial(this.setStateBackbone, collection, key, void 0, true))
             .listenTo(collection, 'error', this.onError)
             .listenTo(collection, 'request', this.onRequest)
@@ -334,6 +359,50 @@
       }
     }
   });
+
+  // Facade method to bypass the `mixin` usage. For use cases such as ES6
+  // classes or else. It binds any `Backbone.Model` and `Backbone.Collection`
+  // instance found inside `backboneInstances.models` and
+  // `backboneInstances.collections` (single instances or objects of them)
+  mixin.on = function (component, backboneInstances) {
+    var wrapper;
+
+    if (!component.wrapper) {
+      wrapper = new Wrapper(component);
+    } else {
+      wrapper = component.wrapper;
+    }
+
+    if (backboneInstances.models) {
+      wrapper.setModels(backboneInstances.models);
+    }
+    if (backboneInstances.collections) {
+      wrapper.setCollections(backboneInstances.collections);
+    }
+    component.wrapper = wrapper;
+  };
+
+  // Shortcut method to bind a model or multiple models
+  mixin.onModel = function (component, models) {
+    mixin.on(component, {models: models});
+  };
+
+  // Shortcut method to bind a collection or multiple collections
+  mixin.onCollection = function (component, collections) {
+    mixin.on(component, {collections: collections});
+  };
+
+  // Facade method to dispose of a `component.wrapper`
+  mixin.off = function (component, modelOrCollection) {
+    if (arguments.length === 2) {
+      if (component.wrapper) {
+        component.wrapper.stopListening(modelOrCollection);
+        // TODO Remove modelOrCollection from `component.state`?
+      }
+    } else {
+      mixin.componentWillUnmount.call(component);
+    }
+  };
 
   // Expose `Backbone.React.Component.mixin`.
   return mixin;

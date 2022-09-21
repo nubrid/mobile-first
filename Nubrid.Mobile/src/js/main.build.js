@@ -8,6 +8,8 @@
 			name: "main"
 			, include: [
 				"app"
+				, "apps/common/App"
+				, "apps/common/Controller"
 				, "apps/common/Dispatcher"
 				, "apps/common/View"
 				, "entities/Todo"
@@ -19,10 +21,7 @@
 				"apps/home/show/Controller"
 			]
 			, exclude: [
-				"apps/AppManager"
-				, "apps/common/Dispatcher"
-				, "apps/common/View"
-				, "entities/Todo"
+				"main"
 			]
 		}
 		, {
@@ -31,10 +30,7 @@
 				"apps/todos/show/Controller"
 			]
 			, exclude: [
-				"apps/AppManager"
-				, "apps/common/Dispatcher"
-				, "apps/common/View"
-				, "entities/Todo"
+				"main"
 			]
 		}
 		, {
@@ -43,10 +39,7 @@
 				"apps/poc/list/Controller"
 			]
 			, exclude: [
-				"apps/AppManager"
-				, "apps/common/Dispatcher"
-				, "apps/common/View"
-				, "entities/Todo"
+				"main"
 			]
 		}
 	]

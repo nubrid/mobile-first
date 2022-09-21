@@ -2,9 +2,8 @@
 Form App
 */
 define(
-["apps/AppManager"
-, "apps/common/App"]
-, function (AppManager, CommonApp) {
+["apps/common/App"]
+, function (CommonApp) {
 	"use strict";
-	return AppManager.getModule("Form", CommonApp);
+	return _.extend(CommonApp, { moduleName: "form" });
 });

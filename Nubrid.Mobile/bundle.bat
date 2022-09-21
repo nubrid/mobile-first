@@ -9,6 +9,8 @@ copy .\node_modules\jquery\dist\jquery.* .\src\js\libs\jquery\
 :: copy .\node_modules\jquery-mobile\dist\jquery.mobile*.map .\src\js\libs\jquery\
 copy .\node_modules\react\dist\react-with-addons.js .\src\js\libs\react\react.js
 copy .\node_modules\react\dist\react-with-addons.min.js .\src\js\libs\react\react.min.js
+copy .\node_modules\react-dom\dist\react-dom.js .\src\js\libs\react\react.dom.js
+copy .\node_modules\react-dom\dist\react-dom.min.js .\src\js\libs\react\react.dom.min.js
 copy .\node_modules\subschema\dist\subschema.* .\src\js\libs\react\
 copy .\node_modules\underscore\underscore*.* .\src\js\libs\underscore\
 

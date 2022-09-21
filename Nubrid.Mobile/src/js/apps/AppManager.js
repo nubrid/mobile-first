@@ -1,6 +1,7 @@
-﻿define(["backbone.marionette", "react", "backbone.react"], function (Marionette, React) {
+﻿define(["backbone.marionette", "react", "react.dom", "backbone.react"], function (Marionette, React, ReactDOM) {
 	"use strict";
 	window.React = React;
+	window.ReactDOM = ReactDOM;
 	window.protocol = window.phonegap
 		? (window.isDEV ? "http:" : "https:")
 		: document.location.protocol;
@@ -22,6 +23,10 @@
 				IO: { Root: window.protocol + window.host }
 				, Web: window.protocol + window.host
 			}
+		}
+		, Transition: {
+			ListItem: { transitionName: "list-item", transitionEnterTimeout: 500, transitionLeaveTimeout: 500 }
+			, Page: { transitionName: "page", transitionEnterTimeout: 0, transitionLeaveTimeout: 0, transitionAppear: true, transitionAppearTimeout: 1000 }
 		}
 		, changePage: function (options) {
 			this.currentLayout = this.currentLayout && (this.currentLayout instanceof options.layout)
@@ -111,8 +116,8 @@
 		, currentRoute: function () {
 			return Backbone.history.fragment;
 		}
-		, getModule: function (moduleName, definition) {
-			return this.module("App." + moduleName, definition);
+		, getTransition: function (options) {
+			return options["data-role"] === "page" ? _.extend(options, this.Transition.Page) : options;
 		}
 		, navigate: function (route, options) {
 			Backbone.history.navigate(route, options);
@@ -173,7 +178,7 @@
 				start();
 			}
 
-			if (window.isDEV && Modernizr.websockets) require([window.protocol + window.host.replace("//www", "//live") + "/livereload.js"]);
+			if (!window.phonegap && window.isDEV && Modernizr.websockets) require([window.protocol + window.host.replace("//www", "//live") + "/livereload.js"]);
 		}
 		, toggleLoading: function (action) {
 			var $this = $(this)

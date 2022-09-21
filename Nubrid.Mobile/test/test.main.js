@@ -7,22 +7,22 @@ var _requireConfig = "/require.config" + (window.__karma__ ? ".js" : "");
 require.config({
 	paths: {
 		"chai": _root + "/node_modules/chai/chai"
-		, "chai-as-promised": _root + "/node_modules/chai-as-promised/lib/chai-as-promised"
-		, "chai-jquery": _root + "/node_modules/chai-jquery/chai-jquery"
-		, "sinon": _root + "/node_modules/sinon/pkg/sinon"
-		, "sinon-chai": _root + "/node_modules/sinon-chai/lib/sinon-chai"
+		, "chai.as.promised": _root + "/node_modules/chai-as-promised/lib/chai-as-promised"
+		, "chai.jquery": _root + "/node_modules/chai-jquery/chai-jquery"
 		, "react.phantomjs": _root + "/src/js/libs/react/react.phantomjs"
+		, "sinon": _root + "/node_modules/sinon/pkg/sinon"
+		, "sinon.chai": _root + "/node_modules/sinon-chai/lib/sinon-chai"
 	}
 	, shim: {
 		"chai": {
 			exports: "chai"
 		}
-		, "chai-as-promised": {
+		, "chai.as.promised": {
 			deps: [
 				"chai"
 			]
 		}
-		, "chai-jquery": {
+		, "chai.jquery": {
 			deps: [
 				"chai"
 			]
@@ -30,7 +30,7 @@ require.config({
 		, "sinon": {
 			exports: "sinon"
 		}
-		, "sinon-chai": {
+		, "sinon.chai": {
 			deps: [
 				"chai"
 				, "sinon"
@@ -51,7 +51,7 @@ function _init(options) {
 
 		mocha.setup("bdd");
 
-		var _modules = ["jquery", "sinon-chai", "chai-jquery", "chai-as-promised"];
+		var _modules = ["jquery", "sinon.chai", "chai.jquery", "chai.as.promised"];
 		if (options.module) _modules.push(options.module);
 		if (/PhantomJS/.test(window.navigator.userAgent)) _modules.push("react.phantomjs");
 
@@ -68,9 +68,9 @@ function _init(options) {
 			});
 
 			var chai = require("chai")
-				.use(require("chai-as-promised"))
-				.use(require("chai-jquery"))
-				.use(require("sinon-chai"));
+				.use(require("chai.as.promised"))
+				.use(require("chai.jquery"))
+				.use(require("sinon.chai"));
 			window.expect = chai.expect;
 			chai.should();
 

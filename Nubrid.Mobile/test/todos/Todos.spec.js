@@ -1,5 +1,5 @@
 
-define(["apps/AppManager", "apps/todos/App", "apps/todos/list/Controller", "apps/common/View", "apps/todos/list/View", "apps/common/Dispatcher"], function(AppManager, App, Controller, CommonView, View, Dispatcher) {
+define(["apps/AppManager", "apps/todos/App", "apps/todos/show/Controller", "apps/common/View", "apps/todos/show/View", "apps/common/Dispatcher"], function(AppManager, App, Controller, CommonView, View, Dispatcher) {
   return describe("Todos", function() {
     before(function() {
       this.options = {
@@ -30,8 +30,7 @@ define(["apps/AppManager", "apps/todos/App", "apps/todos/list/Controller", "apps
         return Controller.should.exist;
       });
       return it("list todos when started", function() {
-        Controller.start();
-        AppManager.trigger("todos:list");
+        Controller.show();
         this.changePage.should.have.been.calledOnce;
         return this.changePage.should.have.been.calledWithMatch(this.options);
       });
@@ -101,13 +100,13 @@ define(["apps/AppManager", "apps/todos/App", "apps/todos/list/Controller", "apps
         }, this));
         return this.submitForm = function(form, inputValue, actionType) {
           var input, submit;
-          input = $(React.findDOMNode(form)).find("input[type='text']");
+          input = $(ReactDOM.findDOMNode(form)).find("input[type='text']");
           this.react.Simulate.change(input[0], {
             target: {
               value: inputValue
             }
           });
-          submit = React.findDOMNode(form.refs.btnSubmit);
+          submit = ReactDOM.findDOMNode(form.refs.btnSubmit);
           $(submit).click();
           this.trigger.should.have.been.calledOnce;
           return this.trigger.should.have.been.calledWithMatch(actionType, {
@@ -165,7 +164,7 @@ define(["apps/AppManager", "apps/todos/App", "apps/todos/list/Controller", "apps
             todo = this.list.$el.children().first();
             todo.find("#btnEditTodo").click();
             this.form = this.react.findRenderedComponentWithType(this.view.page, View.React.TodosForm);
-            form = React.findDOMNode(this.form);
+            form = ReactDOM.findDOMNode(this.form);
             input = $(form).find("input[type='text']");
             input.should.have.value("Todo 1");
             this.submitForm(this.form, "Todo 3", this.actionType.UPDATE);

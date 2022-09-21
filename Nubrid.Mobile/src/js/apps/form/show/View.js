@@ -1,24 +1,12 @@
 ﻿/*
-Todos List View
+Form Show View
 */
 define(
 ["apps/AppManager"
+, "apps/common/View"
 , "entities/Common"]
-, function (AppManager) {
+, function (AppManager, CommonView) {
 	"use strict";
-	var List = AppManager.module("TodosApp.List");
-	List.Todos = Marionette.ItemView.extend({
-		initialize: function (options) {
-			this.parentEl = options.region ? options.region.$el[0] : this.el;
-		}
-		, render: function () {
-			this.page = React.render(React.createElement(List.React.Todos, { id: this.id, view: this }), this.parentEl);
-			this.el = React.findDOMNode(this.page); // HACK: Avoid conflict with Marionette region show and react render.
-
-			return this;
-		}
-	});
-
 	var _todos = React.createClass({
 		displayName: "Todos"
 		, mixins: [React.addons.LinkedStateMixin]
@@ -57,7 +45,7 @@ define(
 			this.state.collection.close();
 		}
 		, render: function () {
-			return React.createElement(React.addons.CSSTransitionGroup, { "data-role": "page", id: this.props.id, component: "div", transitionName: "page", transitionAppear: true, className: "bounceInRight" }
+			return React.createElement(React.addons.CSSTransitionGroup, AppManager.getTransition({ "data-role": "page", id: this.props.id, component: "div", className: "bounceInRight" })
 				, React.createElement("div", { role: "main", className: "ui-content" }
 					, React.createElement(List.React.TodosForm, {
 						id: this.state.id
@@ -78,12 +66,12 @@ define(
 	var _todosForm = React.createClass({
 		displayName: "TodosForm"
 		, componentDidMount: function () {
-			$(React.findDOMNode(this.refs.btnSubmit)).on("click", this.props.handleSubmitClick);
+			$(this.refs.btnSubmit).on("click", this.props.handleSubmitClick);
 		}
 		, componentDidUpdate: function () {
-			$(React.findDOMNode(this.refs.btnSubmit)).button("refresh");
+			$(this.refs.btnSubmit).button("refresh");
 			if (this.refs.btnCancel)
-				$(React.findDOMNode(this.refs.btnCancel))
+				$(this.refs.btnCancel)
 					.button().button("refresh")
 					.on("click", this.props.handleCancelClick);
 		}
@@ -138,7 +126,7 @@ define(
 					// TODO: If you need to compare all attributes.
 					//return !_.isEqual(model, _.findWhere(prevState.collection, { id: model.id }));
 				}), $.proxy(function (model) {
-					checkbox = $(React.findDOMNode(this.refs["chk_" + model.id]));
+					checkbox = $(this.refs["chk_" + model.id]);
 					checkbox[0].checked = model.completed;
 					checkbox.checkboxradio("refresh");
 				}, this));
@@ -153,16 +141,22 @@ define(
 			);
 		}
 		, render: function () {
-			return React.createElement(React.addons.CSSTransitionGroup, { transitionName: "list-item" }
+			return React.createElement(React.addons.CSSTransitionGroup, AppManager.Transition.ListItem
 				, this.state.collection ? this.state.collection.map(this.createItem) : null);
 		}
 	});
+
+	var List = {};
 
 	List.React = {
 		Todos: _todos
 		, TodosForm: _todosForm
 		, TodosList: _todosList
 	};
+
+	List.Form = _.extend(CommonView.Content, {
+		ReactClass: List.React.Todos
+	});
 
 	return List;
 });

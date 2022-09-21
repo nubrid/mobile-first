@@ -21,7 +21,7 @@ define(
 			this.collection.each(bindModelChange);
 			this.listenTo(this.collection, "add", bindModelChange);
 
-			this.view = React.render(React.createElement(Poc, { id: this.id, collection: this.collection, view: this }), this.parentEl);
+			this.view = ReactDOM.render(React.createElement(Poc, { id: this.id, collection: this.collection, view: this }), this.parentEl);
 			this.el = this.view.el; // HACK: Avoid conflict with Marionette region show and react render.
 			AppManager.view = this.view;
 
@@ -134,7 +134,7 @@ define(
 						}
 					}
 				});
-				React.render(React.createElement(subschema.Form, { value: data, schema: schema, errors: errors }), $("#MainRegion")[0]);
+				ReactDOM.render(React.createElement(subschema.Form, { value: data, schema: schema, errors: errors }), $("#MainRegion")[0]);
 			});
 
 			return this;
@@ -263,8 +263,8 @@ define(
 		}
 		, componentDidMount: function () {
 			var self = this;
-			$(React.findDOMNode(this.refs.btnInput1)).on("click", function () { self.setState({ sheet: 1 }); });
-			$(React.findDOMNode(this.refs.btnInput2)).on("click", function () { self.setState({ sheet: 2 }); });
+			$(this.refs.btnInput1).on("click", function () { self.setState({ sheet: 1 }); });
+			$(this.refs.btnInput2).on("click", function () { self.setState({ sheet: 2 }); });
 		}
 		, render: function () {
 			return React.createElement("div", { id: this.props.id }
@@ -598,12 +598,12 @@ define(
 	//var PocForm = React.createClass({
 	//	displayName: "PocForm"
 	//	, componentDidMount: function () {
-	//		$(React.findDOMNode(this.refs.btnSubmit)).on("click", this.props.handleSubmitClick);
+	//		$(this.refs.btnSubmit).on("click", this.props.handleSubmitClick);
 	//	}
 	//	, componentDidUpdate: function (prevProps, prevState) {
-	//		$(React.findDOMNode(this.refs.btnSubmit)).button("refresh");
+	//		$(this.refs.btnSubmit).button("refresh");
 	//		if (this.refs.btnCancel)
-	//			$(React.findDOMNode(this.refs.btnCancel))
+	//			$(this.refs.btnCancel)
 	//				.button().button("refresh")
 	//				.on("click", this.props.handleCancelClick);
 	//	}
@@ -640,8 +640,8 @@ define(
 	//		}
 	//	}
 	//	, componentDidMount: function () {
-	//		$(React.findDOMNode(this)).on("change", this.handleChange);
-	//		$(React.findDOMNode(this)).on("click", this.handleClick);
+	//		$(ReactDOM.findDOMNode(this)).on("change", this.handleChange);
+	//		$(ReactDOM.findDOMNode(this)).on("click", this.handleClick);
 	//	}
 	//	, componentDidUpdate: function (prevProps, prevState) {
 	//		this.$el.enhanceWithin();
@@ -689,7 +689,7 @@ define(
 			this.renderTable();
 		}
 		, renderTable: function () {
-			$(React.findDOMNode(this.refs.tblHOT)).handsontable(_.extend({ afterChange: this.afterChange }, this.state.data));
+			$(this.refs.tblHOT).handsontable(_.extend({ afterChange: this.afterChange }, this.state.data));
 		}
 		, render: function () {
 			return React.createElement("div", null

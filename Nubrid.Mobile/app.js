@@ -165,14 +165,14 @@ else {
 
 		app.set("trust proxy", 1);
 		//cookie.secure = true; // session
-		var serveStatic = require("serve-static");
 	} else {
-			serve = serveStatic(config.web.dir, {
-				//maxAge: config.web.maxAge
-				//, setHeaders: function (response, path) {
-				//	if (serveStatic.mime.lookup(path) === "text/html") response.setHeader("Cache-Control", "public, max-age=86400");
-				//}
-			});
+		var serveStatic = require("serve-static");
+		serve = serveStatic(config.web.dir, {
+			//maxAge: config.web.maxAge
+			//, setHeaders: function (response, path) {
+			//	if (serveStatic.mime.lookup(path) === "text/html") response.setHeader("Cache-Control", "public, max-age=86400");
+			//}
+		});
 	}
 	
 	app.use(compression());

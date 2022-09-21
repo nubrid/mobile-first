@@ -5,7 +5,8 @@ define(
 ["apps/AppManager"]
 , function (AppManager) {
 	"use strict";
-	var View = AppManager.module("Common.View");
+	var View = {};
+
 	View.Layout = Marionette.LayoutView.extend({
 		el: "body"
 		, regions: {
@@ -20,7 +21,8 @@ define(
 				this.HeaderRegion.show(new Header({ region: this.HeaderRegion, title: options.title }));
 			}
 			else {
-				this.HeaderRegion.currentView.view.setProps({ title: options.title });
+				this.HeaderRegion.currentView.title = options.title;
+				this.HeaderRegion.currentView.render();
 			}
 			if (options.footer) {
 				var Footer = options.footer;
@@ -46,7 +48,7 @@ define(
 			this.title = options.title;
 		}
 		, render: function () {
-			this.view = React.render(React.createElement(Header, this), this.parentEl);
+			this.view = ReactDOM.render(React.createElement(Header, this), this.parentEl);
 			this.el = this.view.el;
 			this.setElement(this.el);
 		}
@@ -66,6 +68,18 @@ define(
 					, React.createElement("a", { href: "#home", "data-icon": "home", "data-iconpos": "notext", className: "ui-btn-right", "data-role": "button" }, "Home")
 				)
 			);
+		}
+	});
+
+	View.Content = Marionette.ItemView.extend({
+		initialize: function (options) {
+			this.parentEl = options.region ? options.region.$el[0] : this.el;
+		}
+		, render: function () {
+			this.page = ReactDOM.render(React.createElement(this.ReactClass, { id: this.id, view: this }), this.parentEl);
+			this.el = ReactDOM.findDOMNode(this.page); // HACK: Avoid conflict with Marionette region show and react render.
+
+			return this;
 		}
 	});
 

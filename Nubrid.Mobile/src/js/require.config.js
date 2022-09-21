@@ -1,7 +1,7 @@
 /* jshint maxcomplexity: false */
 (function () {
 	"use strict";
-	window.isDEV = true; // TODO: Comment out for PROD
+	window.isDEV = true || (window.__karma__ && true) || (window.testem && true); // TODO: Comment out for PROD
 	window.phonegap = document.location.protocol === "file:";
 	var jQueryVersion = "2.1.4";
 	if (!("querySelector" in document
@@ -29,13 +29,15 @@
 			, "modernizr": "libs/modernizr"
 			, "primus.io": "libs/primus.io.min"
 			, "react": "empty:"
+			, "react.dom": "empty:"
 			, "react.subschema": "libs/react/subschema"
 			, "underscore": "empty:"
 		}
 		, map: {
 			"*": {
+				"react-dom": "react.dom"
 				// HACK: For compatibility of primus with backbone.iobind.
-				"socket.io": "primus.io"
+				, "socket.io": "primus.io"
 				, "socket.io-client": "primus.io"
 			}
 		}
@@ -82,6 +84,11 @@
 			, "modernizr": {
 				exports: "Modernizr"
 			}
+			, "react.dom": {
+				deps: [
+					"react"
+				]
+			}
 			, "react.subschema": {
 				deps: [
 					"react"
@@ -95,14 +102,15 @@
 	require.config({
 		urlArgs: "bust=v1.0.x" // TODO: For PROD, replace with latest release
 		, paths: {
-			"backbone": _getPath("libs/backbone/backbone", "//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.2.1/backbone", "-")
-			, "backbone.marionette": _getPath("libs/backbone/backbone.marionette", "//cdnjs.cloudflare.com/ajax/libs/backbone.marionette/2.4.2/backbone.marionette")
-			, "backbone.react": _getPath("libs/backbone/backbone.react", "//cdnjs.cloudflare.com/ajax/libs/backbone-react-component/0.8.1/backbone-react-component", "-", true)
+			"backbone": _getPath("libs/backbone/backbone", "//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.2.3/backbone", "-")
+			, "backbone.marionette": _getPath("libs/backbone/backbone.marionette", "//cdnjs.cloudflare.com/ajax/libs/backbone.marionette/2.4.3/backbone.marionette")
+			, "backbone.react": _getPath("libs/backbone/backbone.react", "//cdnjs.cloudflare.com/ajax/libs/backbone-react-component/0.10.0/backbone-react-component", "-", true)
 			, "cordova": "../cordova"
 			, "jquery": _getPath("libs/jquery/jquery", "//ajax.googleapis.com/ajax/libs/jquery/" + jQueryVersion + "/jquery")
 			// TODO: POC , "jquery.handsontable": _getPath("libs/jquery/jquery.handsontable", "//cdnjs.cloudflare.com/ajax/libs/handsontable/0.14.1/handsontable.full", null, true)
 			, "jquery.mobile": _getPath("libs/jquery/jquery.mobile", "//ajax.googleapis.com/ajax/libs/jquerymobile/1.4.5/jquery.mobile")
-			, "react": _getPath("libs/react/react", "//fb.me/react-with-addons-0.13.3", null, true)
+			, "react": _getPath("libs/react/react", "//fb.me/react-with-addons-0.14.2", null, true)
+			, "react.dom": _getPath("libs/react/react.dom", "//fb.me/react-dom-0.14.2", null, true)
 			, "underscore": _getPath("libs/underscore/underscore", "//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore", "-")
 		}
 	});

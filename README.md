@@ -1,6 +1,6 @@
 # TODO Sample
 
-Hybrid Web + Mobile Framework v1.1.0 ~~using VS.Net~~ (NOV 6, 2015)
+Hybrid Web + Mobile Framework v1.2.0 ~~using VS.Net~~ (NOV 13, 2015)
 
 _For use in my company, Excent One, starting with NCC NOAH._
 
@@ -29,7 +29,7 @@ _For use in my company, Excent One, starting with NCC NOAH._
 - Passport `w/ Facebook, LinkedIn, Twitter SSO`
 - PhantomJS
 - PostgreSQL
-- ReactJS `mixins` `JSX` `transformer` `transitions` `subschema`
+- ReactJS `react-dom` `JSX` `mixins` `subschema` `transformer` `transitions`
 - Recaptcha
 - RequireJS `cache buster`
 - REST API
