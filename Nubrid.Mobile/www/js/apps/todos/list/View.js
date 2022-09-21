@@ -2,22 +2,24 @@
 Todos List View
 */
 define(
-["apps/AppManager"]
+["apps/AppManager"
+, "entities/Todo"]
 , function (AppManager) {
+	var _actionType = AppManager.TodosApp.Constants.ActionType;
 	var List = AppManager.module("TodosApp.List");
 	List.Todos = Marionette.ItemView.extend({
 		initialize: function (options) {
 			this.parentEl = options.region ? options.region.$el[0] : this.el;
 		}
 		, render: function () {
-			this.page = React.render(React.createElement(Todos, { id: this.id, collection: this.collection, view: this }), this.parentEl);
+			this.page = React.render(React.createElement(List.React.Todos, { id: this.id, view: this }), this.parentEl);
 			this.el = React.findDOMNode(this.page); // HACK: Avoid conflict with Marionette region show and react render.
 
 			return this;
 		}
 	});
 
-	var Todos = React.createClass({
+	var _todos = React.createClass({
 		displayName: "Todos"
 		, mixins: [React.addons.LinkedStateMixin]
 		, getInitialState: function () {
@@ -33,7 +35,7 @@ define(
 			var initialState = this.getInitialState();
 			var attrs = _.pick(_.omit(this.state, "collection"), _.keys(initialState));
 
-			this.props.view.trigger("todo:" + (attrs.id ? "edit" : "add"), attrs);
+			this.props.view.trigger(attrs.id ? _actionType.UPDATE : _actionType.CREATE, attrs);
 
 			this.setState(initialState);
 		}
@@ -44,17 +46,27 @@ define(
 		, handleEditClick: function (attrs) {
 			this.setState(attrs);
 		}
+		, componentDidMount: function () {
+			var self = this;
+			var fetchingTodos = AppManager.request("todo:entities");
+			$.when(fetchingTodos).done(function (todos) {
+				self.setState({ collection: todos });
+			});
+		}
+		, componentWillUnmount: function () {
+			this.state.collection.close();
+		}
 		, render: function () {
 			return React.createElement("div", { "data-role": "page", id: this.props.id }
 				, React.createElement("div", { role: "main", className: "ui-content" }
-					, React.createElement(TodosForm, {
+					, React.createElement(List.React.TodosForm, {
 						id: this.state.id
 						, linkState: this.linkState
 						, handleSubmitClick: this.handleSubmitClick
 						, handleCancelClick: this.handleCancelClick
 					})
-					, React.createElement(TodosList, {
-						collection: this.props.collection
+					, React.createElement(List.React.TodosList, {
+						collection: this.state.collection
 						, view: this.props.view
 						, handleEditClick: this.handleEditClick
 					})
@@ -63,7 +75,7 @@ define(
 		}
 	});
 
-	var TodosForm = React.createClass({
+	var _todosForm = React.createClass({
 		displayName: "TodosForm"
 		, componentDidMount: function () {
 			$(React.findDOMNode(this.refs.btnSubmit)).on("click", this.props.handleSubmitClick);
@@ -86,14 +98,14 @@ define(
 		}
 	});
 
-	var TodosList = React.createClass({
+	var _todosList = React.createClass({
 		displayName: "TodosList"
 		, mixins: [AppManager.BackboneMixin]
 		, handleChange: function (event) {
 			var el = $(event.target);
 
 			var attrs = _.extend(_.findWhere(this.state.collection, { id: el.attr("data-id") }), { completed: el[0].checked });
-			this.props.view.trigger("todo:edit", attrs);
+			this.props.view.trigger(_actionType.UPDATE, attrs);
 		}
 		, handleClick: function (event) {
 			var el = $(event.target);
@@ -104,22 +116,18 @@ define(
 					this.props.handleEditClick(_.findWhere(this.state.collection, { id: id }));
 					break;
 				case "btnDeleteTodo":
-					this.props.view.trigger("todo:delete", _.findWhere(this.state.collection, { id: id }));
+					this.props.view.trigger(_actionType.DELETE, _.findWhere(this.state.collection, { id: id }));
 					break;
 			}
 		}
 		, componentDidMount: function () {
-			var self = this;
-			this.$el.on("change", self.handleChange);
-			this.$el.on("click", self.handleClick);
+			this.$el.on("change", this.handleChange);
+			this.$el.on("click", this.handleClick);
 
 			this.$el.enhanceWithin();
 		}
-		, componentWillUnmount: function () {
-			this.$el.off();
-		}
 		, componentDidUpdate: function (prevProps, prevState) {
-			if (this.wrapper.nextState && this.wrapper.nextState.collection.length > prevState.collection.length) {
+			if ((this.wrapper.nextState && this.wrapper.nextState.collection.length > prevState.collection.length) || !prevState.collection) {
 				this.$el.enhanceWithin()
 			}
 			else if (!prevState.isRequesting && this.wrapper.nextState) {
@@ -147,9 +155,15 @@ define(
 			);
 		}
 		, render: function () {
-			return React.createElement("div", null, this.state.collection.map(this.createItem));
+			return React.createElement("div", null, this.state.collection ? this.state.collection.map(this.createItem) : null);
 		}
 	});
+
+	List.React = {
+		Todos: _todos
+		, TodosForm: _todosForm
+		, TodosList: _todosList
+	};
 
 	return List;
 });

@@ -1,5 +1,5 @@
 ﻿define(["apps/AppManager"], function (AppManager) {
-	var HomeApp = AppManager.module("HomeApp", AppManager.CommonModule.extend({
+	var HomeApp = AppManager.module("HomeApp", AppManager.Common.Module.extend({
 		Router: Marionette.AppRouter.extend({
 			appRoutes: {
 				"": "showHome"

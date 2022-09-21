@@ -1,5 +1,5 @@
 ﻿define(["apps/AppManager"], function (AppManager) {
-	var PocApp = AppManager.module("PocApp", AppManager.CommonModule.extend({
+	var PocApp = AppManager.module("PocApp", AppManager.Common.Module.extend({
 		Router: Marionette.AppRouter.extend({
 			appRoutes: {
 				"poc": "listPoc"

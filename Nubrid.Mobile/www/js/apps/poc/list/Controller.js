@@ -7,7 +7,7 @@ define(
 , "apps/poc/list/View"
 , "entities/Todo"]
 , function (AppManager, CommonView, ListView) {
-	var Controller = AppManager.module("PocApp.List.Controller", AppManager.CommonModule.extend({
+	var Controller = AppManager.module("PocApp.List.Controller", AppManager.Common.Module.extend({
 		listPoc: function () {
 			var fetchingPoc = AppManager.request("todo:entities");
 			$.when(fetchingPoc).done(function (poc) {

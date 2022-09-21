@@ -2,9 +2,6 @@
 	window.React = React;
 	window.AppManager = new Marionette.Application({
 		BackboneMixin: Backbone.React.Component.mixin
-		, CommonModule: Marionette.Module.extend({
-			startWithParent: false
-		})
 		, Config: {
 			IO: {
 				Options: {
@@ -139,6 +136,11 @@
 				html: html
 			});
 		}
+	});
+
+	var Common = AppManager.module("Common");
+	Common.Module = Marionette.Module.extend({
+		startWithParent: false
 	});
 
 	function _isDeviceOnline() {

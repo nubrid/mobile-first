@@ -1,5 +1,8 @@
-﻿define(["apps/AppManager"], function (AppManager) {
-	var TodosApp = AppManager.module("TodosApp", AppManager.CommonModule.extend({
+﻿define(
+["apps/AppManager"
+, "apps/common/Dispatcher"]
+, function (AppManager, Dispatcher) {
+	var TodosApp = AppManager.module("TodosApp", AppManager.Common.Module.extend({
 		Router: Marionette.AppRouter.extend({
 			appRoutes: {
 				"todos": "listTodos"
@@ -21,6 +24,14 @@
 						break;
 				}
 			});
+		}
+		, dispatcher: new Dispatcher()
+		, Constants: {
+			ActionType: {
+				CREATE: "todo:create"
+				, UPDATE: "todo:update"
+				, DELETE: "todo:delete"
+			}
 		}
 	}));
 

@@ -6,7 +6,7 @@ define(
 , "apps/common/View"
 , "apps/home/show/View"]
 , function (AppManager, CommonView, ShowView) {
-	var Controller = AppManager.module("HomeApp.Show.Controller", AppManager.CommonModule.extend({
+	var Controller = AppManager.module("HomeApp.Show.Controller", AppManager.Common.Module.extend({
 		showHome: function () {
 			var show = AppManager.changePage({ id: "home", title: "Home", layout: CommonView.Layout, main: ShowView.Panel, reverse: true });
 

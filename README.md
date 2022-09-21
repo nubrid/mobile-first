@@ -1,6 +1,6 @@
 # TODO Sample
 
-Hybrid Web + Mobile Framework using VS.Net (JUN 7, 2015)
+Hybrid Web + Mobile Framework using VS.Net (JUN 15, 2015)
 
 _For use in my company, Excent One, starting with NCC NOAH._
 
@@ -10,6 +10,7 @@ _For use in my company, Excent One, starting with NCC NOAH._
 - Cordova `PhoneGap`
 - CSP
 - Express
+- Famous
 - FLUX
 - jQuery, jQuery UI & jQuery Mobile
 - LocalStorage
