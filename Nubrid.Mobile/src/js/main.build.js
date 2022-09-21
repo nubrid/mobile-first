@@ -28,7 +28,7 @@
 		, {
 			name: "apps/todos/App"
 			, include: [
-				"apps/todos/list/Controller"
+				"apps/todos/show/Controller"
 			]
 			, exclude: [
 				"apps/AppManager"

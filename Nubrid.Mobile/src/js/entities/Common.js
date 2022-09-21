@@ -1,4 +1,7 @@
-﻿define(["apps/AppManager"], function (AppManager) {
+﻿define(
+["apps/AppManager"
+, "apps/common/Dispatcher"]
+, function (AppManager) {
 	"use strict";
 	var Common = AppManager.module("Entities.Common");
 

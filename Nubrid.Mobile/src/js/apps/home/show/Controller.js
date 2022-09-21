@@ -7,8 +7,58 @@ define(
 , "apps/home/show/View"]
 , function (AppManager, CommonView, ShowView) {
 	"use strict";
-	var Controller = AppManager.module("HomeApp.Show.Controller", AppManager.Common.Module.extend({
-		showHome: function () {
+	//return {
+	//	start: function (name) {
+	//		var controller = AppManager.module(name + ".Controller", function () {
+	//			this.show = function () {
+	//				var page = AppManager.changePage({ id: "home", title: "Home", layout: CommonView.Layout, main: ShowView.Panel, reverse: true });
+
+	//				page.on("home:openBrowser", function (value) {
+	//					AppManager.net(function () {
+	//						var ref = window.open(value, "_blank", "location=no");
+
+	//						setTimeout(function () {
+	//							ref.close();
+	//						}, 5000);
+	//					});
+	//				});
+
+	//				page.on("home:login", function (event) {
+	//					var provider = $(event.target).attr("href").substring(1);
+
+	//					AppManager.net(function () {
+	//						var loginWindow = window.open(AppManager.Config.Url.Web + "/auth/" + provider, "_blank", "location=no");
+
+	//						loginWindow.addEventListener("loadstop", function (event) {
+	//							if (event.url.indexOf(AppManager.Config.Url.Web) === 0) {
+	//								if (event.url.indexOf(AppManager.Config.Url.Web + "/#failed") === 0) {
+	//									alert("Login failed!");
+	//								}
+	//								else if (event.url.indexOf(AppManager.Config.Url.Web + "/") === 0) {
+	//									alert("Login succeeded! See console for profile.");
+	//								}
+
+	//								loginWindow.close();
+	//							}
+	//						});
+	//					});
+
+	//					event.preventDefault();
+	//					return false;
+	//				});
+	//			};
+
+	//			// TODO: this.on("home:show", this.show);
+	//		});
+
+	//		controller.show();
+
+	//		return controller;
+	//	}
+	//};
+	//var Controller = AppManager.module("HomeApp.Show.Controller", AppManager.module("Common.Module").extend({
+	return Marionette.Module.extend({
+		show: function () {
 			var show = AppManager.changePage({ id: "home", title: "Home", layout: CommonView.Layout, main: ShowView.Panel, reverse: true });
 
 			show.on("home:openBrowser", function (value) {
@@ -46,9 +96,11 @@ define(
 			});
 		}
 		, onStart: function () {
-			AppManager.on("home:show", this.showHome);
+			AppManager.on("home:show", this.show);
+			AppManager.trigger("home:show");
 		}
-	}));
+	});
+	//}));
 
-	return Controller;
+	//return Controller;
 });

@@ -3,7 +3,7 @@ Poc App
 */
 define(["apps/AppManager"], function (AppManager) {
 	"use strict";
-	var PocApp = AppManager.module("PocApp", AppManager.Common.Module.extend({
+	var PocApp = AppManager.module("PocApp", AppManager.module("Common.Module").extend({
 		Router: Marionette.AppRouter.extend({
 			appRoutes: {
 				"poc": "listPoc"

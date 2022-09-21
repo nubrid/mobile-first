@@ -1,10 +1,10 @@
 ﻿/*
-Home App
+Form App
 */
 define(
 ["apps/AppManager"
 , "apps/common/App"]
 , function (AppManager, CommonApp) {
 	"use strict";
-	return AppManager.getModule("Home", CommonApp);
+	return AppManager.getModule("Form", CommonApp);
 });

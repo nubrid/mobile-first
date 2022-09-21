@@ -9,7 +9,7 @@ define(
 , "entities/Todo"]
 , function (AppManager, CommonView, ListView) {
 	"use strict";
-	var Controller = AppManager.module("PocApp.List.Controller", AppManager.Common.Module.extend({
+	var Controller = AppManager.module("PocApp.List.Controller", AppManager.module("Common.Module").extend({
 		listPoc: function () {
 			var fetchingPoc = AppManager.request("todo:entities");
 			$.when(fetchingPoc).done(function (poc) {

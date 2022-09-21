@@ -111,6 +111,9 @@
 		, currentRoute: function () {
 			return Backbone.history.fragment;
 		}
+		, getModule: function (moduleName, definition) {
+			return this.module("App." + moduleName, definition);
+		}
 		, navigate: function (route, options) {
 			Backbone.history.navigate(route, options);
 		}
@@ -144,11 +147,11 @@
 						appRoutes: {
 							"": "initRoute"
 							, ":mod(/)": "initRoute"
-							, ":mod/:id(/)": "initRoute"
+							, ":mod/:id(/)": "initRoute" // TODO: need to test!
 						}
 						, controller: {
 							initRoute: function (name) {
-								require(["apps/" + (name ? name : "home") + "/App"], function (App) {
+								require(["apps/" + (name || "home") + "/App"], function (App) {
 									App.start();
 								});
 							}
