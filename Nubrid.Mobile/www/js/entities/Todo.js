@@ -37,6 +37,7 @@
 		}
 		, close: function () {
 			this.stopListening(_dispatcher);
+			if (this.socket) this.socket.end();
 		}
 	});
 

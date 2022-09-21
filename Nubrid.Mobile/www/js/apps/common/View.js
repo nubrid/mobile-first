@@ -18,6 +18,9 @@ define(
 			if (!(this.HeaderRegion.currentView instanceof Header)) {
 				this.HeaderRegion.show(new Header({ region: this.HeaderRegion, title: options.title }));
 			}
+			else {
+				this.HeaderRegion.currentView.view.setProps({ title: options.title });
+			}
 			if (options.footer) {
 				var Footer = options.footer;
 				if (!(this.FooterRegion.currentView instanceof Footer)) {

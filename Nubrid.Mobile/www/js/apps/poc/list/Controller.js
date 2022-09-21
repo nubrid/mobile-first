@@ -5,6 +5,7 @@ define(
 ["apps/AppManager"
 , "apps/common/View"
 , "apps/poc/list/View"
+, "apps/todos/App"
 , "entities/Todo"]
 , function (AppManager, CommonView, ListView) {
 	var Controller = AppManager.module("PocApp.List.Controller", AppManager.Common.Module.extend({

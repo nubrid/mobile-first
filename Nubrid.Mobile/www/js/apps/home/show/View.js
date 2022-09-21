@@ -31,7 +31,7 @@ define(
 			$(React.findDOMNode(this.refs.divLogin)).on("click", this.handleLoginClick);
 		}
 		, render: function () {
-			return React.createElement("div", { "data-role": "page", id: this.props.id }
+			return React.createElement(React.addons.CSSTransitionGroup, { "data-role": "page", id: this.props.id, component: "div", transitionName: "page", transitionAppear: true, className: "bounceInLeft" }
 				, React.createElement("div", { role: "main", className: "ui-content" }
 					, React.createElement("input", { type: "text", ref: "txtInput" })
 					, React.createElement("input", { type: "button", ref: "btnOpenBrowser", value: "Open Browser" })

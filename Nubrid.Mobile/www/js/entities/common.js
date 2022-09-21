@@ -147,24 +147,34 @@
 	});
 
 	Common.API = {
-		getModel: function (model, attributes) {
-			var _model = new model(attributes);
+		getModel: function (Model, attributes) {
+			var model = new Model(attributes);
 			var defer = $.Deferred();
-			_model.fetch({
-				success: function (data) {
-					defer.resolve(data);
+			model.socket = AppManager.connect({
+				socket: model.socket
+				, callback: function () {
+					model.fetch({
+						success: function (data) {
+							defer.resolve(data);
+						}
+					});
 				}
 			});
 			var promise = defer.promise();
 
 			return promise;
 		}
-		, getCollection: function (collection) {
-			var _collection = new collection();
+		, getCollection: function (Collection) {
+			var collection = new Collection();
 			var defer = $.Deferred();
-			_collection.fetch({
-				success: function (data) {
-					defer.resolve(data);
+			collection.socket = AppManager.connect({
+				socket: collection.socket
+				, callback: function () {
+					collection.fetch({
+						success: function (data) {
+							defer.resolve(data);
+						}
+					});
 				}
 			});
 			var promise = defer.promise();

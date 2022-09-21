@@ -24,7 +24,8 @@
 				: new options.layout(options);
 			$.mobile.initializePage();
 
-			this.currentLayout.MainRegion.$el.pagecontainer("change", $(this.currentLayout.MainRegion.currentView.el), { reverse: options.reverse, transition: (options.transition ? options.transition : "slide"), allowSamePageTransition: true });
+			// TODO: Using React Animation
+			//this.currentLayout.MainRegion.$el.pagecontainer("change", $(this.currentLayout.MainRegion.currentView.el), { reverse: options.reverse, transition: (options.transition ? options.transition : "slide"), allowSamePageTransition: true });
 			if (options.url) AppManager.navigate(options.url);
 
 			return this.currentLayout.MainRegion.currentView;
@@ -41,30 +42,26 @@
 					: AppManager.Config.IO.Options);
 
 			if (primus.readyState == Primus.OPEN) {
+				primus_onOpen();
+
+				return primus;
+			}
+
+			if (primus.readyState != Primus.OPENING) primus.open();
+			primus.on("open", function () {
+				console.log("connection established");
+				primus_onOpen();
+			});
+
+			function primus_onOpen() {
 				if (options.callback) options.callback();
 				if (options.closeOnOpen) {
 					primus.end();
 				}
-				return;
 			}
-
-			primus.open();
-			primus.readyState = Primus.OPENING;
-			primus.on("open", function () {
-				this.readyState = Primus.OPEN;
-				console.log("connection established");
-				if (options.callback) options.callback();
-				if (options.closeOnOpen) {
-					this.end();
-				}
-			});
 
 			primus.on("error", function (error) {
 				console.log(error);
-			});
-
-			primus.on("end", function () {
-				this.readyState = Primus.CLOSED;
 			});
 
 			return primus;
@@ -112,12 +109,22 @@
 						return false;
 					});
 
-					require(["apps/home/HomeApp", "apps/todos/TodosApp"], function (HomeApp, TodosApp) {
-						HomeApp.start();
-						TodosApp.start();
-
-						Backbone.history.start();
+					new Marionette.AppRouter({
+						appRoutes: {
+							"": "initRoute"
+							, ":mod(/)": "initRoute"
+							, ":mod/:id(/)": "initRoute"
+						}
+						, controller: {
+							initRoute: function (name, path, arguments) {
+								require(["apps/" + (name ? name : "home") + "/App"], function (App) {
+									App.start();
+								});
+							}
+						}
 					});
+
+					Backbone.history.start();
 				}
 			}
 		}

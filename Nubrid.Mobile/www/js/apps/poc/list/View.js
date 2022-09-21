@@ -10,18 +10,131 @@ define(
 			this.parentEl = options.region ? options.region.$el[0] : this.el;
 		}
 		, render: function () {
-			var self = this;
-			function bindModelChange(model) {
-				model.bind("change", function (model) {
-					self.trigger("poc:edit", model);
-				});
-			}
-			this.collection.each(bindModelChange);
-			this.listenTo(this.collection, "add", bindModelChange);
+			//var self = this;
+			//function bindModelChange(model) {
+			//	model.bind("change", function (model) {
+			//		self.trigger("poc:edit", model);
+			//	});
+			//}
+			//this.collection.each(bindModelChange);
+			//this.listenTo(this.collection, "add", bindModelChange);
 
-			this.view = React.render(React.createElement(Poc, { id: this.id, collection: this.collection, view: this }), this.parentEl);
-			this.el = this.view.el; // HACK: Avoid conflict with Marionette region show and react render.
-			AppManager.view = this.view;
+			//this.view = React.render(React.createElement(Poc, { id: this.id, collection: this.collection, view: this }), this.parentEl);
+			//this.el = this.view.el; // HACK: Avoid conflict with Marionette region show and react render.
+			//AppManager.view = this.view;
+
+			require(["react.subschema"], function (subschema) {
+				var data = {
+					hot: {
+						data: [
+							{ type: "Windows 2012", quantity: 100, technologyType: "Standard", selected: false }
+							, { type: "RHEL 6", quantity: 10, technologyType: "Standard", selected: false }
+							, { type: "Unix - Solaris 11", quantity: 12, technologyType: "Custom", selected: false }
+						]
+						, minSpareRows: 1
+						, colHeaders: [
+							"Type"
+							, "Quantity"
+							, "Technology Type"
+							, "Remove"
+						]
+						, columns: [
+							{
+								data: "type"
+								, type: "autocomplete"
+								, source: [
+									"Windows 2012"
+									, "RHEL 6"
+									, "Unix - Solaris 11"
+								]
+							}
+							, { data: "quantity", type: "numeric" }
+							, {
+								data: "technologyType"
+								, type: "dropdown"
+								, source: [
+									"Standard"
+									, "Custom"
+								]
+							}
+							, { data: "selected", type: "checkbox" }
+						]
+						, contextMenu: false
+						, formulas: true
+					}
+				};
+				var errors = {};
+				var schema = "Form";
+
+				subschema.loader.addType("HOT", HOT);
+				subschema.loader.addType("Label", React.createClass({
+					displayName: "Label"
+					, mixins: [subschema.FieldValueMixin]
+					, render: function () {
+						return null;
+					}
+				}));
+				subschema.loader.addSchema({
+					Form: {
+						schema: {
+							volumetric: {
+								type: "Label"
+								, title: "Volumetric"
+							}
+							, hot: {
+								type: "HOT"
+								, title: ""
+							}
+							, language: {
+								type: "Select"
+								, title: "Language required"
+								, validators: ["required"]
+							}
+							, incidentVolume: {
+								type: "Text"
+								, title: "Incident volume (per month for in scope CIs)"
+								, validators: ["required"]
+							}
+							, serviceRequestVolume: {
+								type: "Text"
+								, title: "Service Request volume (per month for in scope CIs)"
+							}
+							, serviceUnit: {
+								type: "Text"
+								, title: "No. of service units required (per month)"
+								, validators: ["required"]
+							}
+							, durationPerServiceUnit: {
+								type: "Text"
+								, title: "Duration per service unit"
+								, validators: ["required"]
+							}
+							, clientsToolUsed: {
+								type: "Radio"
+								, title: "Client's tool used?"
+								, validators: ["required"]
+								, options: [
+									{
+										val: 1
+										, label: "Yes"
+									}
+									, {
+										val: 0
+										, label: "No"
+									}
+								]
+							}
+							, toolsUsed: {
+								type: "TextArea"
+								, title: "If Yes, please specify"
+								, validators: ["required"]
+							}
+						}
+					}
+				});
+				React.render(React.createElement(subschema.Form, { value: data, schema: schema, errors: errors }), $("#MainRegion")[0]);
+			});
+
 			return this;
 		}
 	});
@@ -549,6 +662,17 @@ define(
 	var HOT = React.createClass({
 		displayName: "HOT"
 		, mixins: [AppManager.BackboneMixin]
+		, getInitialState: function () {
+			return {
+				data: this.props.valueManager.value.hot
+			}
+		}
+		, getValue: function () {
+			return this.state.data;
+		}
+		, setValue: function (value) {
+			this.setState({ data: value });
+		}
 		, afterChange: function (changes, source) {
 			if (changes) {
 				for (var i in changes) {
@@ -565,16 +689,7 @@ define(
 			this.renderTable();
 		}
 		, renderTable: function () {
-			$(React.findDOMNode(this.refs.tblHOT)).handsontable({
-				data: this.props.data
-				, minSpareRows: this.props.minSpareRows ? this.props.minSpareRows : 0
-				, rowHeaders: this.props.rowHeaders
-				, colHeaders: this.props.colHeaders
-				, contextMenu: this.props.contextMenu
-				, formulas: this.props.formulas
-				, columns: this.props.columns
-				, afterChange: this.afterChange
-			});
+			$(React.findDOMNode(this.refs.tblHOT)).handsontable(_.extend({ afterChange: this.afterChange }, this.state.data));
 		}
 		, render: function () {
 			return React.createElement("div", null

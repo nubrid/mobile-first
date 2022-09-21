@@ -1,7 +1,9 @@
+/* https://github.com/jrburke/r.js/blob/master/build/example.build.js */
 ({
 	appDir: "../"
 	, paths: {
-		"backbone": "empty:" //"libs/backbone/backbone"
+		"libs": "empty:"
+		, "backbone": "empty:" //"libs/backbone/backbone"
 		, "backbone.iobind": "libs/backbone/backbone.iobind"
 		, "backbone.iosync": "libs/backbone/backbone.iosync"
 		, "backbone.marionette": "empty:" //"libs/backbone/backbone.marionette"
@@ -18,8 +20,9 @@
 		// TODO:, "modernizr": "libs/modernizr"
 		, "primus.io": "libs/primus.io"
 		, "react": "empty:" //"libs/react/react"
-		, "text": "libs/require/text"
-		, "underscore": "empty:" //"libs/underscore/underscore.lodash"
+		, "react.subschema": "libs/react/subschema"
+		// TODO:, "text": "libs/require/text"
+		, "underscore": "empty:" //"libs/underscore/underscore"
 	}
 	, shim: {
 		"backbone": {
@@ -67,15 +70,62 @@
 		, "jquery.mobile": {
 			deps: ["jquery"]
 		}
+		, "react.subschema": {
+			deps: [
+				"react"
+			]
+		}
 		, "underscore": {
 			exports: "_"
 		}
 	}
 	, baseUrl: "js"
-	, dir: "../../www-build"
+	, dir: "../../www"
 	, modules: [
 		{
 			name: "main"
+			, include: [
+				"app"
+				, "apps/common/Dispatcher"
+				, "apps/common/View"
+				, "entities/Todo"
+			]
+		}
+		, {
+			name: "apps/home/HomeApp"
+			, include: [
+				"apps/home/show/Controller"
+			]
+			, exclude: [
+				"apps/AppManager"
+				, "apps/common/Dispatcher"
+				, "apps/common/View"
+				, "entities/Todo"
+			]
+		}
+		, {
+			name: "apps/todos/TodosApp"
+			, include: [
+				"apps/todos/list/Controller"
+			]
+			, exclude: [
+				"apps/AppManager"
+				, "apps/common/Dispatcher"
+				, "apps/common/View"
+				, "entities/Todo"
+			]
+		}
+		, {
+			name: "apps/poc/PocApp"
+			, include: [
+				"apps/poc/list/Controller"
+			]
+			, exclude: [
+				"apps/AppManager"
+				, "apps/common/Dispatcher"
+				, "apps/common/View"
+				, "entities/Todo"
+			]
 		}
 	]
 	, exclude: [
@@ -91,10 +141,21 @@
 		// TODO: POC , "jquery.handsontable"
 		// TODO:, "jquery.history"
 		, "jquery.mobile"
+		, "primus.io"
 		, "react"
-		, "text"
+		, "react.subschema"
+		// TODO:, "text"
 		, "underscore"
 	]
-	, findNestedDependencies: true
+	, optimize: "uglify2"
+	, generateSourceMaps: true
+	, preserveLicenseComments: false
+	, useSourceUrl: false
+	, fileExclusionRegExp: /^main.build.js$/
+	//, keepBuildDir: true
+	, useStrict: true
+	//, findNestedDependencies: true
+	, removeCombined: true
 	, optimizeCss: "standard.keepLines"
+	, cssImportIgnore: "jquery.mobile.min.css"
 })

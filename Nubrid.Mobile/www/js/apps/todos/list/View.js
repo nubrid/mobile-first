@@ -57,7 +57,7 @@ define(
 			this.state.collection.close();
 		}
 		, render: function () {
-			return React.createElement("div", { "data-role": "page", id: this.props.id }
+			return React.createElement(React.addons.CSSTransitionGroup, { "data-role": "page", id: this.props.id, component: "div", transitionName: "page", transitionAppear: true, className: "bounceInRight" }
 				, React.createElement("div", { role: "main", className: "ui-content" }
 					, React.createElement(List.React.TodosForm, {
 						id: this.state.id
@@ -155,7 +155,8 @@ define(
 			);
 		}
 		, render: function () {
-			return React.createElement("div", null, this.state.collection ? this.state.collection.map(this.createItem) : null);
+			return React.createElement(React.addons.CSSTransitionGroup, { transitionName: "list-item" }
+				, this.state.collection ? this.state.collection.map(this.createItem) : null);
 		}
 	});
 
