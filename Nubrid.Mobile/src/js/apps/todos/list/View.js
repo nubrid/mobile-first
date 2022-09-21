@@ -45,11 +45,12 @@ define(
 			this.setState(attrs);
 		}
 		, componentDidMount: function () {
-			var fetchingTodos = AppManager.request("entity", { url: "todos" });
-			$.when(fetchingTodos).done($.proxy(function (todos) {
+			var entity = AppManager.request("entity", { url: "todos" });
+			this.props.view.dispatcher = entity.dispatcher; // Need to set this so that the Controller can properly dispatch.
+			this.actionType = entity.actionType;
+
+			$.when(entity.fetch).done($.proxy(function (todos) {
 				this.setState({ collection: todos });
-				this.props.view.dispatcher = todos.dispatcher; // Need to set this so that the Controller can properly dispatch.
-				this.actionType = todos.actionType;
 			}, this));
 		}
 		, componentWillUnmount: function () {

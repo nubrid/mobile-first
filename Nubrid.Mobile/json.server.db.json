@@ -2,13 +2,13 @@
   "todos": [
     {
       "id": 721014352023552,
-      "title": "test 5",
-      "completed": true
+      "title": "test 2",
+      "completed": false
     },
     {
       "id": 721028052045824,
       "title": "test 1",
-      "completed": false
+      "completed": true
     }
   ],
   "*": [

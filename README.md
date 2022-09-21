@@ -1,6 +1,6 @@
 # TODO Sample
 
-Hybrid Web + Mobile Framework v1.0.0 ~~using VS.Net~~ (JUL 31, 2015)
+Hybrid Web + Mobile Framework v1.1.0 ~~using VS.Net~~ (AUG 4, 2015)
 
 _For use in my company, Excent One, starting with NCC NOAH._
 
@@ -38,3 +38,12 @@ _For use in my company, Excent One, starting with NCC NOAH._
 - WebSockets ~~`Engine.io`~~ `Primus` ~~`Socket.io`~~
 - ~~Underscore~~
 - Yargs
+
+## Port Reservation:
+
+- 8000 - web and websocket
+- 8100 - livereload
+- 8200 - testem
+- 8300 - karma
+- 8400 - json-server
+- 8500 - node-inspector

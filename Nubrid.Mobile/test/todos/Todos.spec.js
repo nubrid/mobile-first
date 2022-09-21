@@ -1,5 +1,5 @@
 
-define(["apps/AppManager", "apps/todos/App", "apps/todos/list/Controller", "apps/common/View", "apps/todos/list/View"], function(AppManager, App, Controller, CommonView, View) {
+define(["apps/AppManager", "apps/todos/App", "apps/todos/list/Controller", "apps/common/View", "apps/todos/list/View", "apps/common/Dispatcher"], function(AppManager, App, Controller, CommonView, View, Dispatcher) {
   return describe("Todos", function() {
     before(function() {
       this.options = {
@@ -59,8 +59,13 @@ define(["apps/AppManager", "apps/todos/App", "apps/todos/list/Controller", "apps
     });
     return describe("View", function() {
       before(function() {
-        var mainRegion;
-        this.actionType = AppManager.TodosApp.Constants.ActionType;
+        var mainRegion, name;
+        name = "todos";
+        this.actionType = {
+          CREATE: name + ":create",
+          UPDATE: name + ":update",
+          DELETE: name + ":delete"
+        };
         $("#fixture").append("<div id='PanelRegion' /><div id='HeaderRegion' /><div id='MainRegion' /><div id='FooterRegion' />").appendTo("body");
         mainRegion = Marionette.Region.extend({
           el: "#MainRegion"
@@ -69,11 +74,12 @@ define(["apps/AppManager", "apps/todos/App", "apps/todos/list/Controller", "apps
           region: new mainRegion()
         }));
         this.react = React.addons.TestUtils;
-        this.request = sinon.stub(AppManager, "request", function() {
+        this.request = sinon.stub(AppManager, "request", $.proxy(function() {
           var defer;
           defer = $.Deferred();
-          setTimeout(function() {
-            return defer.resolve(new Backbone.Collection([
+          setTimeout($.proxy(function() {
+            var todos;
+            todos = new Backbone.Collection([
               {
                 id: 1,
                 title: "Todo 1",
@@ -83,10 +89,16 @@ define(["apps/AppManager", "apps/todos/App", "apps/todos/list/Controller", "apps
                 title: "Todo 2",
                 completed: true
               }
-            ]));
-          });
-          return defer.promise();
-        });
+            ]);
+            todos.actionType = this.actionType;
+            return defer.resolve(todos);
+          }, this));
+          return {
+            fetch: defer.promise(),
+            actionType: this.actionType,
+            dispatcher: new Dispatcher()
+          };
+        }, this));
         return this.submitForm = function(form, inputValue, actionType) {
           var input, submit;
           input = $(React.findDOMNode(form)).find("input[type='text']");
@@ -137,7 +149,9 @@ define(["apps/AppManager", "apps/todos/App", "apps/todos/list/Controller", "apps
         it("fetches todos collection", function(done) {
           var $el;
           this.request.should.have.been.calledOnce;
-          this.request.should.have.been.calledWithMatch("todo:entities");
+          this.request.should.have.been.calledWithMatch("entity", {
+            url: "todos"
+          });
           $el = this.list.$el;
           return setTimeout(function() {
             $el.should.exist;

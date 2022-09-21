@@ -1,4 +1,4 @@
-define ["apps/AppManager", "apps/todos/App", "apps/todos/list/Controller", "apps/common/View", "apps/todos/list/View"], (AppManager, App, Controller, CommonView, View) ->
+define ["apps/AppManager", "apps/todos/App", "apps/todos/list/Controller", "apps/common/View", "apps/todos/list/View", "apps/common/Dispatcher"], (AppManager, App, Controller, CommonView, View, Dispatcher) ->
 	describe "Todos", ->
 		before ->
 			@options =
@@ -37,7 +37,11 @@ define ["apps/AppManager", "apps/todos/App", "apps/todos/list/Controller", "apps
 				$("#fixture #MainRegion #todos").should.exist
 		describe "View", ->
 			before ->
-				@actionType = AppManager.TodosApp.Constants.ActionType
+				name = "todos"
+				@actionType =
+					CREATE: name + ":create"
+					UPDATE: name + ":update"
+					DELETE: name + ":delete"
 
 				$("#fixture").append("<div id='PanelRegion' /><div id='HeaderRegion' /><div id='MainRegion' /><div id='FooterRegion' />").appendTo("body");
 				mainRegion = Marionette.Region.extend el: "#MainRegion"
@@ -45,14 +49,18 @@ define ["apps/AppManager", "apps/todos/App", "apps/todos/list/Controller", "apps
 
 				@react = React.addons.TestUtils
 
-				@request = sinon.stub AppManager, "request", ->
+				@request = sinon.stub AppManager, "request", $.proxy( ->
 					defer = $.Deferred()
-					setTimeout ->
-						defer.resolve new Backbone.Collection [ 
+					setTimeout $.proxy( ->
+						todos = new Backbone.Collection [ 
 							{ id: 1, title: "Todo 1", completed: false }
 							{ id: 2, title: "Todo 2", completed: true }
 						]
-					defer.promise()
+						todos.actionType = @actionType
+						defer.resolve todos
+					, @)
+					return fetch: defer.promise(), actionType: @actionType, dispatcher: new Dispatcher()
+				, @)
 				@submitForm = (form, inputValue, actionType) ->
 					input = $(React.findDOMNode form).find "input[type='text']"
 
@@ -90,7 +98,7 @@ define ["apps/AppManager", "apps/todos/App", "apps/todos/list/Controller", "apps
 					@list.should.exist
 				it "fetches todos collection", (done) ->
 					@request.should.have.been.calledOnce
-					@request.should.have.been.calledWithMatch "todo:entities"
+					@request.should.have.been.calledWithMatch "entity", url: "todos"
 
 					$el = @list.$el
 					setTimeout ->

@@ -154,28 +154,25 @@ else {
 		//, cookie = { secure: false }; // session
 	var serve = null;
 
-	switch (process.env.NODE_ENV) {
-		case "production":
-			serve = require("st")({
-				path: config.web.dir
-				, index: "index.html"
-				, cache: { content: { maxAge: config.web.maxAge } }
-				, gzip: true
-				, passthrough: true
-			});
+	if (process.env.NODE_ENV === "production") {
+		serve = require("st")({
+			path: config.web.dir
+			, index: "index.html"
+			, cache: { content: { maxAge: config.web.maxAge } }
+			, gzip: true
+			, passthrough: true
+		});
 
-			app.set("trust proxy", 1);
-			//cookie.secure = true; // session
-			break;
-		default:
-			var serveStatic = require("serve-static");
+		app.set("trust proxy", 1);
+		//cookie.secure = true; // session
+		var serveStatic = require("serve-static");
+	} else {
 			serve = serveStatic(config.web.dir, {
 				//maxAge: config.web.maxAge
 				//, setHeaders: function (response, path) {
 				//	if (serveStatic.mime.lookup(path) === "text/html") response.setHeader("Cache-Control", "public, max-age=86400");
 				//}
 			});
-			break;
 	}
 	
 	app.use(compression());

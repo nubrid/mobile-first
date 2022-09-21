@@ -1,6 +1,6 @@
 {
   "name": "nubrid",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "description": "Nubrid",
   "main": "Nubrid.js",
@@ -96,7 +96,7 @@
     "serve:dev": "SET NODE_ENV=development&& npm run serve -- -s false",
     "serve:json": "json-server --port 8400 --watch json.server.db.json",
     "livereload": "livereload src/ --port 8100",
-    "start": "parallelshell \"npm run livereload -s\" \"npm run serve:prod -s\""
+    "start": "parallelshell \"npm run livereload -s\" \"npm run serve:json -s\" \"npm run serve:dev -s\" \"call Config/startup.nginx.bat\""
   },
   "jshintConfig": {
     "bitwise": true,

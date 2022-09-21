@@ -99,7 +99,7 @@
 		url: "*"
 		, noIoBind: false
 		, model: Common.Model
-		, initialize: function (models, options) {
+		, initialize: function () {
 			this.dispatcher = this.dispatcher || AppManager.request("dispatcher", this.url);
 			this.actionType = Common.ActionType(this.url);
 
@@ -200,7 +200,7 @@
 
 			return promise;
 		}
-		, getCollection: function (Collection, options) {
+		, getEntity: function (Collection, options) {
 			var collection = new Collection(null, options);
 			var defer = $.Deferred();
 			collection.socket = AppManager.connect({
@@ -215,12 +215,16 @@
 			});
 			var promise = defer.promise();
 
-			return promise;
+			return {
+				fetch: promise
+				, dispatcher: collection.dispatcher
+				, actionType: collection.actionType
+			};
 		}
 	};
 
 	AppManager.reqres.setHandler("entity", function (options) {
-		return Common.API.getCollection(
+		return Common.API.getEntity(
 			Common.Collection.extend(_.extend({
 				model: Common.Model.extend({
 					urlRoot: options.url
