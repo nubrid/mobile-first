@@ -1,0 +1,15 @@
+﻿{
+	"author": "Randell Rivera"
+	, "name": "Nubrid"
+	, "description": "// TODO: Description here."
+	, "version": "0.0.1"
+	, "homepage": "http://www.nubrid.com"
+	, "private": true
+	, "dependencies": {
+		"express": "3.x"
+		, "passport": "0.2.x"
+		, "passport-facebook": "1.0.x"
+		, "seed": "0.1.x"
+		, "socket.io": "0.9.x"
+	}
+}
