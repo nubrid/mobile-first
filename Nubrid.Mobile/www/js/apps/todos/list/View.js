@@ -54,15 +54,11 @@ define(
 			var initialState = this.getInitialState();
 			this.setState(initialState);
 		}
-		, handleEditClick: function (event) {
-			var el = $(event.target);
-
-			this.setState(_.findWhere(this.state.collection, { id: el.attr("data-id") }));
+		, handleEditClick: function (id) {
+			this.setState(_.findWhere(this.state.collection, { id: id }));
 		}
-		, handleDeleteClick: function (event) {
-			var el = $(event.target);
-
-			this.props.view.trigger("todo:delete", this.props.collection.get(el.attr("data-id")));
+		, handleDeleteClick: function (id) {
+			this.props.view.trigger("todo:delete", this.props.collection.get(id));
 		}
 		, render: function () {
 			return React.createElement("div", { "data-role": "page", id: this.props.id }
@@ -116,13 +112,14 @@ define(
 		}
 		, handleClick: function (event) {
 			var el = $(event.target);
+			var id = el.attr("data-id");
 
 			switch (el.attr("id")) {
 				case "btnEditTodo":
-					this.props.handleEditClick(event);
+					this.props.handleEditClick(id);
 					break;
 				case "btnDeleteTodo":
-					this.props.handleDeleteClick(event);
+					this.props.handleDeleteClick(id);
 					break;
 			}
 		}
