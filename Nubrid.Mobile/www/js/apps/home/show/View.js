@@ -2,9 +2,8 @@
 Home Show View
 */
 define(
-["apps/AppManager"
-, "text!apps/home/show/Show.html"]
-, function (AppManager, ShowTemplate) {
+["apps/AppManager"]
+, function (AppManager) {
 	var Show = AppManager.module("HomeApp.Show");
 	Show.Panel = Marionette.ItemView.extend({
 		initialize: function (options) {

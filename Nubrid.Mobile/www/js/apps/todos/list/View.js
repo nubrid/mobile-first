@@ -11,15 +11,11 @@ define(
 		}
 		, render: function () {
 			var self = this;
-			function bindModelChange(model) {
-				model.bind("change", function (model) {
-					self.trigger("todo:edit", model);
-				});
-			}
-			this.collection.each(bindModelChange);
-			this.listenTo(this.collection, "add", bindModelChange);
-
-			this.view = React.render(React.createElement(Todos, { id: this.id, collection: this.collection, view: this }), this.parentEl);
+			this.view = React.render(React.createElement(Todos, { id: this.id, view: this }), this.parentEl);
+			this.listenTo(this.collection, "change sync", function (modelOrCollection) {
+				if (!self.view.state.collection) self.view.setState({ collection: modelOrCollection })
+				else self.view.setProps({ changedId: modelOrCollection.id });
+			});
 			this.el = this.view.el; // HACK: Avoid conflict with Marionette region show and react render.
 
 			return this;
@@ -40,13 +36,9 @@ define(
 			var el = $(event.target);
 
 			var initialState = this.getInitialState();
+			var attrs = _.pick(_.omit(this.state, "collection"), _.keys(initialState));
 
-			if (this.state.id) {
-				this.props.collection.get(this.state.id).set(this.state)
-			}
-			else {
-				this.props.view.trigger("todo:add", _.pick(_.omit(this.state, "collection"), _.keys(initialState)));
-			}
+			this.props.view.trigger("todo:" + (attrs.id ? "edit" : "add"), attrs);
 
 			this.setState(initialState);
 		}
@@ -54,11 +46,15 @@ define(
 			var initialState = this.getInitialState();
 			this.setState(initialState);
 		}
+		, handleCompletedChange: function (id, checked) {
+			var attrs = _.extend(this.state.collection.get(id).toJSON(), { completed: checked });
+			this.props.view.trigger("todo:edit", attrs);
+		}
 		, handleEditClick: function (id) {
-			this.setState(_.findWhere(this.state.collection, { id: id }));
+			this.setState(this.state.collection.get(id).attributes);
 		}
 		, handleDeleteClick: function (id) {
-			this.props.view.trigger("todo:delete", this.props.collection.get(id));
+			this.props.view.trigger("todo:delete", this.state.collection.get(id));
 		}
 		, render: function () {
 			return React.createElement("div", { "data-role": "page", id: this.props.id }
@@ -69,11 +65,13 @@ define(
 						, handleSubmitClick: this.handleSubmitClick
 						, handleCancelClick: this.handleCancelClick
 					})
-					, React.createElement(TodosList, {
-						collection: this.props.collection
+					, this.state.collection ? React.createElement(TodosList, {
+						collection: this.state.collection
+						, changedId: this.props.changedId
+						, handleCompletedChange: this.handleCompletedChange
 						, handleEditClick: this.handleEditClick
 						, handleDeleteClick: this.handleDeleteClick
-					})
+					}) : null
 				)
 			);
 		}
@@ -108,7 +106,7 @@ define(
 		, handleChange: function (event) {
 			var el = $(event.target);
 
-			this.props.collection.get(el.attr("data-id")).set("completed", el[0].checked);
+			this.props.handleCompletedChange(el.attr("data-id"), el[0].checked);
 		}
 		, handleClick: function (event) {
 			var el = $(event.target);
@@ -126,20 +124,23 @@ define(
 		, componentDidMount: function () {
 			$(this.getDOMNode()).on("change", null, this.handleChange);
 			$(this.getDOMNode()).on("click", null, this.handleClick);
+
+			this.$el.enhanceWithin();
 		}
 		, componentDidUpdate: function (prevProps, prevState) {
 			this.$el.enhanceWithin();
 		}
-		, createItem: function (item, id) {
+		, createItem: function (model, id) {
+			var item = model.toJSON();
 			return React.createElement("div", { key: item.id, "data-role": "controlgroup", "data-type": "horizontal" }
 				, React.createElement("h3", null, item.title)
-				, React.createElement("label", null, React.createElement("input", { type: "checkbox", defaultChecked: item.completed, "data-id": item.id }), "Complete")
+				, React.createElement("label", null, React.createElement("input", { type: "checkbox", ref: "chk_" + item.id, defaultChecked: item.completed, "data-id": item.id }), "Complete")
 				, React.createElement("input", { type: "button", id: "btnEditTodo", value: "Edit", "data-id": item.id })
 				, React.createElement("input", { type: "button", id: "btnDeleteTodo", value: "Delete", "data-id": item.id })
 			);
 		}
 		, render: function () {
-			return React.createElement("div", null, this.state.collection.map(this.createItem));
+			return React.createElement("div", null, this.props.collection.map(this.createItem));
 		}
 	});
 

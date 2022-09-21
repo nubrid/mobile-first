@@ -1,7 +1,7 @@
-window.host = "//" + document.location.host;
-window.protocol = document.location.protocol;
-window.phonegap = window.protocol === "file:";
-_libProtocol = (window.phonegap ? "https:" : window.protocol);
+window.phonegap = document.location.protocol === "file:";
+window.host = "//" + (window.phonegap ? "www.nubrid.com" : document.location.host);
+window.protocol = window.phonegap ? "http:" : document.location.protocol;
+_libProtocol = window.phonegap ? "https:" : document.location.protocol;
 _libMinify = ""; // TODO: For PROD, replace with: _libMinify = ".min"; For DEV, replace with: _libMinify = ""
 var jQueryVersion = "2.1.4";
 if (!("querySelector" in document
@@ -31,7 +31,7 @@ require.config({
 		, "primus.io": "libs/primus.io"
 		, "react": _libProtocol + "//fb.me/react-with-addons-0.13.3" + _libMinify //"libs/react/react"
 		, "text": _libProtocol + "//cdnjs.cloudflare.com/ajax/libs/require-text/2.0.12/text" + _libMinify //"libs/require/text"
-		, "underscore": _libProtocol + "//cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.underscore" + _libMinify //"libs/underscore/underscore.lodash"
+		, "underscore": _libProtocol + "//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore" + (_libMinify.length ? _libMinify.replace(".", "-") : "") //"libs/underscore/underscore"
 	}
 	, shim: {
 		"backbone": {

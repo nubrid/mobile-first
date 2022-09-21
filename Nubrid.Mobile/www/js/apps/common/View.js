@@ -55,7 +55,7 @@ define(
 			this.$el.toolbar();
 		}
 		, render: function () {
-			return React.createElement("div", { "data-role": "header", "data-theme": "a" }
+			return React.createElement("div", { "data-role": "header", "data-position": "fixed", "data-theme": "a" }
 				, React.createElement("h1", null, this.props.title)
 				, React.createElement("div", null
 					, React.createElement("a", { href: "#PanelRegion", "data-icon": "bars", "data-iconpos": "notext", className: "ui-btn-left", "data-role": "button" }, "Panel")

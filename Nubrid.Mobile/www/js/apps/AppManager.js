@@ -32,18 +32,42 @@
 
 			return this.currentLayout.MainRegion.currentView;
 		}
-		, connect: function (callback, closeOnOpen) {
-			var primus = new Primus(AppManager.Config.Url.IO.Root, closeOnOpen ? _.extend(AppManager.Config.IO.Options, { strategy: "" }) : AppManager.Config.IO.Options);
+		, connect: function (options) {
+			if (_.isFunction(options)) {
+				options = { callback: options };
+			}
+
+			var primus = options.socket
+				? options.socket
+				: new Primus(AppManager.Config.Url.IO.Root, options.closeOnOpen
+					? _.extend(AppManager.Config.IO.Options, { strategy: "" })
+					: AppManager.Config.IO.Options);
+
+			if (primus.readyState == Primus.OPEN) {
+				if (options.callback) options.callback();
+				if (options.closeOnOpen) {
+					primus.end();
+				}
+				return;
+			}
 
 			primus.open();
+			primus.readyState = Primus.OPENING;
 			primus.on("open", function () {
+				this.readyState = Primus.OPEN;
 				console.log("connection established");
-				if (callback) callback();
-				if (closeOnOpen) this.end();
+				if (options.callback) options.callback();
+				if (options.closeOnOpen) {
+					this.end();
+				}
 			});
 
 			primus.on("error", function (error) {
 				console.log(error);
+			});
+
+			primus.on("end", function () {
+				this.readyState = Primus.CLOSED;
 			});
 
 			return primus;
@@ -61,7 +85,7 @@
 				return;
 			}
 			else {
-				this.connect(callback, true);
+				this.connect({ callback: callback, closeOnOpen: true });
 			}
 		}
 		, onStart: function () {

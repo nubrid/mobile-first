@@ -1,6 +1,6 @@
-# TODO Sample (!Broken)
+# TODO Sample
 
-Hybrid Web + Mobile Framework using VS.Net (JUN 4, 2015)
+Hybrid Web + Mobile Framework using VS.Net (JUN 6, 2015)
 
 _For use in my company, Excent One, starting with NCC NOAH._
 
@@ -8,10 +8,12 @@ _For use in my company, Excent One, starting with NCC NOAH._
 
 - Backbone `iobind` `iosync` ~~`modelbinder`~~ `picky` `syphon`
 - Cordova `PhoneGap`
+- CSP
 - Express
 - FLUX
 - jQuery, jQuery UI & jQuery Mobile
 - LocalStorage
+- Lodash
 - MarionetteJS `v2`
 - ~~ModernizrJS~~
 - ~~MVC~~
@@ -22,4 +24,4 @@ _For use in my company, Excent One, starting with NCC NOAH._
 - Recaptcha
 - RequireJS `cache buster`
 - WebSockets ~~`Engine.io`~~ `Primus` ~~`Socket.io`~~
-- Underscore
+- ~~Underscore~~

@@ -27,11 +27,11 @@ define(
 					var loginWindow = window.open(AppManager.Config.Url.Web + "/auth/" + provider, "_blank", "location=no");
 
 					loginWindow.addEventListener("loadstop", function (event) {
-						if (event.url.indexOf(AppManager.Url.Web) == 0) {
-							if (event.url.indexOf(AppManager.Url.Web + "/#failed") == 0) {
+						if (event.url.indexOf(AppManager.Config.Url.Web) == 0) {
+							if (event.url.indexOf(AppManager.Config.Url.Web + "/#failed") == 0) {
 								alert("Login failed!");
 							}
-							else if (event.url.indexOf(AppManager.Url.Web + "/") == 0) {
+							else if (event.url.indexOf(AppManager.Config.Url.Web + "/") == 0) {
 								alert("Login succeeded! See console for profile.");
 							}
 

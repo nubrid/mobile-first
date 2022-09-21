@@ -4,27 +4,79 @@
 		noIoBind: false
 		, initialize: function () {
 			var self = this;
-			if (!this.socket) this.socket = AppManager.connect(function () {
-				// Only bind new models from the server because the server assigns the id.
-				if (!this.noIoBind) {
-					_.bindAll(self, "serverChange", "serverDelete", "modelCleanup");
-					self.ioBind("update", self.serverChange, self);
-					self.ioBind("delete", self.serverDelete, self);
+			this.socket = AppManager.connect({
+				socket: this.socket
+				, callback: function () {
+					// Only bind new models from the server because the server assigns the id.
+					if (!self.noIoBind) {
+						_.bindAll(self, "serverChange", "serverDelete", "modelCleanup");
+						self.ioBind("update", self.serverChange, self);
+						self.ioBind("delete", self.serverDelete, self);
+					}
 				}
 			});
+
+			this.on("after:save", function () {
+				if (this.noIoBind) this.socket.end();
+			});
+		}
+		, destroy: function () {
+			if (!this.socket) this.socket = this.collection.socket;
+
+			return Backbone.Model.prototype.destroy.apply(this, arguments);
+		}
+		, save: function (attrs, options) {
+			if (!this.socket) this.socket = this.collection.socket;
+
+			options = options || {};
+
+			// TODO: Uncomment if trimming attrs are required.
+			//attrs = attrs || this.toJSON();
+			//if (attrs.fromServer) return;
+
+			//// Replace attrs with trimmed version
+			//attrs = _.omit(attrs, "fromServer");
+
+			//// Move attrs to options
+			//options.attrs = attrs;
+
+			var self = this;
+			var success = options.success;
+			options.success = function (model, response) {
+				self.trigger("after:save");
+
+				if (success) success(model, response);
+			};
+
+			var error = options.error;
+			options.error = function (model, response) {
+				self.trigger("after:save");
+
+				if (error) error(model, response);
+			};
+
+			this.trigger("before:save");
+			// Call super with attrs moved to options
+			Backbone.Model.prototype.save.call(this, attrs, options);
+			return this;
 		}
 		, serverChange: function (data) {
+			if (!this.socket) this.socket = this.collection.socket;
+
 			// Used to prevent loops when dealing with client-side updates (e.g. forms).
-			data.fromServer = true;
-			this.set(data);
+			//this.fromServer = true;
+			if (this.changedAttributes(data)) this.set(data);
 		}
 		, serverDelete: function (data) {
+			if (!this.socket) this.socket = this.collection.socket;
+
+			this.modelCleanup();
+
 			if (this.collection) {
 				this.collection.remove(this);
 			} else {
 				this.trigger("remove", this);
 			}
-			this.modelCleanup();
 		}
 		, modelCleanup: function () {
 			this.ioUnbindAll();
@@ -37,18 +89,42 @@
 		, initialize: function () {
 			this.on("before:fetch", function () {
 				var self = this;
-				if (!this.socket) this.socket = AppManager.connect(function () {
-					if (!this.noIoBind) {
-						_.bindAll(self, "serverCreate", "collectionCleanup");
-						self.ioBind("create", self.serverCreate, self);
-					}
+				this.socket = AppManager.connect({
+					socket: this.socket
+					, callback: function () {
+						if (!self.noIoBind) {
+							_.bindAll(self, "serverCreate", "collectionCleanup");
+							self.ioBind("create", self.serverCreate, self);
+						}
 
-					self.model = self.model.extend({ socket: self.socket });
+						self.model = self.model.extend({ socket: self.socket });
+					}
 				});
 			});
 			this.on("after:fetch", function () {
 				if (this.noIoBind) this.socket.end();
 			});
+		}
+		, fetch: function () {
+			if (!arguments || arguments.length == 0) arguments = [{}];
+			var self = this;
+
+			var success = arguments[0].success;
+			arguments[0].success = function (data) {
+				self.trigger("after:fetch");
+
+				if (success) success(data);
+			};
+
+			var error = arguments[0].error;
+			arguments[0].error = function (data) {
+				self.trigger("after:fetch");
+
+				if (error) error(data);
+			};
+
+			this.trigger("before:fetch");
+			return Backbone.Collection.prototype.fetch.apply(this, arguments);
 		}
 		, serverCreate: function (data) {
 			var oldData = this.get(data.id);
@@ -56,8 +132,8 @@
 			if (!oldData) {
 				this.add(data);
 			} else {
-				data.fromServer = true;
-				oldData.set(data);
+				//oldData.fromServer = true;
+				if (oldData.changedAttributes(data)) oldData.set(data);
 			}
 		}
 		, collectionCleanup: function (callback) {
@@ -69,29 +145,6 @@
 			return this;
 		}
 	});
-
-	var fetchCollection = Common.Collection.prototype.fetch;
-	Common.Collection.prototype.fetch = function () {
-		if (!arguments || arguments.length == 0) arguments = [{}];
-		var success = arguments[0].success;
-		var error = arguments[0].error;
-		var self = this;
-
-		arguments[0].success = function (data) {
-			self.trigger("after:fetch");
-
-			if (success) success(data);
-		};
-
-		arguments[0].error = function (data) {
-			self.trigger("after:fetch");
-
-			if (error) error(data);
-		};
-
-		this.trigger("before:fetch");
-		return fetchCollection.apply(this, arguments);
-	};
 
 	Common.API = {
 		getModel: function (model, attributes) {

@@ -18,7 +18,7 @@
 		// TODO:, "modernizr": "libs/modernizr"
 		, "primus.io": "libs/primus.io"
 		, "react": "empty:" //"libs/react/react"
-		, "text": "empty:" //"libs/require/text"
+		, "text": "libs/require/text"
 		, "underscore": "empty:" //"libs/underscore/underscore.lodash"
 	}
 	, shim: {
