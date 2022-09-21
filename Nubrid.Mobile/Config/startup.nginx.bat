@@ -1,0 +1,1 @@
+start cmd.exe /k "cd %~dp0nginx && D: && nginx"

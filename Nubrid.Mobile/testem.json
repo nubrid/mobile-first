@@ -1,0 +1,16 @@
+{
+	"framework": "mocha",
+	"test_page": "../test/testem.mustache",
+	"src_files": [
+		"src/**/*.js",
+		"test/**/*.spec.js"
+	],
+	"src_files_ignore": [
+		"src/js/main.js",
+		"src/js/main.build.js",
+		"src/js/require.config.js",
+		"src/js/libs/**/*.js"
+	],
+	"port": 8082,
+	"phantomjs_debug_port": 8083
+}

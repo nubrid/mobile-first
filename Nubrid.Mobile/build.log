@@ -1,0 +1,102 @@
+Optimizing (standard.keepLines) CSS file: D:/Shared/Desktop/Projects/Nubrid/Nubrid.Mobile/www/css/jquery.mobile.css
+Optimizing (standard.keepLines) CSS file: D:/Shared/Desktop/Projects/Nubrid/Nubrid.Mobile/www/css/styles.css
+D:/Shared/Desktop/Projects/Nubrid/Nubrid.Mobile/www/css/styles.css
+  Cannot inline css import, skipping: https://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.5/jquery.mobile.min.css
+
+Tracing dependencies for: main
+
+Tracing dependencies for: apps/home/App
+
+Tracing dependencies for: apps/todos/App
+
+Tracing dependencies for: apps/poc/App
+
+Tracing dependencies for: apps/AppManager
+
+Tracing dependencies for: apps/common/Dispatcher
+
+Tracing dependencies for: apps/common/View
+
+Tracing dependencies for: entities/Todo
+
+Tracing dependencies for: apps/AppManager
+
+Tracing dependencies for: apps/common/Dispatcher
+
+Tracing dependencies for: apps/common/View
+
+Tracing dependencies for: entities/Todo
+
+Tracing dependencies for: apps/AppManager
+
+Tracing dependencies for: apps/common/Dispatcher
+
+Tracing dependencies for: apps/common/View
+
+Tracing dependencies for: entities/Todo
+Uglify2 file: D:/Shared/Desktop/Projects/Nubrid/Nubrid.Mobile/www/js/apps/home/App.js
+Uglify2 file: D:/Shared/Desktop/Projects/Nubrid/Nubrid.Mobile/www/js/apps/poc/App.js
+Uglify2 file: D:/Shared/Desktop/Projects/Nubrid/Nubrid.Mobile/www/js/apps/todos/App.js
+Uglify2 file: D:/Shared/Desktop/Projects/Nubrid/Nubrid.Mobile/www/js/libs/backbone/backbone.iobind.js
+Uglify2 file: D:/Shared/Desktop/Projects/Nubrid/Nubrid.Mobile/www/js/libs/backbone/backbone.iosync.js
+Uglify2 file: D:/Shared/Desktop/Projects/Nubrid/Nubrid.Mobile/www/js/libs/backbone/backbone.js
+Uglify2 file: D:/Shared/Desktop/Projects/Nubrid/Nubrid.Mobile/www/js/libs/backbone/backbone.marionette.js
+Uglify2 file: D:/Shared/Desktop/Projects/Nubrid/Nubrid.Mobile/www/js/libs/backbone/backbone.react.js
+Uglify2 file: D:/Shared/Desktop/Projects/Nubrid/Nubrid.Mobile/www/js/libs/cordova/cordova.loader.js
+Uglify2 file: D:/Shared/Desktop/Projects/Nubrid/Nubrid.Mobile/www/js/libs/detectmobilebrowser.js
+Uglify2 file: D:/Shared/Desktop/Projects/Nubrid/Nubrid.Mobile/www/js/libs/jquery/jquery.browser.js
+Uglify2 file: D:/Shared/Desktop/Projects/Nubrid/Nubrid.Mobile/www/js/libs/jquery/jquery.cookie.js
+Uglify2 file: D:/Shared/Desktop/Projects/Nubrid/Nubrid.Mobile/www/js/libs/jquery/jquery.handsontable.js
+Uglify2 file: D:/Shared/Desktop/Projects/Nubrid/Nubrid.Mobile/www/js/libs/jquery/jquery.history.js
+Uglify2 file: D:/Shared/Desktop/Projects/Nubrid/Nubrid.Mobile/www/js/libs/jquery/jquery.js
+Uglify2 file: D:/Shared/Desktop/Projects/Nubrid/Nubrid.Mobile/www/js/libs/jquery/jquery.mobile.js
+Uglify2 file: D:/Shared/Desktop/Projects/Nubrid/Nubrid.Mobile/www/js/libs/modernizr.js
+Uglify2 file: D:/Shared/Desktop/Projects/Nubrid/Nubrid.Mobile/www/js/libs/primus.io.js
+Uglify2 file: D:/Shared/Desktop/Projects/Nubrid/Nubrid.Mobile/www/js/libs/react/react.js
+Uglify2 file: D:/Shared/Desktop/Projects/Nubrid/Nubrid.Mobile/www/js/libs/react/react.jsx.js
+Uglify2 file: D:/Shared/Desktop/Projects/Nubrid/Nubrid.Mobile/www/js/libs/react/react.jsx.transformer.js
+Uglify2 file: D:/Shared/Desktop/Projects/Nubrid/Nubrid.Mobile/www/js/libs/react/subschema.js
+Uglify2 file: D:/Shared/Desktop/Projects/Nubrid/Nubrid.Mobile/www/js/libs/require/require.js
+Uglify2 file: D:/Shared/Desktop/Projects/Nubrid/Nubrid.Mobile/www/js/libs/require/text.js
+Uglify2 file: D:/Shared/Desktop/Projects/Nubrid/Nubrid.Mobile/www/js/libs/underscore/underscore.js
+Uglify2 file: D:/Shared/Desktop/Projects/Nubrid/Nubrid.Mobile/www/js/libs/underscore/underscore.lodash.js
+Uglify2 file: D:/Shared/Desktop/Projects/Nubrid/Nubrid.Mobile/www/js/main.js
+
+css/jquery.mobile.css
+----------------
+css/jquery.mobile.css
+
+css/styles.css
+----------------
+css/styles.css
+
+js/main.js
+----------------
+js/require.config.js
+js/main.js
+js/apps/AppManager.js
+js/app.js
+js/apps/common/Dispatcher.js
+js/apps/common/View.js
+js/entities/Common.js
+js/entities/Todo.js
+
+js/apps/home/App.js
+----------------
+js/apps/home/App.js
+js/apps/home/show/View.js
+js/apps/home/show/Controller.js
+
+js/apps/todos/App.js
+----------------
+js/apps/todos/App.js
+js/apps/todos/list/View.js
+js/apps/todos/list/Controller.js
+
+js/apps/poc/App.js
+----------------
+js/apps/poc/App.js
+js/apps/poc/list/View.js
+js/apps/todos/App.js
+js/apps/poc/list/Controller.js
+
