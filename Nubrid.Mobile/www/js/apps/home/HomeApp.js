@@ -2,22 +2,22 @@
 	var HomeApp = AppManager.module("HomeApp");
 	HomeApp.Router = Marionette.AppRouter.extend({
 		appRoutes: {
-			"": "listHome"
-			, "home": "listHome"
+			"": "showHome"
+			, "home": "showHome"
 		}
 	});
 
 	var API = {
-		listHome: function () {
-			require(["apps/home/list/ListController"], function () {
-				HomeApp.List.Controller.listHome();
+		showHome: function () {
+			require(["apps/home/show/ShowController"], function () {
+				HomeApp.Show.Controller.showHome();
 			});
 		}
 	};
 
-	AppManager.on("home:list", function () {
+	AppManager.on("home:show", function () {
 		AppManager.navigate("home");
-		API.listHome();
+		API.showHome();
 	});
 
 	AppManager.addInitializer(function () {

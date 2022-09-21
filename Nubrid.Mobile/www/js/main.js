@@ -1,20 +1,6 @@
-var loading = false
-	, Event = { DeviceReady: "deviceready" }
-	, Key = { Email: "email" }
-	, Method = { GetById: "getById" }
-	, Url = {
-		IO: { Root: "http://socket.excentone.com" }
-		, Web: "http://apps.excentone.com"
-	};
-
-window.App = {
-	Models: {}
-	, Collections: {}
-	, Views: {}
-};
-
 require.config({
-	baseUrl: "js"
+	urlArgs: "bust=" + (+new Date) // TODO: For PROD, replace with: urlArgs: "bust=v5.0.x"
+	, baseUrl: "js"
 	, paths: {
 		"backbone": "libs/backbone/backbone"
 		, "backbone.collectionbinder": "libs/backbone/backbone.collectionbinder"
@@ -27,7 +13,7 @@ require.config({
 		, "detectmobilebrowser": "libs/detectmobilebrowser"
 		, "jquery": "libs/jquery/jquery"
 		, "jquery.mobile": "libs/jquery/jquery.mobile"
-		, "socket.io": "http://socket.excentone.com/socket.io/socket.io"
+		, "primus.io": "http://socket.nubrid.com/primus/primus.io"
 		, "text": "libs/require/text"
 		, "underscore": "libs/underscore/underscore.lodash"
 	}
@@ -47,9 +33,13 @@ require.config({
 		}
 		, "backbone.iobind": {
 			deps: [
-				"socket.io"
+				"backbone.iosync"
+			]
+		}
+		, "backbone.iosync": {
+			deps: [
+				"primus.io"
 				, "backbone"
-				, "backbone.iosync"
 			]
 		}
 		, "backbone.marionette": {
@@ -82,14 +72,14 @@ require(["jquery"], function () {
 		$.mobile.pushStateEnabled = false;
 	});
 
-	require(["socket.io", "backbone.iobind", "backbone.collectionbinder", "jquery.mobile"], function () {
-		window.io = io; // HACK: For socket.io 1.0.x
+	require(["backbone.iobind", "backbone.collectionbinder", "jquery.mobile"], function () {
 		require(["app"], function (app) {
 			app.start();
 		});
 	});
 });
 
+var loading = false;
 function getScript(url, callback, isValidCallback) {
 	if (typeof (isValidCallback) === "function") {
 		if (isValidCallback() && callback) {

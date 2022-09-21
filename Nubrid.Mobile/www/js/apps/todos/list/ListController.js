@@ -6,7 +6,7 @@
 	var List = AppManager.module("TodosApp.List");
 	List.Controller = {
 		listTodos: function () {
-			window.socket = io.connect(Url.IO.Root);
+			window.socket = Primus.connect(AppManager.Url.IO.Root);
 
 			var todosListLayout = AppManager.changePage(ListView);
 			var todosListPanel = new List.Panel();
@@ -37,9 +37,17 @@
 					_todo.save();
 				});
 
+				todos.each(todo_created);
+				todosListView.on("todo:created", todo_created);
 				todosListView.on("todo:delete", function (model) {
 					model.destroy();
 				});
+
+				function todo_created(model) {
+					model.bind("change:completed", function () {
+						this.save();
+					});
+				}
 			});
 		}
 	}

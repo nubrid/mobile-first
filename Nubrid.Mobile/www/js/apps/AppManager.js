@@ -1,6 +1,11 @@
 ﻿define(["backbone.marionette", "text!templates/MasterPage.html"], function (Marionette, MasterPage) {
 	window.AppManager = new Marionette.Application();
 
+	AppManager.Url = {
+		IO: { Root: "http://socket.nubrid.com" }
+		, Web: "http://www.nubrid.com"
+	};
+
 	AppManager.addRegions({
 		mainRegion: "body"
 	});
@@ -37,12 +42,13 @@
 			if (!window.mobile) {
 				start();
 			}
-
-			require(["cordova.loader"], function (navigator) {
-				$(function () {
-					document.addEventListener(Event.DeviceReady, start, false);
+			else {
+				require(["cordova.loader"], function (navigator) {
+					$(function () {
+						document.addEventListener("deviceready", start, false);
+					});
 				});
-			});
+			}
 
 			function start() {
 				if (Backbone.history) {
@@ -55,8 +61,8 @@
 
 					Backbone.history.start();
 
-					if (this.getCurrentRoute() === "") {
-						AppManager.trigger("home:list");
+					if (AppManager.getCurrentRoute() === "") {
+						AppManager.trigger("home:show");
 					}
 				}
 			}

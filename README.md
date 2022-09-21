@@ -1,6 +1,6 @@
 # TODO Sample
 
-Hybrid Web + Mobile Framework using VS.Net (AUG 19, 2014)
+Hybrid Web + Mobile Framework using VS.Net (AUG 27, 2014)
 
 _For use in my company, Excent One, starting with NCC NOAH._
 
@@ -14,8 +14,8 @@ _For use in my company, Excent One, starting with NCC NOAH._
 - MarionetteJS `v2`
 - MVC
 - OAuth
-- Passport `w/ Facebook, Twitter, LinkedIn SSO`
+- Passport `w/ Facebook, LinkedIn, Twitter SSO`
 - Postgres
-- RequireJS
-- Socket.io `websockets`
+- RequireJS `cache buster`
+- WebSockets ~~`Engine.io`~~ `Primus` ~~`Socket.io`~~
 - Underscore

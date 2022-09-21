@@ -46,14 +46,13 @@
 			"click #btnDeleteTodo": "deleteTodo"
 		}
 		, render: function () {
+			var self = this;
 			var elManagerFactory = new Backbone.CollectionBinder.ElManagerFactory(ListItemTemplate, "data-name");
 			this.collectionBinder = new Backbone.CollectionBinder(elManagerFactory);
 			this.collectionBinder.bind(this.collection, this.$el);
 
 			this.collectionBinder.on("elCreated", function (model, el) {
-				model.bind("change:completed", function () {
-					this.save();
-				});
+				self.trigger("todo:created", model);
 			});
 			return this;
 		}
