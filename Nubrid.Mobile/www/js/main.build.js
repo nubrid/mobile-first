@@ -2,8 +2,10 @@
 	appDir: "../"
 	, paths: {
 		"backbone": "libs/backbone/backbone"
+		, "backbone.collectionbinder": "libs/backbone/backbone.collectionbinder"
 		, "backbone.iobind": "libs/backbone/backbone.iobind"
 		, "backbone.iosync": "libs/backbone/backbone.iosync"
+		, "backbone.modelbinder": "libs/backbone/backbone.modelbinder"
 		, "cordova": "../cordova"
 		, "cordova.loader": "libs/cordova/cordova.loader"
 		, "jquery": "libs/jquery/jquery"

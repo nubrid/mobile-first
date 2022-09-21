@@ -17,8 +17,10 @@ require.config({
 	baseUrl: "js"
 	, paths: {
 		"backbone": "libs/backbone/backbone"
+		, "backbone.collectionbinder": "libs/backbone/backbone.collectionbinder"
 		, "backbone.iobind": "libs/backbone/backbone.iobind"
 		, "backbone.iosync": "libs/backbone/backbone.iosync"
+		, "backbone.modelbinder": "libs/backbone/backbone.modelbinder"
 		, "cordova": "../cordova"
 		, "cordova.loader": "libs/cordova/cordova.loader"
 		, "jquery": "libs/jquery/jquery"
@@ -40,6 +42,12 @@ require.config({
 				"socket.io"
 				, "backbone"
 				, "backbone.iosync"
+			]
+		}
+		, "backbone.collectionbinder": {
+			deps: [
+				"backbone"
+				, "backbone.modelbinder"
 			]
 		}
 		, "jquery": {
@@ -66,7 +74,7 @@ require(["jquery"], function () {
 		$.mobile.pushStateEnabled = false;
 	});
 
-	require(["socket.io", "backbone.iobind", "jquery.mobile"], function (io) {
+	require(["socket.io", "backbone.iobind", "backbone.collectionbinder", "jquery.mobile"], function (io) {
 		window.io = io;
 		require(["app"], function (app) {
 			app.init();

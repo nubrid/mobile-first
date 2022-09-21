@@ -1,32 +1,33 @@
 ﻿// List of Todos received upon construction.
 // This view will respond to events broadcasted from socket.io.
-define(["views/TodoListItem"], function (TodoListItem) {
+define(["text!templates/TodoListItem.html"], function (TodoListItem) {
 	App.Views.TodoList = Backbone.View.extend({
 		id: "TodoList"
+		, events: {
+			"click #btnDeleteTodo": "deleteTodo"
+		}
 		, initialize: function (todos) {
-			_.bindAll(this, "render", "addTodo");
-
 			this.todos = todos;
-
-			// Called upon fetch.
-			this.todos.bind("reset", this.render);
-			// Called when the collection adds a new Todo from the server.
-			this.todos.bind("add", this.addTodo);
 
 			this.render();
 		}
 		, render: function () {
-			var self = this;
+			var elManagerFactory = new Backbone.CollectionBinder.ElManagerFactory(TodoListItem, "data-name");
+			this.collectionBinder = new Backbone.CollectionBinder(elManagerFactory);
+			this.collectionBinder.bind(this.todos, this.$el);
 
-			this.todos.each(function (todo) {
-				self.addTodo(todo);
+			this.collectionBinder.on("elCreated", function (model, el) {
+				model.bind("change:completed", function () {
+					this.save();
+				});
 			});
 
 			return this;
 		}
-		, addTodo: function (todo) {
-			var todoListItem = new TodoListItem(todo);
-			this.$el.append(todoListItem.$el);
+		, deleteTodo: function (event) {
+			var el = $(event.target)[0];
+			var model = this.collectionBinder.getManagerForEl(el).getModel();
+			model.destroy();
 		}
 	});
 
