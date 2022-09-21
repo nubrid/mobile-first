@@ -45,5 +45,10 @@ define(
 		//}
 	});
 
+	AppManager.reqres.setHandler("dispatcher", function (name) {
+		Common.dispatcher = Common.dispatcher || {};
+		return Common.dispatcher[name] = Common.dispatcher[name] || new Common.Dispatcher();
+	});
+
 	return Common.Dispatcher;
 });

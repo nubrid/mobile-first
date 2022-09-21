@@ -60,11 +60,16 @@
     <Content Include="config.xml">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="hooks\hook-symlink-fix.js" />
+    <Content Include="json.server.db.js" />
     <Content Include="karma.conf.js" />
-    <Content Include="Nubrid.Config.js" />
-    <Content Include="Nubrid.js" />
+    <Content Include="cecho\cecho.js" />
+    <Content Include="app.config.js" />
+    <Content Include="app.js" />
+    <Content Include="ReadMe.txt" />
     <Content Include="src\css\jquery.mobile.css" />
     <Content Include="src\css\styles.css" />
+    <Content Include="src\favicon.ico" />
     <Content Include="src\img\ajax-loader.gif" />
     <Content Include="src\img\icons-png\action-black.png" />
     <Content Include="src\img\icons-png\action-white.png" />
@@ -288,7 +293,6 @@
     <Content Include="src\js\libs\backbone\backbone.js" />
     <Content Include="src\js\libs\backbone\backbone.marionette.js" />
     <Content Include="src\js\libs\backbone\backbone.react.js" />
-    <Content Include="src\js\libs\cordova\cordova.loader.js" />
     <Content Include="src\js\libs\detectmobilebrowser.js" />
     <Content Include="src\js\libs\jquery\jquery.browser.js" />
     <Content Include="src\js\libs\jquery\jquery.cookie.js" />
@@ -298,6 +302,7 @@
     <Content Include="src\js\libs\jquery\jquery.mobile.js" />
     <Content Include="src\js\libs\modernizr.js" />
     <Content Include="src\js\libs\primus.io.js" />
+    <Content Include="src\js\libs\primus.io.min.js" />
     <Content Include="src\js\libs\react\react.js" />
     <Content Include="src\js\libs\react\react.jsx.js" />
     <Content Include="src\js\libs\react\react.jsx.transformer.js" />
@@ -320,6 +325,16 @@
     <Content Include="Config\startup.nginx.bat" />
     <Content Include="src\js\libs\react\react.phantomjs.js" />
     <Content Include="src\js\libs\underscore\underscore-min.map" />
+    <Content Include="bundle.bat" />
+    <Content Include="json.server.db.json" />
+    <Content Include="Config\update.cordova.bat" />
+    <Content Include="node_modules\.bin\cecho" />
+    <Content Include="node_modules\.bin\cecho.cmd" />
+    <Content Include="cecho\bin\cecho" />
+    <Content Include="cecho\package.json" />
+    <None Include="bin\app" />
+    <Content Include="src\js\libs\primus.io.min.map" />
+    <Content Include="Config\genssl.bat" />
     <None Include="test\testem.mustache" />
     <None Include="test\todos\Todos.spec.coffee" />
   </ItemGroup>
@@ -332,11 +347,9 @@
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Config\build.bat" />
     <Content Include="Config\hosts" />
     <Content Include="Config\hosts.bat" />
     <Content Include="Config\nginx\conf\nginx.conf" />
-    <Content Include="Config\startup.bat" />
     <Content Include="package.json" />
   </ItemGroup>
   <ItemGroup>

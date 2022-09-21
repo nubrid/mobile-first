@@ -1,6 +1,6 @@
 # TODO Sample
 
-Hybrid Web + Mobile Framework v0.3.0 ~~using VS.Net~~ (JUL 15, 2015)
+Hybrid Web + Mobile Framework v1.0.0 ~~using VS.Net~~ (JUL 31, 2015)
 
 _For use in my company, Excent One, starting with NCC NOAH._
 
@@ -11,10 +11,13 @@ _For use in my company, Excent One, starting with NCC NOAH._
 - Cordova `PhoneGap`
 - CSP
 - Express
+- Faker
 - Famous
 - FLUX
+- Helmet
 - jQuery, jQuery UI & jQuery Mobile
 - JSHint
+- JSON Server
 - LiveReload
 - LocalStorage
 - Lodash
@@ -34,3 +37,4 @@ _For use in my company, Excent One, starting with NCC NOAH._
 - UglifyJS `v2`
 - WebSockets ~~`Engine.io`~~ `Primus` ~~`Socket.io`~~
 - ~~Underscore~~
+- Yargs

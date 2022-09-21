@@ -1,8 +1,20 @@
 ﻿define(["apps/AppManager"], function (AppManager) {
 	"use strict";
 	var Common = AppManager.module("Entities.Common");
+
+	Common.ActionType = function (name) {
+		name = name || "";
+
+		return {
+			CREATE: name + ":create"
+			, UPDATE: name + ":update"
+			, DELETE: name + ":delete"
+		};
+	};
+
 	Common.Model = Backbone.Model.extend({
-		noIoBind: false
+		urlRoot: "*"
+		, noIoBind: false
 		, initialize: function () {
 			this.socket = AppManager.connect({
 				socket: this.socket
@@ -84,8 +96,30 @@
 	});
 
 	Common.Collection = Backbone.Collection.extend({
-		noIoBind: false
-		, initialize: function () {
+		url: "*"
+		, noIoBind: false
+		, model: Common.Model
+		, initialize: function (models, options) {
+			this.dispatcher = this.dispatcher || AppManager.request("dispatcher", this.url);
+			this.actionType = Common.ActionType(this.url);
+
+			this.listenTo(this.dispatcher, "dispatch", $.proxy(function (payload) {
+				switch (payload.actionType) {
+					case this.actionType.CREATE:
+						this.create(payload.attrs, { wait: true });
+
+						break;
+					case this.actionType.UPDATE:
+						this.get(payload.attrs.id).save(payload.attrs);
+
+						break;
+					case this.actionType.DELETE:
+						this.get(payload.attrs.id).destroy();
+
+						break;
+				}
+			}, this));
+
 			this.on("before:fetch", function () {
 				this.socket = AppManager.connect({
 					socket: this.socket
@@ -142,6 +176,10 @@
 
 			return this;
 		}
+		, close: function () {
+			this.stopListening(this.dispatcher);
+			if (this.socket) this.socket.end();
+		}
 	});
 
 	Common.API = {
@@ -162,8 +200,8 @@
 
 			return promise;
 		}
-		, getCollection: function (Collection) {
-			var collection = new Collection();
+		, getCollection: function (Collection, options) {
+			var collection = new Collection(null, options);
 			var defer = $.Deferred();
 			collection.socket = AppManager.connect({
 				socket: collection.socket
@@ -180,4 +218,13 @@
 			return promise;
 		}
 	};
+
+	AppManager.reqres.setHandler("entity", function (options) {
+		return Common.API.getCollection(
+			Common.Collection.extend(_.extend({
+				model: Common.Model.extend({
+					urlRoot: options.url
+				})
+			}, options)));
+	});
 });

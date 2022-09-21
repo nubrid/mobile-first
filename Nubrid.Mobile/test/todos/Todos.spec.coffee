@@ -49,8 +49,8 @@ define ["apps/AppManager", "apps/todos/App", "apps/todos/list/Controller", "apps
 					defer = $.Deferred()
 					setTimeout ->
 						defer.resolve new Backbone.Collection [ 
-							{ id: "1", title: "Todo 1", completed: false }
-							{ id: "2", title: "Todo 2", completed: true }
+							{ id: 1, title: "Todo 1", completed: false }
+							{ id: 2, title: "Todo 2", completed: true }
 						]
 					defer.promise()
 				@submitForm = (form, inputValue, actionType) ->

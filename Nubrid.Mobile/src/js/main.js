@@ -16,8 +16,6 @@ require(["js/require.config.js"], function () {
 			require(["app"], function (app) {
 				app.start();
 			});
-
-			if (window.isDEV && Modernizr.websockets) require(["livereload"]);
 		});
 	});
 });

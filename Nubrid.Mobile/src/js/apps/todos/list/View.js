@@ -3,10 +3,9 @@ Todos List View
 */
 define(
 ["apps/AppManager"
-, "entities/Todo"]
+, "entities/Common"]
 , function (AppManager) {
 	"use strict";
-	var _actionType = AppManager.TodosApp.Constants.ActionType;
 	var List = AppManager.module("TodosApp.List");
 	List.Todos = Marionette.ItemView.extend({
 		initialize: function (options) {
@@ -34,7 +33,7 @@ define(
 			var initialState = this.getInitialState();
 			var attrs = _.pick(_.omit(this.state, "collection"), _.keys(initialState));
 
-			this.props.view.trigger(attrs.id ? _actionType.UPDATE : _actionType.CREATE, attrs);
+			this.props.view.trigger(attrs.id ? this.actionType.UPDATE : this.actionType.CREATE, attrs);
 
 			this.setState(initialState);
 		}
@@ -46,9 +45,11 @@ define(
 			this.setState(attrs);
 		}
 		, componentDidMount: function () {
-			var fetchingTodos = AppManager.request("todo:entities");
+			var fetchingTodos = AppManager.request("entity", { url: "todos" });
 			$.when(fetchingTodos).done($.proxy(function (todos) {
 				this.setState({ collection: todos });
+				this.props.view.dispatcher = todos.dispatcher; // Need to set this so that the Controller can properly dispatch.
+				this.actionType = todos.actionType;
 			}, this));
 		}
 		, componentWillUnmount: function () {
@@ -102,19 +103,19 @@ define(
 		, handleChange: function (event) {
 			var el = $(event.target);
 
-			var attrs = _.extend(_.findWhere(this.state.collection, { id: el.attr("data-id") }), { completed: el[0].checked });
-			this.props.view.trigger(_actionType.UPDATE, attrs);
+			var attrs = _.extend(_.findWhere(this.state.collection, { id: parseInt(el.attr("data-id"), 10) }), { completed: el[0].checked });
+			this.props.view.trigger(this.props.collection.actionType.UPDATE, attrs);
 		}
 		, handleClick: function (event) {
 			var el = $(event.target);
-			var id = el.attr("data-id");
+			var id = parseInt(el.attr("data-id"), 10);
 
 			switch (el.attr("id")) {
 				case "btnEditTodo":
 					this.props.handleEditClick(_.findWhere(this.state.collection, { id: id }));
 					break;
 				case "btnDeleteTodo":
-					this.props.view.trigger(_actionType.DELETE, _.findWhere(this.state.collection, { id: id }));
+					this.props.view.trigger(this.props.collection.actionType.DELETE, _.findWhere(this.state.collection, { id: id }));
 					break;
 			}
 		}

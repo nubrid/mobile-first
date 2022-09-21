@@ -11,7 +11,7 @@ Nubrid.Mobile/Config/nginx/nginx.exe
 Nubrid.Mobile/Config/nubrid.*
 Nubrid.Mobile/logs
 Nubrid.Mobile/node_modules
-Nubrid.Mobile/Nubrid.Config.js
+Nubrid.Mobile/app.config.js
 Nubrid.Mobile/platforms
 Nubrid.Mobile/plugins
 Nubrid.Web/bin

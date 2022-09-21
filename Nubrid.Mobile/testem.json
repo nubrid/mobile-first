@@ -11,6 +11,6 @@
 		"src/js/require.config.js",
 		"src/js/libs/**/*.js"
 	],
-	"port": 8082,
-	"phantomjs_debug_port": 8083
+	"port": 8200,
+	"phantomjs_debug_port": 8201
 }

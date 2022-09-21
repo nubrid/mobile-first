@@ -11,6 +11,7 @@ module.exports = function (config) {
 		// list of files / patterns to load in the browser
 		files: [
 			{ pattern: "src/js/**/*.js", included: false },
+			{ pattern: "src/js/**/*.map", included: false },
 			{ pattern: "test/**/*.spec.js", included: false, watched: false },
 			{ pattern: "node_modules/chai/chai.js", included: false },
 			{ pattern: "node_modules/chai-as-promised/lib/chai-as-promised.js", included: false },
@@ -50,7 +51,7 @@ module.exports = function (config) {
 		reporters: ["progress"],
 
 		// web server port
-		port: 8084,
+		port: 8300,
 
 		// enable / disable colors in the output (reporters and logs)
 		colors: true,
@@ -75,7 +76,7 @@ module.exports = function (config) {
 				//		webSecurityEnabled: false
 				//	},
 				//},
-				flags: ["--remote-debugger-port=8085", "--remote-debugger-autorun=yes"] //flags: ["--load-images=true"],
+				flags: ["--remote-debugger-port=8301", "--remote-debugger-autorun=yes"] //flags: ["--load-images=true"],
 				//debug: true
 			}
 		},

@@ -75,11 +75,11 @@ define(["apps/AppManager", "apps/todos/App", "apps/todos/list/Controller", "apps
           setTimeout(function() {
             return defer.resolve(new Backbone.Collection([
               {
-                id: "1",
+                id: 1,
                 title: "Todo 1",
                 completed: false
               }, {
-                id: "2",
+                id: 2,
                 title: "Todo 2",
                 completed: true
               }

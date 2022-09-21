@@ -1,6 +1,10 @@
 ﻿define(["backbone.marionette", "react", "backbone.react"], function (Marionette, React) {
 	"use strict";
 	window.React = React;
+	window.protocol = window.phonegap
+		? (window.isDEV ? "http:" : "https:")
+		: document.location.protocol;
+	window.host = "//" + (window.phonegap ? $("body").data("host") || document.location.host : document.location.host);
 	var _appManager = new Marionette.Application({
 		BackboneMixin: Backbone.React.Component.mixin
 		, Config: {
@@ -59,14 +63,20 @@
 			// HACK: For compatibility of primus with backbone.iobind.
 			var emit = primus.emit;
 			var sendMethods = [
-			"create"
-			, "delete"
-			, "read"
-			, "update"
+			"*:create"
+			, "*:delete"
+			, "*:read"
+			, "*:update"
 			];
 			primus.emit = function () {
-				if (arguments.length === 3 && _.indexOf(sendMethods, arguments[0].split(":")[1]) !== -1) {
-					primus.send.apply(this, arguments);
+				var message = arguments[0];
+				var delimiterIndex = message.lastIndexOf(":");
+				var method = "*" + message.substring(delimiterIndex);
+				if (arguments.length === 3 && _.indexOf(sendMethods, method) !== -1) {
+					var args = _.extend([], arguments);
+					args.splice(0, 1, method);
+					args.splice(2, 0, message.substring(0, delimiterIndex));
+					primus.send.apply(this, args);
 				}
 				else {
 					emit.apply(this, arguments);
@@ -150,7 +160,7 @@
 			}
 
 			if (window.phonegap) {
-				require(["cordova.loader"], function () {
+				require(["cordova"], function () {
 					$(function () {
 						document.addEventListener("deviceready", start, false);
 					});
@@ -159,6 +169,8 @@
 			else {
 				start();
 			}
+
+			if (window.isDEV && Modernizr.websockets) require([window.protocol + window.host.replace("//www", "//live") + "/livereload.js"]);
 		}
 		, toggleLoading: function (action) {
 			var $this = $(this)
