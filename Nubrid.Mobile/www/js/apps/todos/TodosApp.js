@@ -8,7 +8,7 @@
 
 	var API = {
 		listTodos: function () {
-			require(["apps/todos/list/ListController"], function () {
+			require(["apps/todos/list/Controller"], function () {
 				TodosApp.List.Controller.listTodos();
 			});
 		}

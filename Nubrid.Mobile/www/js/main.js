@@ -1,21 +1,26 @@
+window.host = "//" + document.location.host;
+window.protocol = document.location.protocol;
 require.config({
 	urlArgs: "bust=" + (+new Date) // TODO: For PROD, replace with: urlArgs: "bust=v5.0.x"
 	, baseUrl: "js"
 	, paths: {
-		"backbone": "libs/backbone/backbone"
-		, "backbone.collectionbinder": "libs/backbone/backbone.collectionbinder"
+		"backbone": window.protocol + "//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.2/backbone-min"
+		, "backbone.collectionbinder": window.protocol + "//cdnjs.cloudflare.com/ajax/libs/backbone.modelbinder/1.0.5/Backbone.CollectionBinder.min"
 		, "backbone.iobind": "libs/backbone/backbone.iobind"
 		, "backbone.iosync": "libs/backbone/backbone.iosync"
-		, "backbone.marionette": "libs/backbone/backbone.marionette"
-		, "backbone.modelbinder": "libs/backbone/backbone.modelbinder"
+		, "backbone.marionette": window.protocol + "//cdnjs.cloudflare.com/ajax/libs/backbone.marionette/2.1.0/backbone.marionette.min"
+		, "backbone.modelbinder": window.protocol + "//cdnjs.cloudflare.com/ajax/libs/backbone.modelbinder/1.0.5/Backbone.ModelBinder.min"
 		, "cordova": "../cordova"
 		, "cordova.loader": "libs/cordova/cordova.loader"
 		, "detectmobilebrowser": "libs/detectmobilebrowser"
-		, "jquery": "libs/jquery/jquery"
-		, "jquery.mobile": "libs/jquery/jquery.mobile"
-		, "primus.io": "http://socket.nubrid.com/primus/primus.io"
-		, "text": "libs/require/text"
-		, "underscore": "libs/underscore/underscore.lodash"
+		, "jquery": window.protocol + "//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min"
+		, "jquery.browser": window.protocol + "//cdnjs.cloudflare.com/ajax/libs/jquery-browser/0.0.6/jquery.browser.min"
+		, "jquery.cookie": window.protocol + "//cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min"
+		, "jquery.mobile": window.protocol + "//ajax.googleapis.com/ajax/libs/jquerymobile/1.4.3/jquery.mobile.min"
+		, "modernizr": "libs/modernizr"
+		, "primus.io": "libs/primus.io"
+		, "text": window.protocol + "//cdnjs.cloudflare.com/ajax/libs/require-text/2.0.12/text.min"
+		, "underscore": window.protocol + "//cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.underscore.min"
 	}
 	, shim: {
 		"backbone": {
@@ -54,6 +59,9 @@ require.config({
 		, "jquery.mobile": {
 			deps: ["jquery"]
 		}
+		, "jquery.cookie": {
+			deps: ["jquery"]
+		}
 		, "underscore": {
 			exports: "_"
 		}
@@ -72,7 +80,7 @@ require(["jquery"], function () {
 		$.mobile.pushStateEnabled = false;
 	});
 
-	require(["backbone.iobind", "backbone.collectionbinder", "jquery.mobile"], function () {
+	require(["modernizr", "backbone.iobind", "backbone.collectionbinder", "jquery.mobile", "jquery.cookie", "jquery.browser"], function () {
 		require(["app"], function (app) {
 			app.start();
 		});

@@ -1,6 +1,6 @@
-# TODO Sample
+# TODO Sample (!BROKEN)
 
-Hybrid Web + Mobile Framework using VS.Net (AUG 27, 2014)
+Hybrid Web + Mobile Framework using VS.Net (SEP 30, 2014)
 
 _For use in my company, Excent One, starting with NCC NOAH._
 
@@ -16,6 +16,7 @@ _For use in my company, Excent One, starting with NCC NOAH._
 - OAuth
 - Passport `w/ Facebook, LinkedIn, Twitter SSO`
 - Postgres
+- Recaptcha
 - RequireJS `cache buster`
 - WebSockets ~~`Engine.io`~~ `Primus` ~~`Socket.io`~~
 - Underscore

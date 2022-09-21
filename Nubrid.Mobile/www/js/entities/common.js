@@ -1,83 +1,126 @@
-ContactManager.module("Entities", function(Entities, ContactManager, Backbone, Marionette, $, _){
-  Entities.FilteredCollection = function(options){
-    var original = options.collection;
-    var filtered = new original.constructor();
-    filtered.add(original.models);
-    filtered.filterFunction = options.filterFunction;
+﻿define(["apps/AppManager"], function (AppManager) {
+	var Common = AppManager.module("Entities.Common");
+	Common.Model = Backbone.Model.extend({
+		noIoBind: false
+		, initialize: function () {
+			// Only bind new models from the server because the server assigns the id.
+			if (!this.noIoBind) {
+				if (!this.socket) this.socket = AppManager.connect(function () {
+					this.ioBind("update", this.serverChange, this);
+					this.ioBind("delete", this.serverDelete, this);
+				});
+			}
+		}
+		, serverChange: function (data) {
+			// Used to prevent loops when dealing with client-side updates (e.g. forms).
+			data.fromServer = true;
+			this.set(data);
+		}
+		, serverDelete: function (data) {
+			if (this.collection) {
+				this.collection.remove(this);
+			} else {
+				this.trigger("remove", this);
+			}
+			this.modelCleanup();
+		}
+		, modelCleanup: function () {
+			this.ioUnbindAll();
+			return this;
+		}
+	});
 
-    var applyFilter = function(filterCriterion, filterStrategy, collection){
-      var collection = collection || original;
-      var criterion;
-      if(filterStrategy == "filter"){
-        criterion = filterCriterion.trim();
-      }
-      else{
-        criterion = filterCriterion;
-      }
+	Common.Collection = Backbone.Collection.extend({
+		noIoBind: false
+		, initialize: function () {
+			this.on("before:fetch", function () {
+				this.model = Common.Model.extend({ socket: this.socket });
+			});
+			this.on("after:fetch", function () {
+				this.socket.end();
+			});
 
-      var items = [];
-      if(criterion){
-        if(filterStrategy == "filter"){
-          if( ! filtered.filterFunction){
-            throw("Attempted to use 'filter' function, but none was defined");
-          }
-          var filterFunction = filtered.filterFunction(criterion);
-          items = collection.filter(filterFunction);
-        }
-        else{
-          items = collection.where(criterion);
-        }
-      }
-      else{
-        items = collection.models;
-      }
+			if (!this.noIoBind) {
+				if (!this.socket) this.socket = AppManager.connect(function () {
+					this.ioBind("create", this.serverCreate, this);
+				});
+			}
+		}
+		, serverCreate: function (data) {
+			var oldData = this.get(data.id);
+			// Check for duplicates in the collection.
+			if (!oldData) {
+				this.add(data);
+			} else {
+				data.fromServer = true;
+				oldData.set(data);
+			}
+		}
+		, collectionCleanup: function (callback) {
+			this.ioUnbindAll();
+			this.each(function (model) {
+				model.modelCleanup();
+			});
 
-      // store current criterion
-      filtered._currentCriterion = criterion;
+			return this;
+		}
+	});
 
-      return items;
-    };
+	var fetchCollection = Common.Collection.prototype.fetch;
+	Common.Collection.prototype.fetch = function () {
+		if (!arguments || arguments.length == 0) arguments = [{}];
+		var success = arguments[0].success;
+		var error = arguments[0].error;
+		var self = this;
 
-    filtered.filter = function(filterCriterion){
-      filtered._currentFilter = "filter";
-      var items = applyFilter(filterCriterion, "filter");
+		arguments[0].success = function (data) {
+			self.trigger("after:fetch");
 
-      // reset the filtered collection with the new items
-      filtered.reset(items);
-      return filtered;
-    };
+			if (success) success(data);
+		};
 
-    filtered.where = function(filterCriterion){
-      filtered._currentFilter = "where";
-      var items = applyFilter(filterCriterion, "where");
+		arguments[0].error = function (data) {
+			self.trigger("after:fetch");
 
-      // reset the filtered collection with the new items
-      filtered.reset(items);
-      return filtered;
-    };
+			if (error) error(data);
+		};
 
-    // when the original collection is reset,
-    // the filtered collection will re-filter itself
-    // and end up with the new filtered result set
-    original.on("reset", function(){
-      var items = applyFilter(filtered._currentCriterion, filtered._currentFilter);
+		this.trigger("before:fetch");
+		return fetchCollection.apply(this, arguments);
+	};
 
-      // reset the filtered collection with the new items
-      filtered.reset(items);
-    });
+	Common.API = {
+		getModel: function (model, attributes) {
+			var _model = new model(attributes);
+			var defer = $.Deferred();
+			_model.socket = AppManager.connect(function () {
+				_model.fetch({
+					success: function (data) {
+						defer.resolve(data);
 
-    // if the original collection gets models added to it:
-    // 1. create a new collection
-    // 2. filter it
-    // 3. add the filtered models (i.e. the models that were added *and*
-    //     match the filtering criterion) to the `filtered` collection
-    original.on("add", function(models){
-      var coll = new original.constructor();
-      coll.add(models);
-      var items = applyFilter(filtered._currentCriterion, filtered._currentFilter, coll);
-      filtered.add(items);
-    });
+						_model.socket.end();
+					}
+				});
+			});
+			var promise = defer.promise();
 
-    return filtered;
-  };
+			return promise;
+		}
+		, getCollection: function (collection) {
+			var _collection = new collection();
+			var defer = $.Deferred();
+			_collection.socket = AppManager.connect(function () {
+				_collection.fetch({
+					success: function (data) {
+						defer.resolve(data);
+
+						_collection.socket.end();
+					}
+				});
+			});
+			var promise = defer.promise();
+
+			return promise;
+		}
+	};
 });

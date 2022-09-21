@@ -1,4 +1,6 @@
-﻿.social-media{
+﻿@import url("jquery.mobile.css");
+
+.social-media{
 padding: 0 20px 0px 0;
 }
 .social-media a{

@@ -9,7 +9,7 @@
 
 	var API = {
 		showHome: function () {
-			require(["apps/home/show/ShowController"], function () {
+			require(["apps/home/show/Controller"], function () {
 				HomeApp.Show.Controller.showHome();
 			});
 		}
