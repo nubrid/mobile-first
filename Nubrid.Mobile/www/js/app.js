@@ -1,23 +1,25 @@
-define([], function () {
-	return { init: app_init };
+define(["apps/contacts/contacts_app"], function (ContactManager) {
+	return ContactManager;
 
-	function app_init() {
-		require(["detectmobilebrowser"], function () {
-			if (!window.mobile) {
-				start();
-			}
+	//return { init: app_init };
 
-			require(["cordova.loader"], function (navigator) {
-				$(function () {
-					document.addEventListener(Event.DeviceReady, start, false);
-				});
-			});
+	//function app_init() {
+	//	require(["detectmobilebrowser"], function () {
+	//		if (!window.mobile) {
+	//			start();
+	//		}
 
-			function start() {
-				require(["routers/MobileRouter"], function (MobileRouter) {
-					this.router = new MobileRouter();
-				});
-			}
-		});
-	}
+	//		require(["cordova.loader"], function (navigator) {
+	//			$(function () {
+	//				document.addEventListener(Event.DeviceReady, start, false);
+	//			});
+	//		});
+
+	//		function start() {
+	//			require(["routers/MobileRouter"], function (MobileRouter) {
+	//				this.router = new MobileRouter();
+	//			});
+	//		}
+	//	});
+	//}
 });

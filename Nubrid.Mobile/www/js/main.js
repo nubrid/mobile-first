@@ -29,6 +29,14 @@ require.config({
 		, "socket.io": "http://socket.nubrid.com/socket.io/socket.io"
 		, "text": "libs/require/text"
 		, "underscore": "libs/underscore/underscore.lodash"
+
+		, "json2": "vendor/json2"
+		, "backbone.picky": "vendor/backbone.picky"
+		, "backbone.syphon": "vendor/backbone.syphon"
+		, "backbone.localstorage": "vendor/backbone.localstorage"
+		, "backbone.marionette": "vendor/backbone.marionette"
+		, "spin": "vendor/spin"
+		, "spin.jquery": "vendor/spin.jquery"
 	}
 	, shim: {
 		"backbone": {
@@ -77,8 +85,8 @@ require(["jquery"], function () {
 
 	require(["socket.io", "backbone.iobind", "backbone.collectionbinder", "jquery.mobile"], function (io) {
 		window.io = io; // HACK: For socket.io 1.0.x
-		require(["app"], function (app) {
-			app.init();
+		require(["app"], function (ContactManager) {
+			ContactManager.start();
 		});
 	});
 });
