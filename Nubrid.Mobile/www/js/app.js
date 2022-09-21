@@ -1,4 +1,4 @@
-define(["apps/contacts/contacts_app"], function (ContactManager) {
+define(["apps/contacts/ContactsApp"], function (ContactManager) {
 	return ContactManager;
 
 	//return { init: app_init };

@@ -9,7 +9,7 @@ Hybrid Web + Mobile using VS.Net (JUL 29, 2014)
 - Express
 - jQuery, jQuery UI & jQuery Mobile
 - LocalStorage
-- MarionetteJS
+- MarionetteJS `v2`
 - MVC
 - OAuth
 - Passport `w/ Facebook, Twitter, LinkedIn SSO`

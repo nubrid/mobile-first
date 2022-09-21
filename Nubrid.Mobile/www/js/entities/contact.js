@@ -1,4 +1,4 @@
-define(["apps/config/storage/localstorage"], function () {
+define(["apps/config/storage/LocalStorage"], function () {
 	ContactManager.module("Entities", function (Entities, ContactManager, Backbone, Marionette, $, _) {
 		Entities.Contact = Backbone.Model.extend({
 			urlRoot: "contacts",

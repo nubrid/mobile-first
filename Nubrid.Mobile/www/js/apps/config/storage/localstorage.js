@@ -1,4 +1,4 @@
-define(["apps/contact_manager"], function (ContactManager) {
+define(["apps/ContactManager"], function (ContactManager) {
 	var Entities = ContactManager.module("Entities");
 	var findStorageKey = function (entity) {
 		// use a model's urlRoot value

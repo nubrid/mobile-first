@@ -1,4 +1,4 @@
-define(["apps/contact_manager", "text!apps/contacts/common/form.html"], function (ContactManager, FormTemplate) {
+define(["apps/ContactManager", "text!apps/contacts/common/Form.html"], function (ContactManager, FormTemplate) {
 	var Views = ContactManager.module("ContactsApp.Common.Views");
 	Views.Form = Marionette.ItemView.extend({
 		template: _.template(FormTemplate),

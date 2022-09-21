@@ -1,4 +1,4 @@
-define(["apps/contact_manager", "text!common/loading.html"], function (ContactManager, LoadingTemplate) {
+define(["apps/ContactManager", "text!common/Loading.html"], function (ContactManager, LoadingTemplate) {
 	var Views = ContactManager.module("Common.Views");
 	Views.Loading = Marionette.ItemView.extend({
 		template: _.template(LoadingTemplate),
