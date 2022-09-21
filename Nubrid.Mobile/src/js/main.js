@@ -12,12 +12,12 @@ require(["js/require.config.js"], function () {
 			$.mobile.pushStateEnabled = false;
 		});
 
-		require(["backbone.iobind", "jquery.mobile"], function () {
+		require(["backbone.iobind", "jquery.mobile", "modernizr"], function () {
 			require(["app"], function (app) {
 				app.start();
 			});
 
-			if (window.isDEV) require(["livereload"]);
+			if (window.isDEV && Modernizr.websockets) require(["livereload"]);
 		});
 	});
 });

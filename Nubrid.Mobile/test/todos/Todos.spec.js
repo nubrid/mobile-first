@@ -87,22 +87,21 @@ define(["apps/AppManager", "apps/todos/App", "apps/todos/list/Controller", "apps
           });
           return defer.promise();
         });
-        return this.submitForm = $.proxy(function(inputValue, actionType) {
-          var form, input, submit;
-          form = React.findDOMNode(this.form);
-          input = $(form).find("input[type='text']");
+        return this.submitForm = function(form, inputValue, actionType) {
+          var input, submit;
+          input = $(React.findDOMNode(form)).find("input[type='text']");
           this.react.Simulate.change(input[0], {
             target: {
               value: inputValue
             }
           });
-          submit = React.findDOMNode(this.form.refs.btnSubmit);
+          submit = React.findDOMNode(form.refs.btnSubmit);
           $(submit).click();
           this.trigger.should.have.been.calledOnce;
           return this.trigger.should.have.been.calledWithMatch(actionType, {
             title: inputValue
           });
-        }, this);
+        };
       });
       beforeEach(function() {
         return this.trigger = sinon.stub(this.view, "trigger");
@@ -127,7 +126,7 @@ define(["apps/AppManager", "apps/todos/App", "apps/todos/list/Controller", "apps
           return this.form.should.exist;
         });
         return it("creates a todo when submitted", function() {
-          return this.submitForm("Todo 1", this.actionType.CREATE);
+          return this.submitForm(this.form, "Todo 1", this.actionType.CREATE);
         });
       });
       return describe("List", function() {
@@ -151,10 +150,11 @@ define(["apps/AppManager", "apps/todos/App", "apps/todos/list/Controller", "apps
             var form, input, todo;
             todo = this.list.$el.children().first();
             todo.find("#btnEditTodo").click();
+            this.form = this.react.findRenderedComponentWithType(this.view.page, View.React.TodosForm);
             form = React.findDOMNode(this.form);
             input = $(form).find("input[type='text']");
             input.should.have.value("Todo 1");
-            this.submitForm("Todo 3", this.actionType.UPDATE);
+            this.submitForm(this.form, "Todo 3", this.actionType.UPDATE);
             return done();
           }, this), 1);
         });

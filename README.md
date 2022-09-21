@@ -1,6 +1,6 @@
 # TODO Sample
 
-Hybrid Web + Mobile Framework v0.2.0 ~~using VS.Net~~ (JUL 10, 2015)
+Hybrid Web + Mobile Framework v0.3.0 ~~using VS.Net~~ (JUL 15, 2015)
 
 _For use in my company, Excent One, starting with NCC NOAH._
 
@@ -19,7 +19,7 @@ _For use in my company, Excent One, starting with NCC NOAH._
 - LocalStorage
 - Lodash
 - MarionetteJS `v2`
-- ~~ModernizrJS~~
+- ModernizrJS
 - ~~MVC~~
 - Nginx
 - OAuth

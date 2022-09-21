@@ -318,13 +318,15 @@
       <DependentUpon>Todos.spec.coffee</DependentUpon>
     </Content>
     <Content Include="Config\startup.nginx.bat" />
+    <Content Include="src\js\libs\react\react.phantomjs.js" />
+    <Content Include="src\js\libs\underscore\underscore-min.map" />
     <None Include="test\testem.mustache" />
     <None Include="test\todos\Todos.spec.coffee" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="src\js\libs\backbone\backbone.map" />
+    <Content Include="src\js\libs\backbone\backbone-min.map" />
     <Content Include="src\js\libs\backbone\backbone.marionette.map" />
-    <Content Include="src\js\libs\jquery\jquery.mobile.map" />
+    <Content Include="src\js\libs\jquery\jquery.mobile.min.map" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />

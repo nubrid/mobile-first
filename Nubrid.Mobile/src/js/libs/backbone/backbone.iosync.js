@@ -5,14 +5,14 @@
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
-    define(['backbone', 'underscore', 'primus.io', 'jquery'], factory);
+    define(['backbone', 'underscore', 'socket.io', 'jquery'], factory);
   } else if (typeof exports === 'object') {
     // Node. Does not work with strict CommonJS, but
     // only CommonJS-like environments that support module.exports,
     // like Node.
     var _ = require('underscore'),
       Backbone = require('backbone'),
-      io = require('primus.io'),
+      io = require('socket.io-client'),
       $ = require('jquery');
     module.exports = factory(Backbone, _, io, $);
   } else {
@@ -50,7 +50,7 @@ var ajaxSync = Backbone.sync;
  *     socket.on('todos:update', ... );
  *     socket.on('todos:delete', ... );
  *
- * @name socketSync
+ * @name sync
  */
 var socketSync = function (method, model, options) {
   var params = _.extend({}, options)
@@ -78,7 +78,7 @@ var socketSync = function (method, model, options) {
   //since Backbone version 1.0.0 all events are raised in methods 'fetch', 'save', 'remove' etc
 
   var defer = $.Deferred();
-  io.send(namespace + ':' + method, params.data, params.url, function (err, data) {
+  io.emit(namespace + ':' + method, params.data, function (err, data) {
     if (err) {
       if(options.error) options.error(err);
       defer.reject();

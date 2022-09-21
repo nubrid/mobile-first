@@ -32,6 +32,20 @@
 			return this.currentLayout.MainRegion.currentView;
 		}
 		, connect: function (options) {
+			// HACK: Force websocket if available.
+			if (Modernizr.websockets) {
+				var merge = Primus.prototype.merge;
+				Primus.prototype.merge = function () {
+					var target = merge.apply(this, arguments);
+
+					return _.extend(target, {
+						transports: [
+							"websocket"
+						]
+					});
+				};
+			}
+
 			if (_.isFunction(options)) {
 				options = { callback: options };
 			}
@@ -39,8 +53,25 @@
 			var primus = options.socket
 				? options.socket
 				: new Primus(_appManager.Config.Url.IO.Root, options.closeOnOpen
-					? _.extend(_appManager.Config.IO.Options, { strategy: "" })
+					? _.extend(_appManager.Config.IO.Options, { strategy: false })
 					: _appManager.Config.IO.Options);
+
+			// HACK: For compatibility of primus with backbone.iobind.
+			var emit = primus.emit;
+			var sendMethods = [
+			"create"
+			, "delete"
+			, "read"
+			, "update"
+			];
+			primus.emit = function () {
+				if (arguments.length === 3 && _.indexOf(sendMethods, arguments[0].split(":")[1]) !== -1) {
+					primus.send.apply(this, arguments);
+				}
+				else {
+					emit.apply(this, arguments);
+				}
+			};
 
 			function primus_onOpen() {
 				if (options.callback) options.callback();

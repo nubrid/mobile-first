@@ -53,18 +53,16 @@ define ["apps/AppManager", "apps/todos/App", "apps/todos/list/Controller", "apps
 							{ id: "2", title: "Todo 2", completed: true }
 						]
 					defer.promise()
-				@submitForm = $.proxy (inputValue, actionType) ->
-					form = React.findDOMNode @form
-					input = $(form).find "input[type='text']"
+				@submitForm = (form, inputValue, actionType) ->
+					input = $(React.findDOMNode form).find "input[type='text']"
 
 					@react.Simulate.change input[0], target: value: inputValue
 
-					submit = React.findDOMNode @form.refs.btnSubmit
+					submit = React.findDOMNode form.refs.btnSubmit
 					$(submit).click()
 
 					@trigger.should.have.been.calledOnce
 					@trigger.should.have.been.calledWithMatch actionType, title: inputValue
-				, this
 			beforeEach ->
 				@trigger = sinon.stub @view, "trigger"
 			after ->
@@ -85,7 +83,7 @@ define ["apps/AppManager", "apps/todos/App", "apps/todos/list/Controller", "apps
 					@form = @react.findRenderedComponentWithType @view.page, View.React.TodosForm
 					@form.should.exist
 				it "creates a todo when submitted", ->
-					@submitForm "Todo 1", @actionType.CREATE
+					@submitForm @form, "Todo 1", @actionType.CREATE
 			describe "List", ->
 				it "renders a list", ->
 					@list = @react.findRenderedComponentWithType @view.page, View.React.TodosList
@@ -105,14 +103,15 @@ define ["apps/AppManager", "apps/todos/App", "apps/todos/list/Controller", "apps
 						todo = @list.$el.children().first()
 						todo.find("#btnEditTodo").click()
 						
+						@form = @react.findRenderedComponentWithType @view.page, View.React.TodosForm
 						form = React.findDOMNode @form
 						input = $(form).find "input[type='text']"
 						input.should.have.value "Todo 1"
 
-						@submitForm "Todo 3", @actionType.UPDATE
+						@submitForm @form, "Todo 3", @actionType.UPDATE
 
 						done()
-					, this)
+					, @)
 					, 1
 				it "can delete a todo", (done) ->
 					setTimeout $.proxy( ->
@@ -123,5 +122,5 @@ define ["apps/AppManager", "apps/todos/App", "apps/todos/list/Controller", "apps
 						@trigger.should.have.been.calledWithMatch @actionType.DELETE
 
 						done()
-					, this)
+					, @)
 					, 1

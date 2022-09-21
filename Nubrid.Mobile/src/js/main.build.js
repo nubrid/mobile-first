@@ -50,29 +50,14 @@
 			]
 		}
 	]
-	, exclude: [
-		"backbone"
-		, "backbone.iobind"
-		, "backbone.iosync"
-		, "backbone.marionette"
-		, "backbone.react"
-		, "cordova"
-		, "jquery"
-		, "jquery.mobile"
-		, "primus.io"
-		, "react"
-		, "react.subschema"
-		, "underscore"
-	]
 	, optimize: "uglify2"
 	, generateSourceMaps: true
 	, preserveLicenseComments: false
 	, useSourceUrl: false
-	, fileExclusionRegExp: /^main.build.js$/
+	, fileExclusionRegExp: /^main.build.js$|libs/
 	//, keepBuildDir: true
 	, useStrict: true
 	//, findNestedDependencies: true
 	, removeCombined: true
 	, optimizeCss: "standard.keepLines"
-	, cssImportIgnore: "jquery.mobile.min.css"
 });

@@ -216,7 +216,7 @@ else {
 		Triggered when todo.save() is called.
 		We listen on model namespace, but emit on the collection namespace.
 		*/
-		spark.on("todo:create", function (data, url, callback) {
+		spark.on("todo:create", function (data, callback) {
 			var id = guid.gen()
 		  , todo = db.set("/todo/" + id, data)
 		  , json = todo._attributes;
@@ -229,7 +229,7 @@ else {
 		/*
 		Triggered when todos.fetch() is called.
 		*/
-		spark.on("todos:read", function (data, url, callback) {
+		spark.on("todos:read", function (data, callback) {
 			var list = [];
 
 			db.each("todo", function (todo) {
@@ -242,7 +242,7 @@ else {
 		/*
 		Triggered when todo.save() is called.
 		*/
-		spark.on("todo:update", function (data, url, callback) {
+		spark.on("todo:update", function (data, callback) {
 			var todo = db.get("/todo/" + data.id);
 			todo.set(data);
 
@@ -256,7 +256,7 @@ else {
 		/*
 		Triggered when todo.destroy() is called.
 		*/
-		spark.on("todo:delete", function (data, url, callback) {
+		spark.on("todo:delete", function (data, callback) {
 			var json = db.get("/todo/" + data.id)._attributes;
 
 			db.del("/todo/" + data.id);
@@ -267,7 +267,7 @@ else {
 		});
 
 		// TODO: Sample postgres
-		spark.on("getById", function (userId, url, callback) {
+		spark.on("getById", function (userId, callback) {
 			var pg = require("pg");
 			var connString = "tcp://postgres:Password1@localhost:5432/ThreeDegree";
 			var client = new pg.Client(connString);
