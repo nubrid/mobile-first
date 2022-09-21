@@ -3,8 +3,8 @@ var loading = false
 	, Key = { Email: "email" }
 	, Method = { GetById: "getById" }
 	, Url = {
-		IO: { Root: "http://socket.nubrid.com" }
-		, Web: "http://www.nubrid.com"
+		IO: { Root: "http://socket.excentone.com" }
+		, Web: "http://apps.excentone.com"
 	};
 
 window.App = {
@@ -20,23 +20,16 @@ require.config({
 		, "backbone.collectionbinder": "libs/backbone/backbone.collectionbinder"
 		, "backbone.iobind": "libs/backbone/backbone.iobind"
 		, "backbone.iosync": "libs/backbone/backbone.iosync"
+		, "backbone.marionette": "libs/backbone/backbone.marionette"
 		, "backbone.modelbinder": "libs/backbone/backbone.modelbinder"
 		, "cordova": "../cordova"
 		, "cordova.loader": "libs/cordova/cordova.loader"
 		, "detectmobilebrowser": "libs/detectmobilebrowser"
 		, "jquery": "libs/jquery/jquery"
 		, "jquery.mobile": "libs/jquery/jquery.mobile"
-		, "socket.io": "http://socket.nubrid.com/socket.io/socket.io"
+		, "socket.io": "http://socket.excentone.com/socket.io/socket.io"
 		, "text": "libs/require/text"
 		, "underscore": "libs/underscore/underscore.lodash"
-
-		, "json2": "vendor/json2"
-		, "backbone.picky": "vendor/backbone.picky"
-		, "backbone.syphon": "vendor/backbone.syphon"
-		, "backbone.localstorage": "vendor/backbone.localstorage"
-		, "backbone.marionette": "vendor/backbone.marionette"
-		, "spin": "vendor/spin"
-		, "spin.jquery": "vendor/spin.jquery"
 	}
 	, shim: {
 		"backbone": {
@@ -58,6 +51,12 @@ require.config({
 				, "backbone"
 				, "backbone.iosync"
 			]
+		}
+		, "backbone.marionette": {
+			deps: [
+				"backbone"
+			]
+			, exports: "Marionette"
 		}
 		, "jquery": {
 			exports: "$"
@@ -83,10 +82,10 @@ require(["jquery"], function () {
 		$.mobile.pushStateEnabled = false;
 	});
 
-	require(["socket.io", "backbone.iobind", "backbone.collectionbinder", "jquery.mobile"], function (io) {
+	require(["socket.io", "backbone.iobind", "backbone.collectionbinder", "jquery.mobile"], function () {
 		window.io = io; // HACK: For socket.io 1.0.x
-		require(["app"], function (ContactManager) {
-			ContactManager.start();
+		require(["app"], function (app) {
+			app.start();
 		});
 	});
 });

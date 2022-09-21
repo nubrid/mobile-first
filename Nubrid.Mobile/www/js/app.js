@@ -1,6 +1,5 @@
-define(["apps/contacts/ContactsApp"], function (ContactManager) {
-	return ContactManager;
-
+define(["apps/home/HomeApp"], function (AppManager) {
+	return AppManager;
 	//return { init: app_init };
 
 	//function app_init() {

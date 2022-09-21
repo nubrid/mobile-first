@@ -8,14 +8,15 @@
 		, "backbone.modelbinder": "libs/backbone/backbone.modelbinder"
 		, "cordova": "../cordova"
 		, "cordova.loader": "libs/cordova/cordova.loader"
+		, "detectmobilebrowser": "libs/detectmobilebrowser"
 		, "jquery": "libs/jquery/jquery"
 		, "jquery.mobile": "libs/jquery/jquery.mobile"
-		, "socket.io": "http://socket.nubrid.com/socket.io/socket.io"
+		, "socket.io": "http://socket.excentone.com/socket.io/socket.io"
 		, "text": "libs/require/text"
 		, "underscore": "libs/underscore/underscore.lodash"
 	}
 	, baseUrl: "js"
-	, dir: "../../../Nubrid.Mobile/www"
+	, dir: "../../../ExcentOne.Mobile/assets/www"
 //	, modules: [{
 //		name: "main"
 //	}]
