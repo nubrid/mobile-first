@@ -150,8 +150,8 @@ define(
 		}
 		, componentDidMount: function () {
 			var self = this;
-			$(this.refs.btnInput1.getDOMNode()).on("click", function () { self.setState({ sheet: 1 }); });
-			$(this.refs.btnInput2.getDOMNode()).on("click", function () { self.setState({ sheet: 2 }); });
+			$(React.findDOMNode(this.refs.btnInput1)).on("click", function () { self.setState({ sheet: 1 }); });
+			$(React.findDOMNode(this.refs.btnInput2)).on("click", function () { self.setState({ sheet: 2 }); });
 		}
 		, render: function () {
 			return React.createElement("div", { id: this.props.id }
@@ -485,14 +485,14 @@ define(
 	var PocForm = React.createClass({
 		displayName: "PocForm"
 		, componentDidMount: function () {
-			$(this.refs.btnSubmit.getDOMNode()).on("click", null, this.props.handleSubmitClick);
+			$(React.findDOMNode(this.refs.btnSubmit)).on("click", this.props.handleSubmitClick);
 		}
 		, componentDidUpdate: function (prevProps, prevState) {
-			$(this.refs.btnSubmit.getDOMNode()).button("refresh");
+			$(React.findDOMNode(this.refs.btnSubmit)).button("refresh");
 			if (this.refs.btnCancel)
-				$(this.refs.btnCancel.getDOMNode())
+				$(React.findDOMNode(this.refs.btnCancel))
 					.button().button("refresh")
-					.on("click", null, this.props.handleCancelClick);
+					.on("click", this.props.handleCancelClick);
 		}
 		, render: function () {
 			return React.createElement("div", null
@@ -527,8 +527,8 @@ define(
 			}
 		}
 		, componentDidMount: function () {
-			$(this.getDOMNode()).on("change", null, this.handleChange);
-			$(this.getDOMNode()).on("click", null, this.handleClick);
+			$(React.findDOMNode(this)).on("change", this.handleChange);
+			$(React.findDOMNode(this)).on("click", this.handleClick);
 		}
 		, componentDidUpdate: function (prevProps, prevState) {
 			this.$el.enhanceWithin();
@@ -565,7 +565,7 @@ define(
 			this.renderTable();
 		}
 		, renderTable: function () {
-			$(this.refs.tblHOT.getDOMNode()).handsontable({
+			$(React.findDOMNode(this.refs.tblHOT)).handsontable({
 				data: this.props.data
 				, minSpareRows: this.props.minSpareRows ? this.props.minSpareRows : 0
 				, rowHeaders: this.props.rowHeaders

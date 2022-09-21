@@ -21,8 +21,8 @@ define(
 					todos.get(attrs.id).save(attrs);
 				});
 
-				page.on("todo:delete", function (model) {
-					model.destroy();
+				page.on("todo:delete", function (attrs) {
+					todos.get(attrs.id).destroy();
 				});
 			});
 		}

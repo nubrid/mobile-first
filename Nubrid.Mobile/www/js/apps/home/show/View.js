@@ -19,7 +19,7 @@ define(
 		displayName: "Home"
 		, mixins: [AppManager.BackboneMixin]
 		, handleOpenBrowserClick: function (event) {
-			this.props.view.trigger("home:openBrowser", $(this.refs.txtInput.getDOMNode()).val());
+			this.props.view.trigger("home:openBrowser", $(React.findDOMNode(this.refs.txtInput)).val());
 		}
 		, handleLoginClick: function (event) {
 			var el = $(event.target);
@@ -27,8 +27,8 @@ define(
 			if (el.closest("a").length) this.props.view.trigger("home:login", event);
 		}
 		, componentDidMount: function () {
-			$(this.refs.btnOpenBrowser.getDOMNode()).on("click", null, this.handleOpenBrowserClick);
-			$(this.refs.divLogin.getDOMNode()).on("click", null, this.handleLoginClick);
+			$(React.findDOMNode(this.refs.btnOpenBrowser)).on("click", this.handleOpenBrowserClick);
+			$(React.findDOMNode(this.refs.divLogin)).on("click", this.handleLoginClick);
 		}
 		, render: function () {
 			return React.createElement("div", { "data-role": "page", id: this.props.id }

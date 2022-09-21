@@ -10,13 +10,8 @@ define(
 			this.parentEl = options.region ? options.region.$el[0] : this.el;
 		}
 		, render: function () {
-			var self = this;
-			this.view = React.render(React.createElement(Todos, { id: this.id, view: this }), this.parentEl);
-			this.listenTo(this.collection, "change sync", function (modelOrCollection) {
-				if (!self.view.state.collection) self.view.setState({ collection: modelOrCollection })
-				else self.view.setProps({ changedId: modelOrCollection.id });
-			});
-			this.el = this.view.el; // HACK: Avoid conflict with Marionette region show and react render.
+			this.page = React.render(React.createElement(Todos, { id: this.id, collection: this.collection, view: this }), this.parentEl);
+			this.el = React.findDOMNode(this.page); // HACK: Avoid conflict with Marionette region show and react render.
 
 			return this;
 		}
@@ -24,7 +19,7 @@ define(
 
 	var Todos = React.createClass({
 		displayName: "Todos"
-		, mixins: [AppManager.BackboneMixin, React.addons.LinkedStateMixin]
+		, mixins: [React.addons.LinkedStateMixin]
 		, getInitialState: function () {
 			return {
 				id: null
@@ -46,15 +41,8 @@ define(
 			var initialState = this.getInitialState();
 			this.setState(initialState);
 		}
-		, handleCompletedChange: function (id, checked) {
-			var attrs = _.extend(this.state.collection.get(id).toJSON(), { completed: checked });
-			this.props.view.trigger("todo:edit", attrs);
-		}
-		, handleEditClick: function (id) {
-			this.setState(this.state.collection.get(id).attributes);
-		}
-		, handleDeleteClick: function (id) {
-			this.props.view.trigger("todo:delete", this.state.collection.get(id));
+		, handleEditClick: function (attrs) {
+			this.setState(attrs);
 		}
 		, render: function () {
 			return React.createElement("div", { "data-role": "page", id: this.props.id }
@@ -65,13 +53,11 @@ define(
 						, handleSubmitClick: this.handleSubmitClick
 						, handleCancelClick: this.handleCancelClick
 					})
-					, this.state.collection ? React.createElement(TodosList, {
-						collection: this.state.collection
-						, changedId: this.props.changedId
-						, handleCompletedChange: this.handleCompletedChange
+					, React.createElement(TodosList, {
+						collection: this.props.collection
+						, view: this.props.view
 						, handleEditClick: this.handleEditClick
-						, handleDeleteClick: this.handleDeleteClick
-					}) : null
+					})
 				)
 			);
 		}
@@ -80,14 +66,14 @@ define(
 	var TodosForm = React.createClass({
 		displayName: "TodosForm"
 		, componentDidMount: function () {
-			$(this.refs.btnSubmit.getDOMNode()).on("click", null, this.props.handleSubmitClick);
+			$(React.findDOMNode(this.refs.btnSubmit)).on("click", this.props.handleSubmitClick);
 		}
 		, componentDidUpdate: function (prevProps, prevState) {
-			$(this.refs.btnSubmit.getDOMNode()).button("refresh");
+			$(React.findDOMNode(this.refs.btnSubmit)).button("refresh");
 			if (this.refs.btnCancel)
-				$(this.refs.btnCancel.getDOMNode())
+				$(React.findDOMNode(this.refs.btnCancel))
 					.button().button("refresh")
-					.on("click", null, this.props.handleCancelClick);
+					.on("click", this.props.handleCancelClick);
 		}
 		, render: function () {
 			return React.createElement("div", null
@@ -106,7 +92,8 @@ define(
 		, handleChange: function (event) {
 			var el = $(event.target);
 
-			this.props.handleCompletedChange(el.attr("data-id"), el[0].checked);
+			var attrs = _.extend(_.findWhere(this.state.collection, { id: el.attr("data-id") }), { completed: el[0].checked });
+			this.props.view.trigger("todo:edit", attrs);
 		}
 		, handleClick: function (event) {
 			var el = $(event.target);
@@ -114,24 +101,44 @@ define(
 
 			switch (el.attr("id")) {
 				case "btnEditTodo":
-					this.props.handleEditClick(id);
+					this.props.handleEditClick(_.findWhere(this.state.collection, { id: id }));
 					break;
 				case "btnDeleteTodo":
-					this.props.handleDeleteClick(id);
+					this.props.view.trigger("todo:delete", _.findWhere(this.state.collection, { id: id }));
 					break;
 			}
 		}
 		, componentDidMount: function () {
-			$(this.getDOMNode()).on("change", null, this.handleChange);
-			$(this.getDOMNode()).on("click", null, this.handleClick);
+			var self = this;
+			this.$el.on("change", self.handleChange);
+			this.$el.on("click", self.handleClick);
 
 			this.$el.enhanceWithin();
 		}
-		, componentDidUpdate: function (prevProps, prevState) {
-			this.$el.enhanceWithin();
+		, componentWillUnmount: function () {
+			this.$el.off();
 		}
-		, createItem: function (model, id) {
-			var item = model.toJSON();
+		, componentDidUpdate: function (prevProps, prevState) {
+			if (this.wrapper.nextState && this.wrapper.nextState.collection.length > prevState.collection.length) {
+				this.$el.enhanceWithin()
+			}
+			else if (!prevState.isRequesting && this.wrapper.nextState) {
+				var nextCollection = this.wrapper.nextState.collection;
+				var checkbox = null;
+				var self = this;
+
+				_.each(_.filter(nextCollection, function (model) {
+					return !_.isEqual(model.completed, _.findWhere(prevState.collection, { id: model.id }).completed);
+					// TODO: If you need to compare all attributes.
+					//return !_.isEqual(model, _.findWhere(prevState.collection, { id: model.id }));
+				}), function (model) {
+					checkbox = $(React.findDOMNode(self.refs["chk_" + model.id]));
+					checkbox[0].checked = model.completed;
+					checkbox.checkboxradio("refresh");
+				})
+			}
+		}
+		, createItem: function (item, id) {
 			return React.createElement("div", { key: item.id, "data-role": "controlgroup", "data-type": "horizontal" }
 				, React.createElement("h3", null, item.title)
 				, React.createElement("label", null, React.createElement("input", { type: "checkbox", ref: "chk_" + item.id, defaultChecked: item.completed, "data-id": item.id }), "Complete")
@@ -140,7 +147,7 @@ define(
 			);
 		}
 		, render: function () {
-			return React.createElement("div", null, this.props.collection.map(this.createItem));
+			return React.createElement("div", null, this.state.collection.map(this.createItem));
 		}
 	});
 
