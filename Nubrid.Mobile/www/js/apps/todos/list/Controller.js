@@ -1,82 +1,71 @@
 ﻿/*
-Todo List Controller
+Todos List Controller
 */
 define(
 ["apps/AppManager"
+, "apps/common/View"
 , "apps/todos/list/View"
 , "entities/Todo"]
-, function (AppManager) {
-	var List = AppManager.module("TodosApp.List");
-	List.Controller = {
-		listTodos: function () {
-			var self = this;
-			this.layout = AppManager.changePage(List.Layout);
-			this.form = new List.Form();
+, function (AppManager, CommonView, ListView) {
+    var Controller = AppManager.module("TodosApp.List.Controller", AppManager.CommonModule.extend({
+        listTodos: function () {
+            var list = AppManager.changePage({ url: "todos", layout: CommonView.Layout, main: ListView.Layout });
 
-			var fetchingTodos = AppManager.request("todo:entities");
+            var fetchingTodos = AppManager.request("todo:entities");
+            $.when(fetchingTodos).done(function (todos) {
+                var todosListPanel = new ListView.Panel();
+                var todosList = new ListView.Todos({
+                    collection: todos
+                });
 
-			$.when(fetchingTodos).done(function (todos) {
-				var todosListView = new List.Todos({
-					collection: todos
-				});
+                list.PanelRegion.show(todosListPanel);
+                list.TodosRegion.show(todosList);
 
-				self.layout.panelRegion.show(self.form);
-				self.layout.todosRegion.show(todosListView);
+                todosListPanel.on("todo:add", function () {
+                    // Set noIoBind to true to disable ioBind events as there is no id.
+                    var todo = AppManager.Entities.Todo.extend({ noIoBind: true });
 
-				self.form.on("todo:add", function () {
-					// Set noIoBind to true to disable ioBind events as there is no id.
-					var todo = AppManager.Entities.Todo.extend({ noIoBind: true });
+                    var attrs = {
+                        title: this.ui.txtTodo.val(),
+                        completed: false
+                    };
 
-					var attrs = {
-						title: this.ui.txtTodo.val(),
-						completed: false
-					};
+                    // Reset the text box value
+                    this.ui.txtTodo.val("");
 
-					// Reset the text box value
-					this.ui.txtTodo.val("");
-
-					var _todo = new todo(attrs);
-
-					_todo.socket = AppManager.connect(function () {
-						_todo.save({}, {
-							success: function (model, response) {
-								model.socket.end();
-							}
+                    var _todo = new todo(attrs);
+                    AppManager.toggleLoading("show");
+                    _todo.socket = AppManager.connect(function () {
+                        _todo.save({}, {
+                            success: function (model, response) {
+                                model.socket.end();
+                                AppManager.toggleLoading("hide");
+                            }
 							, error: function (model, response) {
-								model.socket.end();
+							    model.socket.end();
+							    AppManager.toggleLoading("hide");
 							}
-						});
-					});
-				});
+                        });
+                    });
+                });
 
-				todos.each(todo_created);
-				todosListView.on("todo:created", todo_created);
-				todosListView.on("todo:delete", function (model) {
-					model.socket = AppManager.connect(function () {
-						model.destroy({
-							success: function (model, response) {
-								model.socket.end();
-							}
-							, error: function (model, response) {
-								model.socket.end();
-							}
-						});
-					});
-				});
+                todos.each(todo_created);
+                todosList.on("todo:created", todo_created);
+                todosList.on("todo:delete", function (model) {
+                    model.destroy();
+                });
 
-				function todo_created(model) {
-					model.bind("change:completed", function () {
-						this.save({}, {
-							success: function (model, response) {
-								model.socket.end();
-							}
-							, error: function (model, response) {
-								model.socket.end();
-							}
-						});
-					});
-				}
-			});
+                function todo_created(model) {
+                    model.bind("change:completed", function () {
+                        this.save();
+                    });
+                }
+            });
+        }
+		, onStart: function () {
+		    AppManager.on("todos:list", this.listTodos);
 		}
-	}
+    }));
+
+    return Controller;
 });

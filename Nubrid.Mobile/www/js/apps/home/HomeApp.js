@@ -1,30 +1,30 @@
-﻿define(["apps/AppManager", "apps/todos/TodosApp"], function (AppManager) {
-	var HomeApp = AppManager.module("HomeApp");
-	HomeApp.Router = Marionette.AppRouter.extend({
-		appRoutes: {
-			"": "showHome"
-			, "home": "showHome"
-		}
-	});
+﻿define(["apps/AppManager"], function (AppManager) {
+	var HomeApp = AppManager.module("HomeApp", AppManager.CommonModule.extend({
+		Router: Marionette.AppRouter.extend({
+			appRoutes: {
+				"": "showHome"
+				, "home": "showHome"
+			}
+		})
+		, onStart: function () {
+		    require(["apps/home/show/Controller"], function (controller) { // TODO: , require(["apps/home/show/Controller", "apps/home/new/Controller"], function (showController, newController) {
+		        // TODO: var controller = _.extend(showController, newController);
+				new HomeApp.Router({
+					controller: controller
+				});
 
-	var API = {
-		showHome: function () {
-			require(["apps/home/show/Controller"], function () {
-				HomeApp.Show.Controller.showHome();
+				controller.start(); // TODO: showController.start();
+		        // TODO: newController.start();
+
+				switch (AppManager.currentRoute()) {
+				    case "":
+				    case "home":
+				        AppManager.trigger("home:show");
+				        break;
+				}
 			});
 		}
-	};
+	}));
 
-	AppManager.on("home:show", function () {
-		AppManager.navigate("home");
-		API.showHome();
-	});
-
-	AppManager.addInitializer(function () {
-		new HomeApp.Router({
-			controller: API
-		});
-	});
-
-	return AppManager;
+	return HomeApp;
 });

@@ -1,6 +1,6 @@
-# TODO Sample (!BROKEN)
+# TODO Sample
 
-Hybrid Web + Mobile Framework using VS.Net (SEP 30, 2014)
+Hybrid Web + Mobile Framework using VS.Net (MAY 25, 2015)
 
 _For use in my company, Excent One, starting with NCC NOAH._
 
@@ -12,6 +12,7 @@ _For use in my company, Excent One, starting with NCC NOAH._
 - jQuery, jQuery UI & jQuery Mobile
 - LocalStorage
 - MarionetteJS `v2`
+- ~~ModernizrJS~~
 - MVC
 - OAuth
 - Passport `w/ Facebook, LinkedIn, Twitter SSO`

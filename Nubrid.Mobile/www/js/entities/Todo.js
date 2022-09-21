@@ -5,13 +5,13 @@
 	var Entities = AppManager.module("Entities");
 	Entities.Todo = AppManager.Entities.Common.Model.extend({
 		urlRoot: "todo"
-		, noIoBind: true
+		, noIoBind: false
 	});
 
 	Entities.Todos = AppManager.Entities.Common.Collection.extend({
 		model: Entities.Todo
 		, url: "todos"
-		, noIoBind: true
+		, noIoBind: false
 	});
 
 	AppManager.reqres.setHandler("todo:entities", function () {

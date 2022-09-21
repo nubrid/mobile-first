@@ -1,3 +1,3 @@
-define(["apps/home/HomeApp"], function (AppManager) {
+define(["apps/AppManager"], function (AppManager) {
 	return AppManager;
 });
