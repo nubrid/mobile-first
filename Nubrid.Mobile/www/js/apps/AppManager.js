@@ -1,35 +1,39 @@
-﻿define(["backbone.marionette"], function (Marionette) {
+﻿define(["backbone.marionette", "react", "backbone.react"], function (Marionette, React) {
+	window.React = React;
 	window.AppManager = new Marionette.Application({
-		CommonModule: Marionette.Module.extend({
+		BackboneMixin: Backbone.React.Component.mixin
+		, CommonModule: Marionette.Module.extend({
 			startWithParent: false
 		})
 		, Config: {
-				IO: {
-					Options: {
-						manual: true
-						//, transport: {
-						//	transports: [
-						//		"websocket"
-						//	]
-						//}
-					}
+			IO: {
+				Options: {
+					manual: true
+					//, transport: {
+					//	transports: [
+					//		"websocket"
+					//	]
+					//}
 				}
+			}
 			, Url: {
 				IO: { Root: window.protocol + window.host }
 				, Web: window.protocol + window.host
 			}
 		}
 		, changePage: function (options) {
-		    this.currentLayout = this.currentLayout && (this.currentLayout instanceof options.layout) ? this.currentLayout.initialize(options) : new options.layout(options);
+			this.currentLayout = this.currentLayout && (this.currentLayout instanceof options.layout)
+				? this.currentLayout.initialize(options)
+				: new options.layout(options);
 			$.mobile.initializePage();
 
-			this.currentLayout.MainRegion.$el.pagecontainer("change", this.currentLayout.MainRegion.currentView.$el, { reverse: options.reverse, transition: (options.transition ? options.transition : "slide"), allowSamePageTransition: true });
+			this.currentLayout.MainRegion.$el.pagecontainer("change", $(this.currentLayout.MainRegion.currentView.el), { reverse: options.reverse, transition: (options.transition ? options.transition : "slide"), allowSamePageTransition: true });
 			if (options.url) AppManager.navigate(options.url);
 
 			return this.currentLayout.MainRegion.currentView;
 		}
 		, connect: function (callback, closeOnOpen) {
-		    var primus = new Primus(AppManager.Config.Url.IO.Root, closeOnOpen ? _.extend(AppManager.Config.IO.Options, { strategy: "" }) : AppManager.Config.IO.Options);
+			var primus = new Primus(AppManager.Config.Url.IO.Root, closeOnOpen ? _.extend(AppManager.Config.IO.Options, { strategy: "" }) : AppManager.Config.IO.Options);
 
 			primus.open();
 			primus.on("open", function () {
@@ -44,9 +48,9 @@
 
 			return primus;
 		}
-        , currentRoute: function () {
-            return Backbone.history.fragment;
-        }
+		, currentRoute: function () {
+			return Backbone.history.fragment;
+		}
 		, navigate: function (route, options) {
 			options || (options = {});
 			Backbone.history.navigate(route, options);
@@ -61,15 +65,15 @@
 			}
 		}
 		, onStart: function () {
-		    var attachHtml = Marionette.Region.prototype.attachHtml;
-		    Marionette.Region.prototype.attachHtml = function () {
-		        this.attachHtml = attachHtml;
-		        this.attachHtml.apply(this, arguments);
+			// TODO: var attachHtml = Marionette.Region.prototype.attachHtml;
+			Marionette.Region.prototype.attachHtml = function () {
+				// TODO: this.attachHtml = attachHtml;
+				//this.attachHtml.apply(this, arguments);
 
-		        this.$el.enhanceWithin();
-		    };
+				//this.$el.enhanceWithin();
+			};
 
-		    require(["detectmobilebrowser"], function () {
+			require(["detectmobilebrowser"], function () {
 				if (window.phonegap) {
 					require(["cordova.loader"], function () {
 						$(function () {
@@ -89,8 +93,8 @@
 						});
 
 						require(["apps/home/HomeApp", "apps/todos/TodosApp"], function (HomeApp, TodosApp) {
-						    HomeApp.start();
-						    TodosApp.start();
+							HomeApp.start();
+							TodosApp.start();
 
 							Backbone.history.start();
 						});
@@ -98,21 +102,21 @@
 				}
 			});
 		}
-        , toggleLoading: function (action) {
-            var $this = $(this)
-                , theme = $this.jqmData("theme") || $.mobile.loader.prototype.options.theme
-                , msgText = $this.jqmData("msgtext") || $.mobile.loader.prototype.options.text
-                , textVisible = $this.jqmData("textvisible") || $.mobile.loader.prototype.options.textVisible
-                , textonly = !!$this.jqmData("textonly");
-            html = $this.jqmData("html") || "";
-            $.mobile.loading(action, {
-                text: msgText,
-                textVisible: textVisible,
-                theme: theme,
-                textonly: textonly,
-                html: html
-            });
-        }
+		, toggleLoading: function (action) {
+			var $this = $(this)
+				, theme = $this.jqmData("theme") || $.mobile.loader.prototype.options.theme
+				, msgText = $this.jqmData("msgtext") || $.mobile.loader.prototype.options.text
+				, textVisible = $this.jqmData("textvisible") || $.mobile.loader.prototype.options.textVisible
+				, textonly = !!$this.jqmData("textonly");
+			html = $this.jqmData("html") || "";
+			$.mobile.loading(action, {
+				text: msgText,
+				textVisible: textVisible,
+				theme: theme,
+				textonly: textonly,
+				html: html
+			});
+		}
 	});
 
 	function _isDeviceOnline() {

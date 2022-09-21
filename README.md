@@ -9,14 +9,16 @@ _For use in my company, Excent One, starting with NCC NOAH._
 - Backbone `iobind` `iosync` `modelbinder` `picky` `syphon`
 - Cordova `PhoneGap`
 - Express
+- FLUX
 - jQuery, jQuery UI & jQuery Mobile
 - LocalStorage
 - MarionetteJS `v2`
 - ~~ModernizrJS~~
-- MVC
+- ~~MVC~~
 - OAuth
 - Passport `w/ Facebook, LinkedIn, Twitter SSO`
-- Postgres
+- PostgreSQL
+- ReactJS `mixins` `JSX` `transformer`
 - Recaptcha
 - RequireJS `cache buster`
 - WebSockets ~~`Engine.io`~~ `Primus` ~~`Socket.io`~~

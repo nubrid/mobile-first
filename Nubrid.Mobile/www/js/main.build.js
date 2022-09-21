@@ -7,6 +7,7 @@
 		, "backbone.iosync": "libs/backbone/backbone.iosync"
 		, "backbone.marionette": "empty:" //"libs/backbone/backbone.marionette"
 		, "backbone.modelbinder": "empty:" //"libs/backbone/backbone.modelbinder"
+		, "backbone.react": "empty:" //"libs/backbone/backbone.react"
 		, "cordova": "empty:"
 		, "cordova.loader": "empty:"
 		, "detectmobilebrowser": "libs/detectmobilebrowser"
@@ -17,6 +18,7 @@
 		, "jquery.mobile": "empty:" //"libs/jquery/jquery.mobile"
 		// TODO:, "modernizr": "libs/modernizr"
 		, "primus.io": "libs/primus.io"
+		, "react": "empty:" //"libs/react/react"
 		, "text": "empty:" //"libs/require/text"
 		, "underscore": "empty:" //"libs/underscore/underscore.lodash"
 	}
@@ -51,6 +53,12 @@
 			]
 			, exports: "Marionette"
 		}
+		, "backbone.react": {
+			deps: [
+				"backbone"
+				, "react"
+			]
+		}
 		, "jquery": {
 			exports: "$"
 		}
@@ -81,12 +89,14 @@
 		, "backbone.iosync"
 		, "backbone.marionette"
 		, "backbone.modelbinder"
+		, "backbone.react"
 		, "cordova"
 		, "jquery"
 		// TODO:, "jquery.browser"
 		// TODO:, "jquery.cookie"
 		// TODO:, "jquery.history"
 		, "jquery.mobile"
+		, "react"
 		, "text"
 		, "underscore"
 	]

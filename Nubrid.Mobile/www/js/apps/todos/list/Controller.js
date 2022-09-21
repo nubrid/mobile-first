@@ -7,65 +7,45 @@ define(
 , "apps/todos/list/View"
 , "entities/Todo"]
 , function (AppManager, CommonView, ListView) {
-    var Controller = AppManager.module("TodosApp.List.Controller", AppManager.CommonModule.extend({
-        listTodos: function () {
-            var list = AppManager.changePage({ url: "todos", layout: CommonView.Layout, main: ListView.Layout });
+	var Controller = AppManager.module("TodosApp.List.Controller", AppManager.CommonModule.extend({
+		listTodos: function () {
+			var fetchingTodos = AppManager.request("todo:entities");
+			$.when(fetchingTodos).done(function (todos) {
+				var page = AppManager.changePage({ id: "todos", title: "Todos List", layout: CommonView.Layout, main: ListView.Todos, collection: todos });
 
-            var fetchingTodos = AppManager.request("todo:entities");
-            $.when(fetchingTodos).done(function (todos) {
-                var todosListPanel = new ListView.Panel();
-                var todosList = new ListView.Todos({
-                    collection: todos
-                });
+				page.on("todo:add", function (attrs) {
+					// Set noIoBind to true to disable ioBind events as there is no id.
+					var todo = AppManager.Entities.Todo.extend({ noIoBind: true });
 
-                list.PanelRegion.show(todosListPanel);
-                list.TodosRegion.show(todosList);
-
-                todosListPanel.on("todo:add", function () {
-                    // Set noIoBind to true to disable ioBind events as there is no id.
-                    var todo = AppManager.Entities.Todo.extend({ noIoBind: true });
-
-                    var attrs = {
-                        title: this.ui.txtTodo.val(),
-                        completed: false
-                    };
-
-                    // Reset the text box value
-                    this.ui.txtTodo.val("");
-
-                    var _todo = new todo(attrs);
-                    AppManager.toggleLoading("show");
-                    _todo.socket = AppManager.connect(function () {
-                        _todo.save({}, {
-                            success: function (model, response) {
-                                model.socket.end();
-                                AppManager.toggleLoading("hide");
-                            }
-							, error: function (model, response) {
-							    model.socket.end();
-							    AppManager.toggleLoading("hide");
+					var _todo = new todo(attrs);
+					AppManager.toggleLoading("show");
+					_todo.socket = AppManager.connect(function () {
+						_todo.save({}, {
+							success: function (model, response) {
+								model.socket.end();
+								AppManager.toggleLoading("hide");
 							}
-                        });
-                    });
-                });
+							, error: function (model, response) {
+								model.socket.end();
+								AppManager.toggleLoading("hide");
+							}
+						});
+					});
+				});
 
-                todos.each(todo_created);
-                todosList.on("todo:created", todo_created);
-                todosList.on("todo:delete", function (model) {
-                    model.destroy();
-                });
+				page.on("todo:edit", function (model) {
+					model.save();
+				});
 
-                function todo_created(model) {
-                    model.bind("change:completed", function () {
-                        this.save();
-                    });
-                }
-            });
-        }
-		, onStart: function () {
-		    AppManager.on("todos:list", this.listTodos);
+				page.on("todo:delete", function (model) {
+					model.destroy();
+				});
+			});
 		}
-    }));
+		, onStart: function () {
+			AppManager.on("todos:list", this.listTodos);
+		}
+	}));
 
-    return Controller;
+	return Controller;
 });

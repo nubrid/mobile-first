@@ -3,15 +3,15 @@
 	Common.Model = Backbone.Model.extend({
 		noIoBind: false
 		, initialize: function () {
-		    var self = this;
-		    if (!this.socket) this.socket = AppManager.connect(function () {
-		        // Only bind new models from the server because the server assigns the id.
-		        if (!this.noIoBind) {
-		            _.bindAll(self, "serverChange", "serverDelete", "modelCleanup");
-		            self.ioBind("update", self.serverChange, self);
-		            self.ioBind("delete", self.serverDelete, self);
-		        }
-		    });
+			var self = this;
+			if (!this.socket) this.socket = AppManager.connect(function () {
+				// Only bind new models from the server because the server assigns the id.
+				if (!this.noIoBind) {
+					_.bindAll(self, "serverChange", "serverDelete", "modelCleanup");
+					self.ioBind("update", self.serverChange, self);
+					self.ioBind("delete", self.serverDelete, self);
+				}
+			});
 		}
 		, serverChange: function (data) {
 			// Used to prevent loops when dealing with client-side updates (e.g. forms).
@@ -36,15 +36,15 @@
 		noIoBind: false
 		, initialize: function () {
 			this.on("before:fetch", function () {
-			    var self = this;
-			    if (!this.socket) this.socket = AppManager.connect(function () {
-			        if (!this.noIoBind) {
-			            _.bindAll(self, "serverCreate", "collectionCleanup");
-			            self.ioBind("create", self.serverCreate, self);
-			        }
+				var self = this;
+				if (!this.socket) this.socket = AppManager.connect(function () {
+					if (!this.noIoBind) {
+						_.bindAll(self, "serverCreate", "collectionCleanup");
+						self.ioBind("create", self.serverCreate, self);
+					}
 
-			        self.model = self.model.extend({ socket: self.socket });
-			    });
+					self.model = self.model.extend({ socket: self.socket });
+				});
 			});
 			this.on("after:fetch", function () {
 				if (this.noIoBind) this.socket.end();
@@ -98,9 +98,9 @@
 			var _model = new model(attributes);
 			var defer = $.Deferred();
 			_model.fetch({
-			    success: function (data) {
-			        defer.resolve(data);
-			    }
+				success: function (data) {
+					defer.resolve(data);
+				}
 			});
 			var promise = defer.promise();
 
@@ -110,9 +110,9 @@
 			var _collection = new collection();
 			var defer = $.Deferred();
 			_collection.fetch({
-			    success: function (data) {
-			        defer.resolve(data);
-			    }
+				success: function (data) {
+					defer.resolve(data);
+				}
 			});
 			var promise = defer.promise();
 

@@ -8,11 +8,11 @@ define(
 , function (AppManager, CommonView, ShowView) {
 	var Controller = AppManager.module("HomeApp.Show.Controller", AppManager.CommonModule.extend({
 		showHome: function () {
-			var show = AppManager.changePage({ url: "home", layout: CommonView.Layout, main: ShowView.Panel, reverse: true });
+			var show = AppManager.changePage({ id: "home", title: "Home", layout: CommonView.Layout, main: ShowView.Panel, reverse: true });
 
-			show.on("home:openBrowser", function () {
+			show.on("home:openBrowser", function (value) {
 				AppManager.net(function () {
-					var ref = window.open(show.ui.txtInput.val(), "_blank", "location=no");
+					var ref = window.open(value, "_blank", "location=no");
 
 					setTimeout(function () {
 						ref.close();
@@ -24,7 +24,7 @@ define(
 				var provider = $(event.target).attr("href").substring(1);
 
 				AppManager.net(function () {
-					var loginWindow = window.open(AppManager.Url.Web + "/auth/" + provider, "_blank", "location=no");
+					var loginWindow = window.open(AppManager.Config.Url.Web + "/auth/" + provider, "_blank", "location=no");
 
 					loginWindow.addEventListener("loadstop", function (event) {
 						if (event.url.indexOf(AppManager.Url.Web) == 0) {
@@ -45,7 +45,7 @@ define(
 			});
 		}
 		, onStart: function () {
-		    AppManager.on("home:show", this.showHome);
+			AppManager.on("home:show", this.showHome);
 		}
 	}));
 

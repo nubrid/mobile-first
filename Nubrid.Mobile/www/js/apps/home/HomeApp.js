@@ -7,20 +7,20 @@
 			}
 		})
 		, onStart: function () {
-		    require(["apps/home/show/Controller"], function (controller) { // TODO: , require(["apps/home/show/Controller", "apps/home/new/Controller"], function (showController, newController) {
-		        // TODO: var controller = _.extend(showController, newController);
+			require(["apps/home/show/Controller"], function (controller) { // TODO: , require(["apps/home/show/Controller", "apps/home/new/Controller"], function (showController, newController) {
+				// TODO: var controller = _.extend(showController, newController);
 				new HomeApp.Router({
 					controller: controller
 				});
 
 				controller.start(); // TODO: showController.start();
-		        // TODO: newController.start();
+				// TODO: newController.start();
 
 				switch (AppManager.currentRoute()) {
-				    case "":
-				    case "home":
-				        AppManager.trigger("home:show");
-				        break;
+					case "":
+					case "home":
+						AppManager.trigger("home:show");
+						break;
 				}
 			});
 		}
