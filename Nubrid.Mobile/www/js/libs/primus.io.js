@@ -2,35 +2,15 @@
 'use strict';
 
 /**
- * Representation of a single EventEmitter function.
- *
- * @param {Function} fn Event handler to be called.
- * @param {Mixed} context Context for function execution.
- * @param {Boolean} once Only emit once
- * @api private
- */
-function EE(fn, context, once) {
-  this.fn = fn;
-  this.context = context;
-  this.once = once || false;
-}
-
-/**
  * Minimal EventEmitter interface that is molded against the Node.js
  * EventEmitter interface.
  *
  * @constructor
  * @api public
  */
-function EventEmitter() { /* Nothing to set */ }
-
-/**
- * Holds the assigned EventEmitters by name.
- *
- * @type {Object}
- * @private
- */
-EventEmitter.prototype._events = undefined;
+function EventEmitter() {
+  this._events = {};
+}
 
 /**
  * Return a list of assigned event listeners.
@@ -40,13 +20,7 @@ EventEmitter.prototype._events = undefined;
  * @api public
  */
 EventEmitter.prototype.listeners = function listeners(event) {
-  if (!this._events || !this._events[event]) return [];
-
-  for (var i = 0, l = this._events[event].length, ee = []; i < l; i++) {
-    ee.push(this._events[event][i].fn);
-  }
-
-  return ee;
+  return Array.apply(this, this._events[event] || []);
 };
 
 /**
@@ -62,42 +36,48 @@ EventEmitter.prototype.emit = function emit(event, a1, a2, a3, a4, a5) {
   var listeners = this._events[event]
     , length = listeners.length
     , len = arguments.length
-    , ee = listeners[0]
+    , fn = listeners[0]
     , args
-    , i, j;
+    , i;
 
   if (1 === length) {
-    if (ee.once) this.removeListener(event, ee.fn, true);
+    if (fn.__EE3_once) this.removeListener(event, fn);
 
     switch (len) {
-      case 1: return ee.fn.call(ee.context), true;
-      case 2: return ee.fn.call(ee.context, a1), true;
-      case 3: return ee.fn.call(ee.context, a1, a2), true;
-      case 4: return ee.fn.call(ee.context, a1, a2, a3), true;
-      case 5: return ee.fn.call(ee.context, a1, a2, a3, a4), true;
-      case 6: return ee.fn.call(ee.context, a1, a2, a3, a4, a5), true;
-    }
+      case 1:
+        fn.call(fn.__EE3_context || this);
+      break;
+      case 2:
+        fn.call(fn.__EE3_context || this, a1);
+      break;
+      case 3:
+        fn.call(fn.__EE3_context || this, a1, a2);
+      break;
+      case 4:
+        fn.call(fn.__EE3_context || this, a1, a2, a3);
+      break;
+      case 5:
+        fn.call(fn.__EE3_context || this, a1, a2, a3, a4);
+      break;
+      case 6:
+        fn.call(fn.__EE3_context || this, a1, a2, a3, a4, a5);
+      break;
 
+      default:
+        for (i = 1, args = new Array(len -1); i < len; i++) {
+          args[i - 1] = arguments[i];
+        }
+
+        fn.apply(fn.__EE3_context || this, args);
+    }
+  } else {
     for (i = 1, args = new Array(len -1); i < len; i++) {
       args[i - 1] = arguments[i];
     }
 
-    ee.fn.apply(ee.context, args);
-  } else {
-    for (i = 0; i < length; i++) {
-      if (listeners[i].once) this.removeListener(event, listeners[i].fn, true);
-
-      switch (len) {
-        case 1: listeners[i].fn.call(listeners[i].context); break;
-        case 2: listeners[i].fn.call(listeners[i].context, a1); break;
-        case 3: listeners[i].fn.call(listeners[i].context, a1, a2); break;
-        default:
-          if (!args) for (j = 1, args = new Array(len -1); j < len; j++) {
-            args[j - 1] = arguments[j];
-          }
-
-          listeners[i].fn.apply(listeners[i].context, args);
-      }
+    for (i = 0; i < length; fn = listeners[++i]) {
+      if (fn.__EE3_once) this.removeListener(event, fn);
+      fn.apply(fn.__EE3_context || this, args);
     }
   }
 
@@ -115,7 +95,9 @@ EventEmitter.prototype.emit = function emit(event, a1, a2, a3, a4, a5) {
 EventEmitter.prototype.on = function on(event, fn, context) {
   if (!this._events) this._events = {};
   if (!this._events[event]) this._events[event] = [];
-  this._events[event].push(new EE( fn, context || this ));
+
+  fn.__EE3_context = context;
+  this._events[event].push(fn);
 
   return this;
 };
@@ -129,11 +111,8 @@ EventEmitter.prototype.on = function on(event, fn, context) {
  * @api public
  */
 EventEmitter.prototype.once = function once(event, fn, context) {
-  if (!this._events) this._events = {};
-  if (!this._events[event]) this._events[event] = [];
-  this._events[event].push(new EE(fn, context || this, true ));
-
-  return this;
+  fn.__EE3_once = true;
+  return this.on(event, fn, context);
 };
 
 /**
@@ -141,17 +120,16 @@ EventEmitter.prototype.once = function once(event, fn, context) {
  *
  * @param {String} event The event we want to remove.
  * @param {Function} fn The listener that we need to find.
- * @param {Boolean} once Only remove once listeners.
  * @api public
  */
-EventEmitter.prototype.removeListener = function removeListener(event, fn, once) {
+EventEmitter.prototype.removeListener = function removeListener(event, fn) {
   if (!this._events || !this._events[event]) return this;
 
   var listeners = this._events[event]
     , events = [];
 
-  if (fn) for (var i = 0, length = listeners.length; i < length; i++) {
-    if (listeners[i].fn !== fn && listeners[i].once !== once) {
+  for (var i = 0, length = listeners.length; i < length; i++) {
+    if (fn && listeners[i] !== fn) {
       events.push(listeners[i]);
     }
   }
@@ -1565,15 +1543,6 @@ Primus.prototype.client = function client() {
       forceBase64: true,
 
       //
-      // XDR has been the source of pain for most real-time users. It doesn't
-      // support the full CORS spec and is infested with bugs. It cannot connect
-      // cross-scheme, does not send ANY authorization information like Cookies,
-      // Basic Authorization headers etc. Force this off by default to ensure a
-      // stable connection.
-      //
-      enablesXDR: false,
-
-      //
       // Force timestamps on every single connection. Engine.IO only does this
       // for polling by default, but WebSockets require an explicit `true`
       // boolean.
@@ -1653,7 +1622,7 @@ Primus.prototype.decoder = function decoder(data, fn) {
 
   fn(err, data);
 };
-Primus.prototype.version = "2.4.4";
+Primus.prototype.version = "2.4.3";
 
 //
 // Hack 1: \u2028 and \u2029 are allowed inside string in JSON. But JavaScript

@@ -2,18 +2,17 @@
 	appDir: "../"
 	, paths: {
 		"backbone": "empty:" //"libs/backbone/backbone"
-		, "backbone.collectionbinder": "empty:" //"libs/backbone/backbone.collectionbinder"
 		, "backbone.iobind": "libs/backbone/backbone.iobind"
 		, "backbone.iosync": "libs/backbone/backbone.iosync"
 		, "backbone.marionette": "empty:" //"libs/backbone/backbone.marionette"
-		, "backbone.modelbinder": "empty:" //"libs/backbone/backbone.modelbinder"
 		, "backbone.react": "empty:" //"libs/backbone/backbone.react"
 		, "cordova": "empty:"
 		, "cordova.loader": "empty:"
-		, "detectmobilebrowser": "libs/detectmobilebrowser"
+		// TODO:, "detectmobilebrowser": "libs/detectmobilebrowser"
 		, "jquery": "empty:" //"libs/jquery/jquery"
 		// TODO:, "jquery.browser": "empty:" //"libs/jquery/jquery.browser"
 		// TODO:, "jquery.cookie": "empty:" //"libs/jquery/jquery.cookie"
+		// TODO: POC , "jquery.handsontable": "empty:" //"libs/jquery/jquery.handsontable"
 		// TODO:, "jquery.history": "empty:" //"libs/jquery/jquery.history"
 		, "jquery.mobile": "empty:" //"libs/jquery/jquery.mobile"
 		// TODO:, "modernizr": "libs/modernizr"
@@ -29,12 +28,6 @@
 				, "underscore"
 			]
 			, exports: "Backbone"
-		}
-		, "backbone.collectionbinder": {
-			deps: [
-				"backbone"
-				, "backbone.modelbinder"
-			]
 		}
 		, "backbone.iobind": {
 			deps: [
@@ -65,6 +58,9 @@
 		// TODO:, "jquery.cookie": {
 		//	deps: ["jquery"]
 		//}
+		// TODO: POC , "jquery.handsontable": {
+		//	deps: ["jquery"]
+		//}
 		// TODO:, "jquery.history": {
 		//	deps: ["jquery"]
 		//}
@@ -84,16 +80,15 @@
 	]
 	, exclude: [
 		"backbone"
-		, "backbone.collectionbinder"
 		, "backbone.iobind"
 		, "backbone.iosync"
 		, "backbone.marionette"
-		, "backbone.modelbinder"
 		, "backbone.react"
 		, "cordova"
 		, "jquery"
 		// TODO:, "jquery.browser"
 		// TODO:, "jquery.cookie"
+		// TODO: POC , "jquery.handsontable"
 		// TODO:, "jquery.history"
 		, "jquery.mobile"
 		, "react"

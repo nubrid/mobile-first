@@ -1,12 +1,12 @@
-# TODO Sample
+# TODO Sample (!Broken)
 
-Hybrid Web + Mobile Framework using VS.Net (JUN 2, 2015)
+Hybrid Web + Mobile Framework using VS.Net (JUN 4, 2015)
 
 _For use in my company, Excent One, starting with NCC NOAH._
 
 ## Technologies Used
 
-- Backbone `iobind` `iosync` `modelbinder` `picky` `syphon`
+- Backbone `iobind` `iosync` ~~`modelbinder`~~ `picky` `syphon`
 - Cordova `PhoneGap`
 - Express
 - FLUX

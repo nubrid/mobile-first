@@ -73,34 +73,32 @@
 				//this.$el.enhanceWithin();
 			};
 
-			require(["detectmobilebrowser"], function () {
-				if (window.phonegap) {
-					require(["cordova.loader"], function () {
-						$(function () {
-							document.addEventListener("deviceready", start, false);
-						});
+			if (window.phonegap) {
+				require(["cordova.loader"], function () {
+					$(function () {
+						document.addEventListener("deviceready", start, false);
+					});
+				});
+			}
+			else {
+				start();
+			}
+
+			function start() {
+				if (Backbone.history) {
+					$(".back").on("click", function () {
+						window.history.back();
+						return false;
+					});
+
+					require(["apps/home/HomeApp", "apps/todos/TodosApp"], function (HomeApp, TodosApp) {
+						HomeApp.start();
+						TodosApp.start();
+
+						Backbone.history.start();
 					});
 				}
-				else {
-					start();
-				}
-
-				function start() {
-					if (Backbone.history) {
-						$(".back").on("click", function () {
-							window.history.back();
-							return false;
-						});
-
-						require(["apps/home/HomeApp", "apps/todos/TodosApp"], function (HomeApp, TodosApp) {
-							HomeApp.start();
-							TodosApp.start();
-
-							Backbone.history.start();
-						});
-					}
-				}
-			});
+			}
 		}
 		, toggleLoading: function (action) {
 			var $this = $(this)

@@ -2,24 +2,29 @@ window.host = "//" + document.location.host;
 window.protocol = document.location.protocol;
 window.phonegap = window.protocol === "file:";
 _libProtocol = (window.phonegap ? "https:" : window.protocol);
-_libMinify = ""; // TODO: For PROD, replace with: _libMinify = ".min";
+_libMinify = ""; // TODO: For PROD, replace with: _libMinify = ".min"; For DEV, replace with: _libMinify = ""
+var jQueryVersion = "2.1.4";
+if (!("querySelector" in document
+    && "localStorage" in window
+    && "addEventListener" in window)) {
+	jQueryVersion = "1.11.3"
+}
 require.config({
-	urlArgs: "bust=v1.0.x"
+	urlArgs: "bust=v1.0.x" // TODO: For PROD, replace with: urlArgs: "bust=v1.0.x"; For DEV, replace with: urlArgs: "bust=" + (+new Date)
 	, baseUrl: "js"
 	, paths: {
-		"backbone": _libProtocol + "//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.2/backbone" + (_libMinify.length ? _libMinify.replace(".", "-") : "") //"libs/backbone/backbone"
-		, "backbone.collectionbinder": _libProtocol + "//cdnjs.cloudflare.com/ajax/libs/backbone.modelbinder/1.0.5/Backbone.CollectionBinder" + _libMinify //"libs/backbone/backbone.collectionbinder"
+		"backbone": _libProtocol + "//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.2.0/backbone" + (_libMinify.length ? _libMinify.replace(".", "-") : "") //"libs/backbone/backbone"
 		, "backbone.iobind": "libs/backbone/backbone.iobind"
 		, "backbone.iosync": "libs/backbone/backbone.iosync"
-		, "backbone.marionette": _libProtocol + "//cdnjs.cloudflare.com/ajax/libs/backbone.marionette/2.1.0/backbone.marionette" + _libMinify //"libs/backbone/backbone.marionette"
-		, "backbone.modelbinder": _libProtocol + "//cdnjs.cloudflare.com/ajax/libs/backbone.modelbinder/1.0.5/Backbone.ModelBinder" + _libMinify //"libs/backbone/backbone.modelbinder"
+		, "backbone.marionette": _libProtocol + "//cdnjs.cloudflare.com/ajax/libs/backbone.marionette/2.4.1/backbone.marionette" + _libMinify //"libs/backbone/backbone.marionette"
 		, "backbone.react": _libProtocol + "//cdnjs.cloudflare.com/ajax/libs/backbone-react-component/0.8.1/backbone-react-component" + (_libMinify.length ? _libMinify.replace(".", "-") : "") //"libs/backbone/backbone.react"
 		, "cordova": "../cordova"
 		, "cordova.loader": "libs/cordova/cordova.loader"
-		, "detectmobilebrowser": "libs/detectmobilebrowser"
-		, "jquery": _libProtocol + "//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery" + _libMinify //"libs/jquery/jquery"
+		// TODO:, "detectmobilebrowser": "libs/detectmobilebrowser"
+		, "jquery": _libProtocol + "//ajax.googleapis.com/ajax/libs/jquery/" + jQueryVersion + "/jquery" + _libMinify //"libs/jquery/jquery"
 		// TODO:, "jquery.browser": _libProtocol + "//cdnjs.cloudflare.com/ajax/libs/jquery-browser/0.0.6/jquery.browser" + _libMinify //"libs/jquery/jquery.browser"
 		// TODO:, "jquery.cookie": _libProtocol + "//cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie" + _libMinify //"libs/jquery/jquery.cookie"
+		// TODO: POC , "jquery.handsontable": _libProtocol + "//cdnjs.cloudflare.com/ajax/libs/handsontable/0.14.1/handsontable.full" + _libMinify //"libs/jquery/jquery.handsontable"
 		// TODO:, "jquery.history": _libProtocol + "//cdnjs.cloudflare.com/ajax/libs/jquery-history/1.9/jquery.history" + _libMinify //"libs/jquery/jquery.history"
 		, "jquery.mobile": _libProtocol + "//ajax.googleapis.com/ajax/libs/jquerymobile/1.4.5/jquery.mobile" + _libMinify //"libs/jquery/jquery.mobile"
 		// TODO:, "modernizr": "libs/modernizr"
@@ -35,12 +40,6 @@ require.config({
 				, "underscore"
 			]
 			, exports: "Backbone"
-		}
-		, "backbone.collectionbinder": {
-			deps: [
-				"backbone"
-				, "backbone.modelbinder"
-			]
 		}
 		, "backbone.iobind": {
 			deps: [
@@ -71,6 +70,9 @@ require.config({
 		// TODO:, "jquery.cookie": {
 		//	deps: ["jquery"]
 		//}
+		// TODO: POC , "jquery.handsontable": {
+		//	deps: ["jquery"]
+		//}
 		// TODO:, "jquery.history": {
 		//	deps: ["jquery"]
 		//}
@@ -95,7 +97,7 @@ require(["jquery"], function () {
 		$.mobile.pushStateEnabled = false;
 	});
 
-	require(["backbone.iobind", "backbone.collectionbinder", "jquery.mobile"], function () {
+	require(["backbone.iobind", "jquery.mobile"], function () {
 		require(["app"], function (app) {
 			app.start();
 		});
