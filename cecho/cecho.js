@@ -5,12 +5,12 @@
 		.usage("Usage: $0 <message> [options]")
 		.demand(1)
 		.example("$0 \"Hello World!\"")
-		.example("$0 \"Hello World!\" i")
-		.example("$0 \"Hello World!\" info")
-		.example("$0 \"Hello World!\" -i")
-		.example("$0 \"Hello World!\" -info")
-		.example("$0 \"Hello World!\" -v i")
-		.example("$0 \"Hello World!\" -v info")
+		.example("$0 i \"Hello World!\"")
+		.example("$0 info \"Hello World!\"")
+		.example("$0 -i \"Hello World!\"")
+		.example("$0 -info \"Hello World!\"")
+		.example("$0 -v i \"Hello World!\"")
+		.example("$0 -v info \"Hello World!\"")
 		.options({
 			"v": {
 				alias: "verbose"
@@ -37,7 +37,7 @@
 
 	module.exports = function() {
 		var color = clc.blueBright;
-		switch (argv.v || argv.e || argv.w || argv.i || argv._[1]) {
+		switch (argv.v || argv.e || argv.w || argv.i || argv._[0]) {
 			case "i":
 			case "info":
 				color = clc.blueBright;
@@ -52,6 +52,6 @@
 				break;
 		}
 
-		console.log(color(argv._[0]));
+		console.log(color(argv._[1] || argv._[0]));
 	};
 })();

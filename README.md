@@ -1,4 +1,4 @@
-# Hybrid Web + Mobile Framework v6.2.0 (MAR 26, 2019)
+# Hybrid Web + Mobile Framework v6.2.0 (SEP 22, 2022)
 
 By this time, we're now able to perform CRUD operations `OFFLINE` and sync the changes once `ONLINE` using `PouchDB`, `PWA` and `WebSockets`. We're using `LevelDB`, `GraphQL` and `PostgreSQL` saving data in `JSON` format. Form is also dynamic and configurable using schemas.
 
@@ -6,29 +6,28 @@ By this time, we're now able to perform CRUD operations `OFFLINE` and sync the c
 
 - 7zip
 - Babel
-- ~~Backbone `immutable` `iobind` `iosync` ~~`modelbinder`~~ `picky` `syphon`~~
+- ~~Backbone `immutable` `iobind` `iosync` `modelbinder` `picky` `syphon`~~
 - CoffeeScript
-- Cordova `Crosswalk` `PhoneGap` `Telerik`
+- ~~Cordova `Crosswalk` `PhoneGap` `Telerik`~~
 - CSP
 - EJS
 - ES6+ ~~`amd`~~ `esm`
-- Eslint `immutable`
+- Eslint `compat` `immutable`
 - Express
 - Faker
-- Famous
-- FLUX
+- ~~Famous~~
+- ~~FLUX~~
 - ~~GraphQL~~
 - Grunt
 - Helmet `CSRF/XSS protection`
 - HMR
 - Imagemin
-- IndexedDB/WebSQL
+- ~~IndexedDB/WebSQL/LocalStorage~~
 - ~~jQuery, jQuery UI & jQuery Mobile~~
 - ~~JSHint~~
 - JSON Server
 - ~~LevelDB~~
 - ~~LiveReload~~
-- LocalStorage
 - Lodash
 - ~~MarionetteJS `v2`~~
 - ModernizrJS
@@ -42,8 +41,8 @@ By this time, we're now able to perform CRUD operations `OFFLINE` and sync the c
 - ~~PouchDB `replication`~~
 - Prettier
 - PWA `cache-manifest` `ServiceWorker` `workbox`
-- ReactJS `react-dom` `redux` ~~`class/`~~`functional components` `JSX` ~~`mixins` `prop-types` `subschema` `transformer` `transitions`~~
-- Recaptcha
+- ReactJS `react-dom` `redux` ~~`class/`~~`functional components` `JSX` ~~`mixins`~~ `prop-types` ~~`subschema` `transformer` `transitions`~~
+- ~~Recaptcha~~
 - ~~RequireJS `cache buster`~~
 - REST API
 - ~~SharePoint~~

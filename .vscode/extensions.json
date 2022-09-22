@@ -5,13 +5,24 @@
   // List of extensions which should be recommended for users of this workspace.
   "recommendations": [
     "formulahendry.auto-close-tag",
+    "formulahendry.auto-rename-tag",
+    "alefragnani.bookmarks",
+    "shan.code-settings-sync",
     "msjsdiag.debugger-for-chrome",
+    "zignd.html-css-class-completion",
     "qassimfarid.ejs-language-support",
+    "pkief.material-icon-theme",
     "christian-kohler.npm-intellisense",
     "christian-kohler.path-intellisense",
     "esbenp.prettier-vscode",
+    "mtxr.sqltools",
+    "dracula-theme.theme-dracula",
+    "wayou.vscode-todo-highlight",
+    "chakrounanas.turbo-console-log",
+    "kamikillerto.vscode-colorize",
     "dbaeumer.vscode-eslint",
-    "dbankier.vscode-quick-select"
+    "dbankier.vscode-quick-select",
+    "stylelint.vscode-stylelint"
   ],
   // List of extensions recommended by VS Code that should not be recommended for users of this workspace.
   "unwantedRecommendations": []

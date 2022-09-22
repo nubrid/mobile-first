@@ -1,15 +1,22 @@
-// Place your settings in this file to overwrite default and user settings.
 {
+  "editor.bracketPairColorization.enabled": true,
   "editor.formatOnPaste": true,
   "editor.formatOnSave": true,
   "[javascript]": {
     "editor.formatOnSave": false
   },
+  "editor.fontFamily": "'Fira Code', Consolas, 'Courier New', monospace",
+  "editor.fontLigatures": true,
+  "editor.fontSize": 13,
   "editor.formatOnType": true,
+  "editor.guides.bracketPairs": true,
+  "editor.guides.indentation": true,
+  "editor.lineHeight": 25,
+  "editor.linkedEditing": true,
   "editor.minimap.showSlider": "always",
   "editor.renderControlCharacters": true,
-  "editor.renderIndentGuides": true,
   "editor.renderWhitespace": "all",
+  "editor.showUnused": false,
   "editor.tabSize": 2,
   "editor.wordWrap": "on",
   "emmet.includeLanguages": {
@@ -17,6 +24,8 @@
   },
   "eslint.alwaysShowStatus": true,
   "eslint.enable": true,
+  "explorer.openEditors.visible": 0,
+  "files.eol": "\r\n",
   "git.autofetch": true,
   "javascript.format.insertSpaceAfterFunctionKeywordForAnonymousFunctions": false,
   "javascript.validate.enable": false,
@@ -40,5 +49,20 @@
     "**/typings": true,
     "**/www": true
   },
-  "telemetry.enableTelemetry": false
+  "telemetry.enableTelemetry": false,
+  "todohighlight.keywords": [
+    {
+      "text": "NOTE:",
+      "color": "white",
+      "backgroundColor": "blue"
+    },
+    {
+      "text": "HACK:",
+      "color": "white",
+      "backgroundColor": "red"
+    }
+  ],
+  "workbench.activityBar.visible": false,
+  "workbench.editor.pinnedTabSizing": "compact",
+  "workbench.sideBar.location": "right"
 }

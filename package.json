@@ -1,7 +1,7 @@
 {
   "name": "nubrid",
   "description": "Nubrid",
-  "version": "6.0.0",
+  "version": "6.2.0",
   "private": true,
   "author": "Randell Rivera",
   "license": "ISC",
@@ -55,6 +55,7 @@
     "download-cli": "^1.1.1",
     "eslint": "^5.15.3",
     "eslint-config-prettier": "^4.1.0",
+    "eslint-plugin-compat": "^3.1.0",
     "eslint-plugin-immutable": "^1.0.0",
     "eslint-plugin-lodash": "^5.1.0",
     "eslint-plugin-prettier": "^3.0.1",
@@ -136,9 +137,9 @@
     "pretest": "eslint script",
     "test": "karma start --single-run --browsers PhantomJS_custom",
     "prebuild": "cecho \"test & clean:\" && run-p -s test clean",
-    "build": "cecho \"build:\" && run-p -s \"build:*\"",
-    "build:css": "cecho -v e \"stylus assets/styles/main.styl -m -o dist/ && hashmark -s -l 8 -m assets.json dist/main.css 'dist/{name}{hash}{ext}'\"",
-    "build:html": "cecho -v e \"jade assets/markup/index.jade --obj assets.json -o dist\"",
+    "build": "cecho \"build:\" && run-p -s build:*",
+    "build:css": "cecho e \"stylus assets/styles/main.styl -m -o dist/ && hashmark -s -l 8 -m assets.json dist/main.css 'dist/{name}{hash}{ext}'\"",
+    "build:html": "cecho e \"jade assets/markup/index.jade --obj assets.json -o dist\"",
     "build:img": "cecho \"build:img\" && run-p -s build:img:*",
     "build:img:gif": "imagemin src/img/**/*.gif --out-dir=www/img --plugin=gifsicle",
     "build:img:jpg": "imagemin src/img/**/*.{jpg,jpeg} --out-dir=www/img --plugin=mozjpeg",
@@ -152,8 +153,8 @@
     "android:run": "cecho \"run:\" && cordova run android --device",
     "deploy": "run-s -s build android",
     "deploy:run": "run-s -s build android:run",
-    "deploy:prod": "cecho -v e \"s3-cli sync ./www/ s3://nubrid-com/prod-site/\"",
-    "deploy:stage": "cecho -v e \"s3-cli sync ./www/ s3://nubrid-com/stage-site/\"",
+    "deploy:prod": "cecho e \"s3-cli sync ./www/ s3://nubrid-com/prod-site/\"",
+    "deploy:stage": "cecho e \"s3-cli sync ./www/ s3://nubrid-com/stage-site/\"",
     "// ============================== SERVERS ============================== ": "",
     "karma": "karma start",
     "nginx": "cmd.exe /k \"cd Config\\nginx && nginx && cd ..\\..\"",
@@ -172,6 +173,14 @@
     "testem": "testem"
   },
   "// ============================== ESLINT ============================== ": "",
+  "browserslist": [
+    "defaults or > 0.2% in my stats and supports es6 and not IE 11 and not Op_Mini all and not baidu < 7.13 and not kaios < 2.6",
+    "last 2 Chrome major versions",
+    "last 2 Edge major versions",
+    "last 2 Firefox major versions",
+    "last 2 Opera major versions",
+    "last 2 Safari major versions"
+  ],
   "eslintConfig": {
     "env": {
       "browser": true,
@@ -181,6 +190,7 @@
     },
     "extends": [
       "eslint:recommended",
+      "plugin:compat/recommended",
       "plugin:lodash/recommended",
       "plugin:react/recommended",
       "plugin:prettier/recommended",
@@ -195,12 +205,15 @@
       "sourceType": "module"
     },
     "plugins": [
+      "compat",
       "immutable"
     ],
     "rules": {
-      "immutable/no-let": 2,
-      "immutable/no-this": 2,
+      "immutable/no-let": 1,
+      "immutable/no-this": 1,
+      "immutable/no-mutation": 1,
       "no-var": 2,
+      "no-undef": 1,
       "no-param-reassign": 2,
       "lodash/prefer-lodash-method": [
         2,

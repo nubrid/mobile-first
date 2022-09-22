@@ -58,6 +58,7 @@ _primus.save(path.resolve("dist/primus.io.js"))
 //   name: () => "[name]", // eslint-disable-line lodash/prefer-constant
 // });
 
+// eslint-disable-next-line immutable/no-mutation
 module.exports = new Config().extend(`webpack.config.${_env}.js`).merge({
   mode: _env,
   entry: {
@@ -108,7 +109,6 @@ module.exports = new Config().extend(`webpack.config.${_env}.js`).merge({
             [
               "@babel/env",
               {
-                targets: "last 2 versions, > 1%, ie 11",
                 loose: true,
                 modules: false,
               },
