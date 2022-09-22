@@ -298,7 +298,12 @@ else {
 
 	primus.use("broadcast", require("primus-broadcast"));
 
-	require("babel-core/register");
+	require("babel-core/register")({
+		"plugins": [
+			"transform-es2015-function-name",
+			"transform-es2015-modules-commonjs"
+		]
+	});
 	let graphql = require("./data/graphql.js")
 		, Schema = require("./data/schema.js");
 

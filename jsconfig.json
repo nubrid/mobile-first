@@ -1,9 +1,10 @@
 {
 	"compilerOptions": {
-		"module": "commonjs"
+		"target": "ES6"
+		, "module": "commonjs"
 	}
 	, "exclude": [
-		"babel-src"
+		"src"
 		, "cecho"
 		, "Config"
 		, "dist"

@@ -12,7 +12,7 @@ _For use in my company, Excent One, starting with NCC NOAH._
 - CoffeeScript
 - Cordova ~~`Crosswalk`~~ `PhoneGap` `Telerik`
 - CSP
-- ES6+
+- ES6+ ~~`amd`~~ `esm`
 - Express
 - Faker
 - Famous

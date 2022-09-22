@@ -169,7 +169,7 @@
             return setTimeout($.proxy(function() {
               var form, input, todo;
               todo = this.list.$el.children().first();
-              todo.find("#btnEditTodo").click();
+              todo.find("button.ui-btn:first").click();
               this.form = this.react.findRenderedComponentWithType(this.view.page, View.React.TodosForm);
               form = ReactDOM.findDOMNode(this.form);
               input = $(form).find(".ui-input-text input");
@@ -182,7 +182,7 @@
             return setTimeout($.proxy(function() {
               var todo;
               todo = this.list.$el.children().first();
-              todo.find("#btnDeleteTodo").click();
+              todo.find("button.ui-btn:last").click();
               this.trigger.should.have.been.calledOnce;
               this.trigger.should.have.been.calledWithMatch(this.actionType.DELETE);
               return done();

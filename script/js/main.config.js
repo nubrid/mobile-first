@@ -1,11 +1,11 @@
 /* jshint maxcomplexity: false */
 (function () {
-	"use strict";
+	// "use strict";
 	if (!!window.__karma__ || !!window.testem) window.isDEV = true;
 	window.phonegap = document.location.protocol === "file:";
 	window.url = window.phonegap
-		? (window.isDEV ? "http:" : "https:") + "//" + document.body.getAttribute("data-host")
-		: document.location.protocol + "//" + document.location.host;
+		? `${window.isDEV ? "http:" : "https:"}//${document.body.getAttribute("data-host")}`
+		: `${document.location.protocol}//${document.location.host}`;
 
 	function getjQueryVersion (version) {
 		if (!("querySelector" in document
@@ -18,8 +18,8 @@
 	}
 
 	function _getPath(localPath, cdnPath, minSeparator, noSourceMap) {
-		var path = []
-			, min = (minSeparator || ".") + "min";
+		let path = []
+			, min = `${minSeparator || "."}min`;
 		
 		if (!window.phonegap) {
 			min = window.isDEV && noSourceMap ? "" : min;
@@ -128,23 +128,23 @@
 			}
 		}
 	});
-	require([(window.baseUrl || "") + "main.config.version"], function (version) {
+	require([(window.baseUrl || "") + "main.config.version"], version => {
 		require.config({
 			urlArgs: "bust=v1.0.x" // TODO: For PROD, replace with latest release
 			, paths: {
-				"backbone": _getPath("libs/backbone/backbone", "//cdnjs.cloudflare.com/ajax/libs/backbone.js/" + version.backbone + "/backbone", "-")
+				"backbone": _getPath("libs/backbone/backbone", `//cdnjs.cloudflare.com/ajax/libs/backbone.js/${version.backbone}/backbone`, "-")
 				, "backbone.immutable": _getPath("libs/backbone/backbone.immutable")
 				, "backbone.iobind": _getPath("libs/backbone/backbone.iobind")
 				, "backbone.iosync": _getPath("libs/backbone/backbone.iosync")
-				, "backbone.marionette": _getPath("libs/backbone/backbone.marionette", "//cdnjs.cloudflare.com/ajax/libs/backbone.marionette/" + version["backbone.marionette"] + "/backbone.marionette")
-				, "backbone.react": _getPath("libs/backbone/backbone.react", "//cdnjs.cloudflare.com/ajax/libs/backbone-react-component/" + version["backbone-react-component"] + "/backbone-react-component", "-", true)
+				, "backbone.marionette": _getPath("libs/backbone/backbone.marionette", `//cdnjs.cloudflare.com/ajax/libs/backbone.marionette/${version["backbone.marionette"]}/backbone.marionette`)
+				, "backbone.react": _getPath("libs/backbone/backbone.react", `//cdnjs.cloudflare.com/ajax/libs/backbone-react-component/${version["backbone-react-component"]}/backbone-react-component`, "-", true)
 				, "cordova": "../cordova"
-				, "jquery": _getPath("libs/jquery/jquery", "//ajax.googleapis.com/ajax/libs/jquery/" + getjQueryVersion(version.jquery) + "/jquery")
-				, "jquery.mobile": _getPath("libs/jquery/jquery.mobile", "//ajax.googleapis.com/ajax/libs/jquerymobile/" + version["jquery-mobile"] + "/jquery.mobile")
+				, "jquery": _getPath("libs/jquery/jquery", `//ajax.googleapis.com/ajax/libs/jquery/${getjQueryVersion(version.jquery)}/jquery`)
+				, "jquery.mobile": _getPath("libs/jquery/jquery.mobile", `//ajax.googleapis.com/ajax/libs/jquerymobile/${version["jquery-mobile"]}/jquery.mobile`)
 				, "primus.io": _getPath("libs/primus.io")
-				, "react": _getPath("libs/react/react", "//fb.me/react-with-addons-" + version.react, null, true)
-				, "react.dom": _getPath("libs/react/react.dom", "//fb.me/react-dom-" + version["react-dom"], null, true)
-				, "underscore": _getPath("libs/underscore/underscore", "//cdnjs.cloudflare.com/ajax/libs/underscore.js/" + version.underscore + "/underscore", "-")
+				, "react": _getPath("libs/react/react", `//fb.me/react-with-addons-${version.react}`, null, true)
+				, "react.dom": _getPath("libs/react/react.dom", `//fb.me/react-dom-${version["react-dom"]}`, null, true)
+				, "underscore": _getPath("libs/underscore/underscore", `//cdnjs.cloudflare.com/ajax/libs/underscore.js/${version.underscore}/underscore`, "-")
 			}
 		});
 	});

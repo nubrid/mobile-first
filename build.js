@@ -1,15 +1,14 @@
 /* https://github.com/jrburke/r.js/blob/master/build/example.build.js */
 /* jshint -W030 */
 ({
-	mainConfigFile: "main.config.js"
-	, appDir: "../"
-	, dir: "../../www"
+	mainConfigFile: "src/js/main.config.js" //"main.config.js"
+	, appDir: "src" //"../"
+	, dir: "www" //"../../www"
 	, modules: [
 		{
 			name: "main"
 			, include: [
-				"app"
-				, "apps/common/App"
+				"apps/common/App"
 				, "apps/common/Controller"
 				, "apps/common/Dispatcher"
 				, "apps/common/UI"
@@ -21,15 +20,6 @@
 			name: "apps/home/App"
 			, include: [
 				"apps/home/show/Controller"
-			]
-			, exclude: [
-				"main"
-			]
-		}
-		, {
-			name: "apps/pointme/App"
-			, include: [
-				"apps/pointme/show/Controller"
 			]
 			, exclude: [
 				"main"

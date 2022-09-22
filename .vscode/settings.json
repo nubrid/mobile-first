@@ -6,7 +6,6 @@
 	"search.exclude": {
 		"**/node_modules": true,
 		"**/bower_components": true,
-		"**/babel-src": true,
 		"**/cecho/node_modules": true,
 		"**/Config/nginx/contrib": true,
 		"**/Config/nginx/docs": true,
@@ -18,7 +17,8 @@
 		"**/logs": true,
 		"**/platforms": true,
 		"**/plugins": true,
-		"**/src/js/libs": true,
+		"**/script/js/libs": true,
+		"**/src": true,
 		"**/typings": true,
 		"**/www": true
 	}

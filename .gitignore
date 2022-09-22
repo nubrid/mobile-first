@@ -13,6 +13,7 @@ node_modules
 obj
 platforms
 plugins
+src
 typings
 app.config.js
 *.log

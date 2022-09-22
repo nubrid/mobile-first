@@ -1,45 +1,38 @@
 ﻿/*
 Home Show View
 */
-define(
-["apps/AppManager"
-, "apps/common/View"]
-, function (AppManager, CommonView) {
-	"use strict";
-	var Home = React.createClass({
-		displayName: "Home"
-		, handleOpenBrowserClick: function () {
-			this.props.view.trigger("home:openBrowser", $(this.txtInput).val());
-		}
-		, handleLoginClick: function (event) {
-			var el = $(event.target);
+import { Content, UI } from "apps/common/View"; // jshint ignore:line
+let Home = React.createClass({
+	displayName: "Home"
+	, handleOpenBrowserClick () {
+		this.props.view.trigger("home:openBrowser", $(this.txtInput).val());
+	}
+	, handleLoginClick( event ) {
+		let el = $(event.target);
 
-			if (el.closest("a").length) this.props.view.trigger("home:login", event);
-		}
-		, componentDidMount: function () {
-			$(this.refs.btnOpenBrowser).on("click", this.handleOpenBrowserClick);
-			$(this.refs.divLogin).on("click", this.handleLoginClick);
-		}
-		, render: function () {
-			return CommonView.UI.page({ id: this.props.id }
-				, CommonView.UI.input({ ref: CommonView.UI.ref("txtInput", this) })
-				, CommonView.UI.button({ ref: "btnOpenBrowser" }, "Open Browser")
-				, CommonView.UI.a({ href: "#todos" }, "Todos")
-				, CommonView.UI.a({ href: "#form" }, "Form")
-				, React.createElement("div", { ref: "divLogin", className: "social-media" }
-					, React.createElement("a", { href: "#facebook", title: "facebook", className: "facebook" }, "Facebook")
-					, React.createElement("a", { href: "#twitter", title: "twitter", className: "twitter" }, "Twitter")
-					, React.createElement("a", { href: "#linkedin", title: "linkedin", className: "linkedin" }, "LinkedIn")
-				)
-			);
-		}
-	});
-
-	var Show = {};
-
-	Show.Content = CommonView.Content.extend({
-		ReactClass: Home
-	});
-
-	return Show;
+		if (el.closest("a").length) this.props.view.trigger("home:login", event);
+	}
+	, render () {
+		/* jshint ignore:start */
+		return (
+			<UI.page id={ this.props.id }>
+				<UI.input refCallback={ UI.ref("txtInput", this) } />
+				<UI.button onClick={ this.handleOpenBrowserClick }>Open Browser</UI.button>
+				<UI.a href="#todos">Todos</UI.a>
+				<UI.a href="#form">Form</UI.a>
+				<div onClick={ this.handleLoginClick } className="social-media">
+					<a href="#facebook" title="facebook" className="facebook">Facebook</a>
+					<a href="#twitter" title="twitter" className="twitter">Twitter</a>
+					<a href="#linkedin" title="linkedin" className="linkedin">LinkedIn</a></div></UI.page>
+		);
+		/* jshint ignore:end */
+	}
 });
+
+let Show = {};
+
+Show.Content = Content.extend({
+	ReactClass: Home
+});
+
+export default Show;

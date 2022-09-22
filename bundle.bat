@@ -69,13 +69,13 @@ call npm run -s uglifyjs -- src/js/libs/backbone/backbone.iosync.js -o src/js/li
 call npm run -s uglifyjs -- node_modules/requirejs/require.js -o src/js/libs/require/require.min.js -p relative -c -m
 :: call npm run -s uglifyjs -- src/js/libs/require/text.js -o src/js/libs/require/text.min.js -p relative -c -m
 
-call npm run -s json -- -f package.json dependencies['underscore'] devDependencies['backbone'] devDependencies['backbone.marionette'] devDependencies['backbone-react-component'] devDependencies['jquery'] devDependencies['jquery-mobile'] devDependencies['react'] devDependencies['react-dom'] -a -j > src/js/main.config.version.js
-:: call npm run -s replace -- ">.+" "" src/js/main.config.version.js
-call npm run -s replace -- "\n| |dependencies\.|devDependencies\." "" src/js/main.config.version.js
-call npm run -s replace -- ":(\D)\D" ":$1" src/js/main.config.version.js
-call npm run -s replace -- "\]" ";});" src/js/main.config.version.js
-call npm run -s replace -- "\[" "define([],function(){""use strict"";return" src/js/main.config.version.js
-:: call npm run -s uglifyjs -- src/js/main.config.version.js -o src/js/main.config.version.js -p relative -c -m
+call npm run -s json -- -f package.json dependencies['underscore'] devDependencies['backbone'] devDependencies['backbone.marionette'] devDependencies['backbone-react-component'] devDependencies['jquery'] devDependencies['jquery-mobile'] devDependencies['react'] devDependencies['react-dom'] -a -j > script/js/main.config.version.js
+:: call npm run -s replace -- ">.+" "" script/js/main.config.version.js
+call npm run -s replace -- "\n| |dependencies\.|devDependencies\." "" script/js/main.config.version.js
+call npm run -s replace -- ":(\D)\D" ":$1" script/js/main.config.version.js
+call npm run -s replace -- "\]" ";" script/js/main.config.version.js
+call npm run -s replace -- "\[" "export default" script/js/main.config.version.js
+:: call npm run -s uglifyjs -- script/js/main.config.version.js -o script/js/main.config.version.js -p relative -c -m
 
 set arg=npm run -s replace -- ",\n    \""react\"":[^\n,]*(\n)" "$1" node_modules/backbone-react-component/package.json && call run arg
 set arg=npm run -s replace -- "(\{\n)    \""fbjs\"":[^\n]*\n" "$1" node_modules/subschema/package.json && call run arg

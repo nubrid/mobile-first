@@ -115,7 +115,7 @@ define ["apps/AppManager", "apps/todos/App", "apps/todos/show/Controller", "apps
 				it "can edit a todo", (done) ->
 					setTimeout $.proxy( ->
 						todo = @list.$el.children().first()
-						todo.find("#btnEditTodo").click()
+						todo.find("button.ui-btn:first").click()
 
 						@form = @react.findRenderedComponentWithType @view.page, View.React.TodosForm
 						form = ReactDOM.findDOMNode @form
@@ -130,7 +130,7 @@ define ["apps/AppManager", "apps/todos/App", "apps/todos/show/Controller", "apps
 				it "can delete a todo", (done) ->
 					setTimeout $.proxy( ->
 						todo = @list.$el.children().first()
-						todo.find("#btnDeleteTodo").click()
+						todo.find("button.ui-btn:last").click()
 
 						@trigger.should.have.been.calledOnce
 						@trigger.should.have.been.calledWithMatch @actionType.DELETE
