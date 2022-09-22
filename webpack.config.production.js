@@ -1,4 +1,4 @@
-let webpack = require( "webpack" )
+const webpack = require( "webpack" )
 	, { Config } = require( "webpack-config" );
 
 module.exports = new Config().extend( "webpack.config.base.js" ).merge( {

@@ -1,7 +1,16 @@
 // Place your settings in this file to overwrite default and user settings.
 {
 	"editor.insertSpaces": false,
+	// "editor.mouseWheelZoom": true,
+	"editor.renderControlCharacters": true,
+	"editor.renderIndentGuides": true,
+	"editor.renderWhitespace": true,
+	"editor.formatOnType": true,
 	"editor.wrappingColumn": 0,
+	"javascript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBrackets": true,
+	"javascript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyParenthesis": true,
+	"javascript.format.placeOpenBraceOnNewLineForControlBlocks": true,
+	"javascript.format.placeOpenBraceOnNewLineForFunctions": true,
 	"jshint.enable": true,
 	"search.exclude": {
 		"**/node_modules": true,

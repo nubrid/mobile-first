@@ -35,14 +35,13 @@ const _appManager = new Marionette.Application( {
 
 		if ( isDeviceOnline() ) {
 			callback();
-			return;
 		}
 		else {
 			this.request( "connect", { callback, closeOnOpen: true } );
 		}
 	}
 	, onStart() {
-		Marionette.Region.prototype.attachHtml = () => {}; 
+		Marionette.Region.prototype.attachHtml = () => {};
 
 		function start() {
 			if ( Backbone.history ) {

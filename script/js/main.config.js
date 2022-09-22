@@ -1,6 +1,5 @@
 /* jshint maxcomplexity: false */
-(function() {
-	// "use strict";
+/* TODO: (function() {
 	const getjQueryVersion = function ( version ) {
 		if ( !( "querySelector" in document
 			&& "localStorage" in window
@@ -132,4 +131,4 @@
 			}
 		}
 	} );
-} )();
+} )();*/

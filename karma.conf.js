@@ -1,34 +1,36 @@
-module.exports = function (config) {
-	"use strict";
-	config.set({
+const _webpackConfig = require( "./webpack.config.test" );
+
+module.exports = function ( config ) {
+	config.set( {
 		// base path that will be used to resolve all patterns (eg. files, exclude)
 		basePath: "",
 
 		// frameworks to use
 		// available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-		frameworks: ["mocha", "requirejs"],
+		frameworks: [ "mocha" ], // TODO: , "requirejs" ],
 
 		// list of files / patterns to load in the browser
 		files: [
-			{ pattern: "src/js/**/*.js", included: false },
-			{ pattern: "src/js/**/*.map", included: false },
-			{ pattern: "test/**/*.spec.js", included: false, watched: false },
-			{ pattern: "node_modules/chai/chai.js", included: false },
-			{ pattern: "node_modules/chai-as-promised/lib/chai-as-promised.js", included: false },
-			{ pattern: "node_modules/chai-jquery/chai-jquery.js", included: false },
-			{ pattern: "node_modules/sinon/pkg/sinon.js", included: false },
-			{ pattern: "node_modules/sinon-chai/lib/sinon-chai.js", included: false },
+			// TODO: { pattern: "src/js/**/*.js", included: false },
+			// { pattern: "src/js/**/*.map", included: false },
+			// { pattern: "test/**/*.spec.js", included: false, watched: false },
+			// { pattern: "node_modules/chai/chai.js", included: false },
+			// { pattern: "node_modules/chai-as-promised/lib/chai-as-promised.js", included: false },
+			// { pattern: "node_modules/chai-jquery/chai-jquery.js", included: false },
+			// { pattern: "node_modules/sinon/pkg/sinon.js", included: false },
+			// { pattern: "node_modules/sinon-chai/lib/sinon-chai.js", included: false },
 			{ pattern: "test/test.main.js", included: true, watched: false }
 		],
 
 		// list of files to exclude
 		exclude: [
-			"src/js/main.js"
+			// TODO: "src/js/main.js"
 		],
 
 		// preprocess matching files before serving them to the browser
 		// available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
 		preprocessors: {
+			"test/test.main.js": [ "webpack" ]// TODO: , "sourcemap" ]
 			//"**/*.coffee": ["coffee"]
 		},
 
@@ -44,10 +46,24 @@ module.exports = function (config) {
 		//	}
 		//},
 
+		webpack: _webpackConfig,
+		webpackMiddleware: {
+			publicPath: _webpackConfig.output.publicPath
+			, stats: {
+				assets: true
+				, chunks: true
+				, chunkModules: false
+				, colors: true
+				, hash: false
+				, timings: false
+				, version: false
+			}
+		},
+
 		// test results reporter to use
 		// possible values: "dots", "progress"
 		// available reporters: https://npmjs.org/browse/keyword/karma-reporter
-		reporters: ["progress"],
+		reporters: [ "mocha" ],
 
 		// web server port
 		port: 8300,
@@ -64,7 +80,7 @@ module.exports = function (config) {
 
 		// start these browsers
 		// available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-		browsers: ["Chrome"], //, "Firefox", "IE", "PhantomJS", "ChromeCanary"],
+		browsers: [ "Chrome_custom" ], //[ "Chrome", "Firefox", "IE", "PhantomJS", "ChromeCanary" ],
 
 		customLaunchers: {
 			"PhantomJS_custom": {
@@ -75,8 +91,12 @@ module.exports = function (config) {
 				//		webSecurityEnabled: false
 				//	},
 				//},
-				flags: ["--remote-debugger-port=8301", "--remote-debugger-autorun=yes"] //flags: ["--load-images=true"],
+				flags: [ "--remote-debugger-port=8301", "--remote-debugger-autorun=yes" ] //flags: [ "--load-images=true" ],
 				//debug: true
+			},
+			"Chrome_custom": {
+				base: "Chrome",
+				flags: [ "--incognito" ]
 			}
 		},
 
@@ -88,5 +108,5 @@ module.exports = function (config) {
 		// Continuous Integration mode
 		// if true, Karma captures browsers, runs the tests and exits
 		singleRun: false
-	});
+	} );
 };

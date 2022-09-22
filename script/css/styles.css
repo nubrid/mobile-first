@@ -45,7 +45,7 @@ margin-right: 0;
 animation: bounceInLeft ease 1s;
 animation-fill-mode:forwards; /*when the spec is finished*/
 -webkit-animation: bounceInLeft ease 1s;
--webkit-animation-fill-mode:forwards; /*Chrome 16+, Safari 4+*/ 
+-webkit-animation-fill-mode:forwards; /*Chrome 16+, Safari 4+*/
 -moz-animation: bounceInLeft ease 1s;
 -moz-animation-fill-mode:forwards; /*FF 5+*/
 -o-animation: bounceInLeft ease 1s;
@@ -58,7 +58,7 @@ animation-fill-mode:forwards; /*when the spec is finished*/
 animation: bounceInRight ease 1s;
 animation-fill-mode:forwards; /*when the spec is finished*/
 -webkit-animation: bounceInRight ease 1s;
--webkit-animation-fill-mode:forwards; /*Chrome 16+, Safari 4+*/ 
+-webkit-animation-fill-mode:forwards; /*Chrome 16+, Safari 4+*/
 -moz-animation: bounceInRight ease 1s;
 -moz-animation-fill-mode:forwards; /*FF 5+*/
 -o-animation: bounceInRight ease 1s;
@@ -71,7 +71,7 @@ animation-fill-mode:forwards; /*when the spec is finished*/
 animation: fadeInDown ease 0.5s;
 animation-fill-mode:both; /*when the spec is finished*/
 -webkit-animation: fadeInDown ease 0.5s;
--webkit-animation-fill-mode:both; /*Chrome 16+, Safari 4+*/ 
+-webkit-animation-fill-mode:both; /*Chrome 16+, Safari 4+*/
 -moz-animation: fadeInDown ease 0.5s;
 -moz-animation-fill-mode:both; /*FF 5+*/
 -o-animation: fadeInDown ease 0.5s;
@@ -84,7 +84,7 @@ animation-fill-mode:both; /*when the spec is finished*/
 animation: bounceOutLeft ease 0.5s;
 animation-fill-mode:both; /*when the spec is finished*/
 -webkit-animation: bounceOutLeft ease 0.5s;
--webkit-animation-fill-mode:both; /*Chrome 16+, Safari 4+*/ 
+-webkit-animation-fill-mode:both; /*Chrome 16+, Safari 4+*/
 -moz-animation: bounceOutLeft ease 0.5s;
 -moz-animation-fill-mode:both; /*FF 5+*/
 -o-animation: bounceOutLeft ease 0.5s;

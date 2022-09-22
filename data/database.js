@@ -17,19 +17,19 @@ db.create = ( table, data, callback ) => {
 };
 db.read = ( table, callback ) => {
 	db.query( `SELECT * FROM ${table.replace( /[^A-Z0-9]/ig, "_" )} ORDER BY id`, ( error, result ) => {
-		const args = error ? [ null, error ] : [ _.map( result.rows, row => _.extend( { id: row.id }, row.data ) ) ];  
+		const args = error ? [ null, error ] : [ _.map( result.rows, row => _.extend( { id: row.id }, row.data ) ) ];
 		callback.apply( this, args );
 	} );
 };
 db.update = ( table, data, callback ) => {
 	db.query( `UPDATE ${table.replace( /[^A-Z0-9]/ig, "_" )} SET data = $1 WHERE id = $2 RETURNING id, data`, [ JSON.stringify( _.omit( data, "id" ) ), data.id ], ( error, result ) => {
-		const args = error ? [ null, error ] : [ JSON.stringify( _.extend( { id: result.rows[ 0 ].id }, result.rows[ 0 ].data ) ) ];  
+		const args = error ? [ null, error ] : [ JSON.stringify( _.extend( { id: result.rows[ 0 ].id }, result.rows[ 0 ].data ) ) ];
 		callback.apply( this, args );
 	} );
 };
 db.delete = ( table, data, callback ) => {
 	db.query( `DELETE FROM ${table.replace( /[^A-Z0-9]/ig, "_" )} WHERE id = $1`, [ data.id ], ( error, result ) => {
-		const args = error ? [ null, error ] : [ result.rows[ 0 ] ];  
+		const args = error ? [ null, error ] : [ result.rows[ 0 ] ];
 		callback.apply( this, args );
 	} );
 };

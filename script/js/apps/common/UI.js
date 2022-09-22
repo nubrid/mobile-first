@@ -217,7 +217,7 @@ function _transition( props ) {
 		/* jshint ignore:end */
 	}
 	else {
-		const _className = props.direction === "right" ? "bounceInRight" : "bounceInLeft"; // jshint ignore:line 
+		const _className = props.direction === "right" ? "bounceInRight" : "bounceInLeft"; // jshint ignore:line
 
 		/* jshint ignore:start */
 		return (

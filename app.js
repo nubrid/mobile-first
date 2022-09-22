@@ -337,7 +337,7 @@ else {
 	encodingStub.decode = ( value, isValue ) => isValue ? JSON.parse( value ) : value;
 
 	const db = function SQLdown () {
-		return sqldown( `postgres://songokou:P@ssw0rd@localhost/nubrid` );
+		return sqldown( `postgres://${_config.db.user}:${_config.db.password}@${_config.db.host}/${_config.db.database}` );
 	};
 	db.destroy = sqldown.destroy;
 
@@ -444,7 +444,7 @@ else {
 	// 	spark.on( "end", () => console.log( `closed: ${spark.address.ip}` ) );
 	// } );
 
-	process.on( "uncaughtException", error => console.log(error) );
+	process.on( "uncaughtException", error => console.log( error ) );
 
 	server.listen( port );
 

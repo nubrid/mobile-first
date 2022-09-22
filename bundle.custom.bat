@@ -75,7 +75,7 @@ call grunt css
 cd ..\..
 
 call npm run -s download -- --out dist/jquery.mobile/dist/ http://jquerymobile.com/resources/download/jquery.mobile.images-1.4.5.zip
-call npm run -s 7z -- x dist/jquery.mobile/dist/jquery.mobile.images-1.4.5.zip -o dist/jquery.mobile/dist/ -y
+call npm run -s 7z -- x dist/jquery.mobile/dist/jquery.mobile.images-1.4.5.zip -odist/jquery.mobile/dist/ -y
 
 call npm run -s sprity -- create dist/jquery.mobile/dist/img dist/jquery.mobile/dist/images/icons-png/**/* -e gm --style-indent-size 0 --orientation horizontal -c ../img -n jquery.mobile.icons -s ../css/jquery.mobile.icons.png.css
 set arg=npm run -s replace -- "^\n\.icon \{" ".ui-nosvg [class*=""ui-icon-""]::after,.ui-nosvg [class*=""ui-checkbox-on""]::after {" dist/jquery.mobile/dist/css/jquery.mobile.icons.png.css && call run arg

@@ -35,11 +35,11 @@ call bundle.custom.bat
 REM copy /Y .\dist\jquery\dist\jquery.* .\src\js\libs\jquery\
 REM copy /Y .\dist\jquery.mobile\dist\jquery.mobile*.js .\src\js\libs\jquery\
 REM copy /Y .\dist\jquery.mobile\dist\jquery.mobile*.map .\src\js\libs\jquery\
-REM copy /Y .\dist\jquery.mobile\dist\css\*.* .\src\css\
-REM copy /Y .\dist\jquery.mobile\dist\img\*.* .\src\img\
-REM copy /Y .\dist\jquery.mobile\dist\images\ajax-loader.gif .\src\img\
-REM copy /Y .\dist\jquery.mobile\dist\jquery.mobile.theme.css .\src\css\
-REM copy /Y .\dist\jquery.mobile\dist\jquery.mobile.structure.css .\src\css\
+copy /Y .\dist\jquery.mobile\dist\css\*.* .\src\css\
+copy /Y .\dist\jquery.mobile\dist\img\*.* .\src\img\
+copy /Y .\dist\jquery.mobile\dist\images\ajax-loader.gif .\src\img\
+copy /Y .\dist\jquery.mobile\dist\jquery.mobile.theme.css .\src\css\
+copy /Y .\dist\jquery.mobile\dist\jquery.mobile.structure.css .\src\css\
 
 REM copy /Y .\node_modules\pouchdb\dist\pouchdb.js .\src\js\libs\pouchdb\pouchdb.js
 REM copy /Y .\node_modules\pouchdb\dist\pouchdb.min.js .\src\js\libs\pouchdb\pouchdb.min.js
@@ -78,11 +78,11 @@ REM call npm run -s uglifyjs -- src/js/libs/backbone/backbone.iosync.js -o src/j
 REM call npm run -s uglifyjs -- node_modules/requirejs/require.js -o src/js/libs/require/require.min.js -p relative -c -m --source-map
 REM call npm run -s uglifyjs -- src/js/libs/require/text.js -o src/js/libs/require/text.min.js -p relative -c -m --source-map
 
-call npm run -s json -- -f package.json dependencies['underscore'] devDependencies['backbone'] devDependencies['backbone.marionette'] devDependencies['backbone-react-component'] devDependencies['jquery'] devDependencies['jquery-mobile'] devDependencies['pouchdb'] devDependencies['react'] devDependencies['react-dom'] -a -j > script/js/main.config.version.js
-call npm run -s replace -- "\n| |dependencies\.|devDependencies\." "" script/js/main.config.version.js
-call npm run -s replace -- ":(\D)\D" ":$1" script/js/main.config.version.js
-call npm run -s replace -- "\]" ";" script/js/main.config.version.js
-call npm run -s replace -- "\[" "export default" script/js/main.config.version.js
+REM call npm run -s json -- -f package.json dependencies['underscore'] devDependencies['backbone'] devDependencies['backbone.marionette'] devDependencies['backbone-react-component'] devDependencies['jquery'] devDependencies['jquery-mobile'] devDependencies['pouchdb'] devDependencies['react'] devDependencies['react-dom'] -a -j > script/js/main.config.version.js
+REM call npm run -s replace -- "\n| |dependencies\.|devDependencies\." "" script/js/main.config.version.js
+REM call npm run -s replace -- ":(\D)\D" ":$1" script/js/main.config.version.js
+REM call npm run -s replace -- "\]" ";" script/js/main.config.version.js
+REM call npm run -s replace -- "\[" "export default" script/js/main.config.version.js
 
 set arg=npm run -s replace -- ",\n    \""react\"":[^\n,]*(\n)" "$1" node_modules/backbone-react-component/package.json && call run arg
 set arg=npm run -s replace -- "(\{\n)    \""fbjs\"":[^\n]*\n" "$1" node_modules/subschema/package.json && call run arg

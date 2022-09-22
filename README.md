@@ -1,6 +1,6 @@
 # TODO Sample
 
-Hybrid Web + Mobile Framework v4.0.0 ~~using VS.Net~~ (JUL 20, 2016)
+Hybrid Web + Mobile Framework v4.1.0 ~~using VS.Net~~ (SEP 5, 2016)
 
 _For use in my company, Excent One_
 
@@ -14,6 +14,7 @@ By this time, we're now able to perform CRUD operations `OFFLINE` and sync the c
 - CoffeeScript
 - Cordova ~~`Crosswalk`~~ `PhoneGap` `Telerik`
 - CSP
+- EJS
 - ES6+ ~~`amd`~~ `esm`
 - Express
 - Faker
@@ -48,7 +49,7 @@ By this time, we're now able to perform CRUD operations `OFFLINE` and sync the c
 - ~~SharePoint~~
 - Sprity
 - Svg-sprite
-- TDD/BDD `chai` `karma` `mocha` `sinon` `testem`
+- TDD/BDD `chai` `karma` `mocha` `rewire` `sinon` `testem`
 - UglifyJS `v2`
 - WebSockets ~~`Engine.io`~~ `Primus` ~~`Socket.io`~~
 - ~~Underscore~~
