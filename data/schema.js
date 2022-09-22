@@ -11,12 +11,12 @@ import {
 	GraphQLString
 } from "graphql";
 
-import { db } from "./database.js";
+import { db } from "./database";
 
-const Todo = new GraphQLObjectType({
+const _todo = new GraphQLObjectType( {
 	name: "Todo"
 	, description: "Todo item"
-	, fields: () => ({
+	, fields: () => ( {
 		id: {
 			type: GraphQLInt
 		}
@@ -26,33 +26,33 @@ const Todo = new GraphQLObjectType({
 		, completed: {
 			type: GraphQLBoolean
 		}
-	})
-});
+	} )
+} );
 
-let _resolve = ({args}, fieldArgs, args3, ast) => {
-	return new Promise((resolve, reject) => {
+const _resolve = ( { args }, fieldArgs, args3, ast ) => {
+	return new Promise( ( resolve, reject ) => {
 		// TODO: node-rest-client
-		// args.push(data => resolve(ast.operation.operation === "mutation" ? data : JSON.parse(data)));
-		args.push((data, error) => error ? reject(error) : resolve(data));
+		// args.push( data => resolve( ast.operation.operation === "mutation" ? data : JSON.parse( data ) ) );
+		args.push( ( data, error ) => error ? reject( error ) : resolve( data ) );
 
-		db[ast.operation.operation === "mutation" ? ast.fieldName : "read"]
-			.apply(this, args);
-	});
+		db[ ast.operation.operation === "mutation" ? ast.fieldName : "read" ]
+			.apply( this, args );
+	} );
 };
 
-const Query = new GraphQLObjectType({
+const query = new GraphQLObjectType( {
 	name: "Query"
-	, fields: () => ({
+	, fields: () => ( {
 		todos: {
-			type: new GraphQLList(Todo)
+			type: new GraphQLList( _todo )
 			, resolve: _resolve
 		}
-	})
-});
+	} )
+} );
 
-const Mutation = new GraphQLObjectType({
+const mutation = new GraphQLObjectType( {
 	name: "Mutation"
-	, fields: () => ({
+	, fields: () => ( {
 		create: {
 			type: GraphQLString
 			, resolve: _resolve
@@ -65,10 +65,10 @@ const Mutation = new GraphQLObjectType({
 			type: GraphQLString
 			, resolve: _resolve
 		}
-	})
-});
+	} )
+} );
 
-module.exports = new GraphQLSchema({
-	query: Query
-	, mutation: Mutation
-});
+module.exports = new GraphQLSchema( {
+	query
+	, mutation
+} );

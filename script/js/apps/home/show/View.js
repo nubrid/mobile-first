@@ -2,21 +2,21 @@
 Home Show View
 */
 import { Content, UI } from "apps/common/View"; // jshint ignore:line
-let Home = React.createClass({
+const Home = React.createClass( {
 	displayName: "Home"
-	, handleOpenBrowserClick () {
-		this.props.view.trigger("home:openBrowser", $(this.txtInput).val());
+	, handleOpenBrowserClick() {
+		this.props.view.trigger( "home:openBrowser", $( this.txtInput ).val() );
 	}
 	, handleLoginClick( event ) {
-		let el = $(event.target);
+		const el = $( event.target );
 
-		if (el.closest("a").length) this.props.view.trigger("home:login", event);
+		if ( el.closest( "a" ).length ) this.props.view.trigger( "home:login", event );
 	}
-	, render () {
+	, render() {
 		/* jshint ignore:start */
 		return (
 			<UI.page id={ this.props.id }>
-				<UI.input refCallback={ UI.ref("txtInput", this) } />
+				<UI.input refCallback={ UI.ref( "txtInput", this ) } />
 				<UI.button onClick={ this.handleOpenBrowserClick }>Open Browser</UI.button>
 				<UI.a href="#todos">Todos</UI.a>
 				<UI.a href="#form">Form</UI.a>
@@ -27,12 +27,12 @@ let Home = React.createClass({
 		);
 		/* jshint ignore:end */
 	}
-});
+} );
 
-let Show = {};
+const Show = {};
 
-Show.Content = Content.extend({
+Show.Content = Content.extend( {
 	ReactClass: Home
-});
+} );
 
 export default Show;

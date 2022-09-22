@@ -1,22 +1,22 @@
 #!/usr/bin/env node
 (() => {
 "use strict";
-let app = require("../app");
+const app = require( "../app" );
 
-if (!app) return;
+if ( !app ) return;
+
 /**
  * Normalize a port into a number, string, or false.
  */
+function _normalizePort( val ) {
+	const port = parseInt( val, 10 );
 
-function normalizePort(val) {
-	let port = parseInt(val, 10);
-
-	if (isNaN(port)) {
+	if ( isNaN( port ) ) {
 		// named pipe
 		return val;
 	}
 
-	if (port >= 0) {
+	if ( port >= 0 ) {
 		// port number
 		return port;
 	}
@@ -27,33 +27,32 @@ function normalizePort(val) {
 /**
  * Module dependencies.
  */
-
-let server = app.get("server")
-	, address = server.address()
-	, port = normalizePort(app.get("port"));
+const _server = app.get( "server" )
+	, _address = _server.address()
+	, _port = _normalizePort( app.get( "port" ) );
 
 /**
  * Event listener for HTTP server "error" event.
  */
-
-function onError(error) {
-	if (error.syscall !== "listen") {
+function _onError( error ) {
+	if ( error.syscall !== "listen" ) {
 		throw error;
 	}
 
-	var bind = typeof port === "string"
-		? "Pipe " + port
-		: "Port " + port;
+	const bind = ( typeof _port === "string"
+		? `Pipe ${_port}`
+		: `Port ${_port}`
+	);
 
 	// handle specific listen errors with friendly messages
-	switch (error.code) {
+	switch ( error.code ) {
 		case "EACCES":
-			console.error(bind + " requires elevated privileges");
-			process.exit(1);
+			console.error( `${bind} requires elevated privileges` );
+			process.exit( 1 );
 			break;
 		case "EADDRINUSE":
-			console.error(bind + " is already in use");
-			process.exit(1);
+			console.error( `${bind} is already in use` );
+			process.exit( 1 );
 			break;
 		default:
 			throw error;
@@ -63,14 +62,15 @@ function onError(error) {
 /**
  * Event listener for HTTP server "listening" event.
  */
-
-function onListening() {
-	var bind = typeof address === "string"
-		? "pipe " + address
-		: "port " + port;
-	console.log("Listening on " + bind);
+function _onListening() {
+	const bind = ( typeof _address === "string"
+		? `pipe ${_address}`
+		: `port ${_port}`
+	);
+	console.log( `Listening on ${bind}` );
 }
 
-server.on("error", onError)
-	.on("listening", onListening);
-})();
+_server
+	.on( "error", _onError )
+	.on( "listening", _onListening );
+} )();

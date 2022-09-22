@@ -4,6 +4,7 @@
   "globalDependencies": {
     "backbone": "github:DefinitelyTyped/DefinitelyTyped/backbone/backbone.d.ts#aed176536a202b9a2475ce1989ea6d2d0226a185",
     "backbone-global": "github:DefinitelyTyped/DefinitelyTyped/backbone/backbone-global.d.ts#aed176536a202b9a2475ce1989ea6d2d0226a185",
+    "ejs": "registry:dt/ejs#0.0.0+20160317120654",
     "express": "github:DefinitelyTyped/DefinitelyTyped/express/express.d.ts#aed176536a202b9a2475ce1989ea6d2d0226a185",
     "jquery": "github:DefinitelyTyped/DefinitelyTyped/jquery/jquery.d.ts#aed176536a202b9a2475ce1989ea6d2d0226a185",
     "marionette": "github:DefinitelyTyped/DefinitelyTyped/marionette/marionette.d.ts#aed176536a202b9a2475ce1989ea6d2d0226a185",

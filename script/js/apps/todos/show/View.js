@@ -1,39 +1,37 @@
 ﻿/*
 Todos Show View
 */
-import AppManager from "apps/AppManager";
 import { Content, UI } from "apps/common/View"; // jshint ignore:line
-import { PureRenderMixin } from "entities/Common";
-let List = {};
+const List = {};
 
-let _todos = React.createClass({
+const _todos = React.createClass( {
 	displayName: "Todos"
-	, getInitialState () {
+	, getInitialState() {
 		return { collection: null };
 	}
 	, handleFormReset( state ) {
-		this.setState(state);
+		this.setState( state );
 	}
 	, handleListEdit( state ) {
-		this.setState(state);
+		this.setState( state );
 	}
-	, componentDidMount () {
+	, componentDidMount() {
 		// TODO: Update the query to be backend-agnostic
-		let entity = AppManager.request("entity", { url: this.props.id, query: "{todos{id, title, completed}}", dispatcher: this.props.view.options.dispatcher });
+		const entity = AppManager.request( "entity", { url: this.props.id, query: "{todos{id, title, completed}}", dispatcher: this.props.view.options.dispatcher } );
 		// this.props.view.dispatcher = entity.dispatcher; // Need to set this so that the Controller can properly dispatch.
 		this.actionType = entity.actionType;
 
-		$.when(entity.fetch).done(todos => this.setState({ collection: todos }));
+		$.when( entity.fetch ).done( todos => this.setState( { collection: todos } ) );
 	}
-	, componentWillUnmount () {
+	, componentWillUnmount() {
 		this.state.collection.close();
 	}
-	, render () {
+	, render() {
 		/* jshint ignore:start */
 		return (
 			<UI.page id={ this.props.id } direction="right">
 				<List.React.TodosForm
-					data={ _.omit(this.state, "collection") }
+					data={ _.omit( this.state, "collection" ) }
 					actionType={ this.actionType }
 					view={ this.props.view }
 					onReset={ this.handleFormReset } />
@@ -46,40 +44,40 @@ let _todos = React.createClass({
 		);
 		/* jshint ignore:end */
 	}
-});
+} );
 
-let _todosForm = React.createClass({
+const _todosForm = React.createClass( {
 	displayName: "TodosForm"
-	, getInitialState () {
+	, getInitialState() {
 		return {
 			id: -1
 			, title: ""
 			, completed: false
 		};
 	}
-	, reset () {
+	, reset() {
 		this.isReset = true;
-		this.props.onReset(this.getInitialState());
+		this.props.onReset( this.getInitialState() );
 	}
-	, handleCancelClick () {
+	, handleCancelClick() {
 		this.reset();
 	}
 	, handleChange( event ) {
-		this.setState({ title: event.target.value });
+		this.setState( { title: event.target.value } );
 	}
-	, handleSubmitClick () {
-		this.props.view.trigger(this.state.id === -1 ? this.props.actionType.CREATE : this.props.actionType.UPDATE, { id: this.state.id, attrs: this.state });
+	, handleSubmitClick() {
+		this.props.view.trigger( this.state.id === -1 ? this.props.actionType.CREATE : this.props.actionType.UPDATE, { id: this.state.id, attrs: this.state } );
 
 		this.reset();
 	}
-	, componentDidUpdate () {
-		if (this.isReset || (this.props.data.id !== -1 && !_.isEqual(this.props.data, this.data))) {
+	, componentDidUpdate() {
+		if ( this.isReset || ( this.props.data.id !== -1 && !_.isEqual( this.props.data, this.data ) ) ) {
 			this.data = this.props.data;
-			this[this.isReset ? "replaceState" : "setState"](this.props.data);
+			this[ this.isReset ? "replaceState" : "setState" ]( this.props.data );
 			this.isReset = false;
 		}
 	}
-	, render () {
+	, render() {
 		/* jshint ignore:start */
 		return (
 			<div>
@@ -90,29 +88,29 @@ let _todosForm = React.createClass({
 		);
 		/* jshint ignore:end */
 	}
-});
+} );
 
-let _todosList = React.createClass({
+const _todosList = React.createClass( {
 	displayName: "TodosList"
-	, mixins: [AppManager.BackboneMixin, PureRenderMixin]
+	, mixins: [ BackboneReactMixin, BackboneImmutable.PureRenderMixin ]
 	, handleItemClick( event ) {
 		event.preventDefault();
-		let el = $(event.target)
-			, attrs = {};
+		const el = $( event.target );
+		let attrs = {};
 
-		switch (el.text()) {
+		switch ( el.text() ) {
 			case "Complete":
-				let chkComplete = el.next("input");
-				attrs = { completed: !chkComplete.prop("checked") };
-				this.props.view.trigger(this.props.collection.actionType.UPDATE, { id: chkComplete.data("id"), attrs });
+				const chkComplete = el.next( "input" );
+				attrs = { completed: !chkComplete.prop( "checked" ) };
+				this.props.view.trigger( this.props.collection.actionType.UPDATE, { id: chkComplete.data( "id" ), attrs } );
 				break;
 			case "Edit":
-				let id = el.data("id");
-				attrs = _.clone(this.props.collection.get(id).attributes);
-				this.props.onEdit(_.defaults(attrs, { id }));
+				const id = el.data( "id" );
+				attrs = _.clone( this.props.collection.get( id ).attributes );
+				this.props.onEdit( _.defaults( attrs, { id } ) );
 				break;
 			case "Delete":
-				this.props.view.trigger(this.props.collection.actionType.DELETE, { id: el.data("id") });
+				this.props.view.trigger( this.props.collection.actionType.DELETE, { id: el.data( "id" ) } );
 				break;
 		}
 	}
@@ -123,28 +121,28 @@ let _todosList = React.createClass({
 		);
 		/* jshint ignore:end */
 	}
-	, render () {
+	, render() {
 		/* jshint ignore:start */
-		return <React.addons.CSSTransitionGroup { ...AppManager.Transition.ListItem }>{ this.props.collection.models.map(this.createItem) }</React.addons.CSSTransitionGroup>
+		return <ReactCSSTransitionGroup { ...AppManager.Transition.ListItem }>{ this.props.collection.models.map( this.createItem ) }</ReactCSSTransitionGroup>
 		/* jshint ignore:end */
 	}
-});
+} );
 
-let _todosListItem = React.createClass({
+const _todosListItem = React.createClass( {
 	displayName: "TodosListItem"
-	, mixins: [PureRenderMixin]
-	, render () {
-		let item = this.props.item; // jshint ignore:line
+	, mixins: [ BackboneImmutable.PureRenderMixin ]
+	, render() {
+		const item = this.props.item; // jshint ignore:line
 		/* jshint ignore:start */
 		return (
-			<UI.group type="horizontal" title={ item.get("title") } onClick={ this.props.onClick }>
-				<UI.checkbox id={ "chk_" + item.id } data-id={ item.id } checked={ item.get("completed") } onChange={ this.props.onClick } value="Complete" />
+			<UI.group type="horizontal" title={ item.get( "title" ) } onClick={ this.props.onClick }>
+				<UI.checkbox id={ `chk_${item.id}` } data-id={ item.id } checked={ item.get( "completed" ) } onChange={ this.props.onClick } value="Complete" />
 				<UI.button data-id={ item.id }>Edit</UI.button>
 				<UI.button data-id={ item.id }>Delete</UI.button></UI.group>
 		);
 		/* jshint ignore:end */
 	}
-});
+} );
 
 List.React = {
 	Todos: _todos
@@ -153,8 +151,8 @@ List.React = {
 	, TodosListItem: _todosListItem
 };
 
-List.Content = Content.extend({
+List.Content = Content.extend( {
 	ReactClass: List.React.Todos
-});
+} );
 
 export default List;

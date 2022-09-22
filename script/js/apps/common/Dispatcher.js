@@ -1,19 +1,21 @@
-﻿import AppManager from "apps/AppManager";
-let Common = {};
+﻿/*
+Common Dispatcher
+*/
+const _common = {};
 
-Common.Dispatcher = Marionette.Object.extend({
-	initialize () {
-		this.on("all", this.dispatch);
+_common.Dispatcher = Marionette.Object.extend( {
+	initialize() {
+		this.on( "all", this.dispatch );
 	}
 	, dispatch( eventName, payload ) {
-		if (eventName !== "dispatch") this.trigger("dispatch", payload);
+		if ( eventName !== "dispatch" ) this.trigger( "dispatch", payload );
 	}
+} );
+
+AppManager.reqres.setHandler( "dispatcher", name => {
+	_common.dispatcher = _common.dispatcher || {};
+	_common.dispatcher[ name ] = _common.dispatcher[ name ] || new _common.Dispatcher();
+	return _common.dispatcher[ name ];
 });
 
-AppManager.reqres.setHandler("dispatcher", name => {
-	Common.dispatcher = Common.dispatcher || {};
-	Common.dispatcher[name] = Common.dispatcher[name] || new Common.Dispatcher();
-	return Common.dispatcher[name];
-});
-
-export default Common.Dispatcher;
+export default _common.Dispatcher;

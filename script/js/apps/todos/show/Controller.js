@@ -1,6 +1,7 @@
 ﻿/*
 Todos Show Controller
 */
-import CommonController from "apps/common/Controller";
-import ShowView from "apps/todos/show/View";
-export default CommonController.extend({ title: "Todos List", Main: ShowView.Content });
+export default ( id, callback ) => {
+	const Controller = require( "apps/common/Controller" ).extend( { id, title: "Todos List", Main: require( "./View" ).Content } );
+	callback( new Controller() );
+};

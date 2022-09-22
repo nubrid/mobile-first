@@ -1,1 +1,0 @@
-export default{"underscore":"1.8.3","backbone":"1.3.3","backbone.marionette":"2.4.7","backbone-react-component":"0.10.0","jquery":"3.0.0","jquery-mobile":"1.4.1","react":"15.1.0","react-dom":"15.1.0"};

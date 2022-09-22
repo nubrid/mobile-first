@@ -1,13 +1,13 @@
-git clone git://github.com/jquery/jquery.git dist/jquery
-cd dist/jquery
-git stash save
-git stash drop
-REM git checkout 3.0-stable
-git fetch --tags
-git checkout 3.0.0
-call npm install
-call grunt custom:-ajax,-ajax/xhr,-ajax/script,-ajax/jsonp,-css/showHide,-effects,-event/focusin,-core/ready
-cd ..\..
+REM git clone git://github.com/jquery/jquery.git dist/jquery
+REM cd dist/jquery
+REM git stash save
+REM git stash drop
+REM REM git checkout 3.0-stable
+REM git fetch --tags
+REM git checkout 3.0.0
+REM call npm install
+REM call grunt custom:-ajax,-ajax/xhr,-ajax/script,-ajax/jsonp,-css/showHide,-effects,-event/focusin,-core/ready
+REM cd ..\..
 git clone git://github.com/jquery/jquery-mobile.git dist/jquery.mobile
 cd dist/jquery.mobile
 git stash save
@@ -75,7 +75,7 @@ call grunt css
 cd ..\..
 
 call npm run -s download -- --out dist/jquery.mobile/dist/ http://jquerymobile.com/resources/download/jquery.mobile.images-1.4.5.zip
-call npm run -s 7z -- x dist/jquery.mobile/dist/jquery.mobile.images-1.4.5.zip -odist/jquery.mobile/dist/ -y
+call npm run -s 7z -- x dist/jquery.mobile/dist/jquery.mobile.images-1.4.5.zip -o dist/jquery.mobile/dist/ -y
 
 call npm run -s sprity -- create dist/jquery.mobile/dist/img dist/jquery.mobile/dist/images/icons-png/**/* -e gm --style-indent-size 0 --orientation horizontal -c ../img -n jquery.mobile.icons -s ../css/jquery.mobile.icons.png.css
 set arg=npm run -s replace -- "^\n\.icon \{" ".ui-nosvg [class*=""ui-icon-""]::after,.ui-nosvg [class*=""ui-checkbox-on""]::after {" dist/jquery.mobile/dist/css/jquery.mobile.icons.png.css && call run arg

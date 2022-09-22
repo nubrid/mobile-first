@@ -1,12 +1,12 @@
 {
 	"apps": [{
 		"name": "nubrid"
-		, "script": "./bin/app"
+		, "script": "bin/app"
 		, "args": ["-s", "false"]
-		, "watch": ["app.js", "app.config.js", "./bin/app", "./data/"]
+		, "watch": ["app.js", "app.config.js", "webpack.config*.js", "bin/app", "data/"]
 		, "log_date_format": "YYYY-MM-DD HH:mm Z"
-		, "error_file": "./logs/pm2.error.log"
-		, "out_file": "./logs/pm2.out.log"
-		, "pid_file": "./logs/pm2.pid.log"
+		, "error_file": "logs/pm2.error.log"
+		, "out_file": "logs/pm2.out.log"
+		, "pid_file": "logs/pm2.pid.log"
 	}]
 }

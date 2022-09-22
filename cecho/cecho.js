@@ -1,4 +1,4 @@
-(function () {
+(function() {
 	"use strict";
 	var clc = require("cli-color");
 	var argv = require("yargs")
@@ -35,7 +35,7 @@
 		.epilog("copyright 2015")
 		.argv;
 
-	module.exports = function () {
+	module.exports = function() {
 		var color = clc.blueBright;
 		switch (argv.v || argv.e || argv.w || argv.i || argv._[1]) {
 			case "i":

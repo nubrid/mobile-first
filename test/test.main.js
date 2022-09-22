@@ -1,5 +1,5 @@
 /* global mocha */
-(function () {
+(function() {
 "use strict";
 var _root = window.__karma__ ? "/base" : "../..";
 require.config({
@@ -42,7 +42,7 @@ function _init(options) {
 	var _config = [_requireConfig];
 	if (options.config) _config.push(options.config);
 
-	require(_config, function () {
+	require(_config, function() {
 		require.config({
 			baseUrl: options.baseUrl
 			, urlArgs: null
@@ -54,8 +54,8 @@ function _init(options) {
 		if (options.module) _modules.push(options.module);
 		if (/PhantomJS/.test(window.navigator.userAgent)) _modules.push("react.phantomjs");
 
-		require(_modules, function () {
-			$(document).on("mobileinit", function () {
+		require(_modules, function() {
+			$(document).on("mobileinit", function() {
 				$.support.cors = true;
 				$.mobile.allowCrossDomainPages = true;
 
@@ -73,7 +73,7 @@ function _init(options) {
 			window.expect = chai.expect;
 			chai.should();
 
-			require(["backbone.iobind", "jquery.mobile", "modernizr"], function () {
+			require(["backbone.iobind", "jquery.mobile", "modernizr"], function() {
 				options.callback();
 			});
 		});
@@ -97,7 +97,7 @@ if (window.__karma__) {
 	_init({
 		// Karma serves files under /base, which is the basePath from your config file
 		baseUrl: document.location.protocol + "//" + document.location.host + _root + "/src/js"
-		, callback: function () {
+		, callback: function() {
 			require.config({
 				// dynamically load all test files
 				deps: files,
@@ -115,8 +115,8 @@ else if (window.testem) {
 		baseUrl: _baseUrl
 		, config: "../node_modules/mocha/mocha"
 		, module: _root + "/testem"
-		, callback: function () {
-			require(window.testem.files, function () {
+		, callback: function() {
+			require(window.testem.files, function() {
 				mocha.run();
 			});
 		}

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html<% if(!webpackConfig.env.isDEV) { %> manifest=".appcache"<% } %>>
+	<head>
+		<meta charset="utf-8" />
+		<% if(webpackConfig.env.isMobile) { %>
+		<meta name="format-detection" content="telephone=no" />
+		<meta name="msapplication-tap-highlight" content="no" />
+		<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
+		<% } %>
+		<meta http-equiv="Content-Security-Policy" content="<%= webpackConfig.csp.toString() %>">
+		<title><%= htmlWebpackPlugin.options.title %></title>
+		<% for (var css in htmlWebpackPlugin.files.css) { %><link href="<%= htmlWebpackPlugin.files.css[css] %>" rel="stylesheet"><% } %>
+		<link rel="stylesheet" href="css/styles.css" />
+	</head>
+	<body>
+		<div id="PanelRegion" data-role="panel" data-position="left" data-theme="a"></div>
+		<div id="HeaderRegion"></div>
+		<div id="MainRegion"></div>
+		<div data-role="footer" data-position="fixed" data-theme="a">
+			<h1 id="FooterTitle"></h1>
+			<div id="FooterRegion"></div>
+		</div>
+		<% if(!webpackConfig.env.isMobile) { %><script data-main="js/main" src="js/libs/require/require.min.js" async="async"></script><% } %>
+		<% if(webpackConfig.env.isMobile) for (var chunk in htmlWebpackPlugin.files.chunks) { %><script src="<%= htmlWebpackPlugin.files.chunks[chunk].entry %>"></script><% } %>
+		<% if(webpackConfig.env.isDEV) { %><script src="http://live.nubrid.com/livereload.js"></script><% } %>
+		<div class="ui-popup-screen ui-overlay-b ui-screen-hidden"></div>
+		<div class="ui-popup-container ui-popup-hidden ui-popup-truncate" id="PopupRegion-popup">
+  			<div class="ui-popup ui-body-inherit ui-overlay-shadow ui-corner-all" id="PopupRegion" data-role="popup" data-enhanced="true" data-overlay-theme="b"></div></div>
+	</body>
+</html>

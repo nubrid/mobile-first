@@ -1,4 +1,4 @@
-﻿module.exports = function () {
+﻿module.exports = function() {
 	"use strict";
 	var faker = require("faker");
 	var data = {

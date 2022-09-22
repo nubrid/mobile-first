@@ -1,12 +1,11 @@
 ﻿/*
 Common View
 */
-import AppManager from "apps/AppManager";
-import UI from "apps/common/UI";
+import UI from "./UI";
 // TODO: Specify another UI for Phonegap
-let View = {};
+const _view = {};
 
-View.Layout = Marionette.LayoutView.extend({
+_view.Layout = Marionette.LayoutView.extend( {
 	el: "body"
 	, regions: {
 		PanelRegion: "#PanelRegion"
@@ -16,24 +15,24 @@ View.Layout = Marionette.LayoutView.extend({
 		, FooterRegion: "#FooterRegion"
 	}
 	, initialize( options ) {
-		let Header = options.Header || View.Header;
-		if (!(this.HeaderRegion.currentView instanceof Header)) {
-			this.HeaderRegion.show(new Header({ region: this.HeaderRegion, title: options.title }));
+		const Header = options.Header || _view.Header;
+		if ( !( this.HeaderRegion.currentView instanceof Header ) ) {
+			this.HeaderRegion.show( new Header( { region: this.HeaderRegion, title: options.title } ) );
 		}
 		else {
 			this.HeaderRegion.currentView.title = options.title;
 			this.HeaderRegion.currentView.render();
 		}
-		if (options.Footer) {
-			let Footer = options.Footer;
-			if (!(this.FooterRegion.currentView instanceof Footer)) {
-				this.FooterRegion.show(new Footer());
+		if ( options.Footer ) {
+			const Footer = options.Footer;
+			if ( !( this.FooterRegion.currentView instanceof Footer ) ) {
+				this.FooterRegion.show( new Footer() );
 				this.FooterRegion.$el.parent().toolbar();
 			}
 		}
 
-		let Main = options.Main;
-		if (!(this.MainRegion.currentView instanceof Main)) this.MainRegion.show(new Main(_.defaults(_.pick(options, "id", "title", "dispatcher"), { region: this.MainRegion })));
+		const Main = options.Main;
+		if ( !( this.MainRegion.currentView instanceof Main ) ) this.MainRegion.show( new Main( _.defaults( _.pick( options, "id", "title", "dispatcher" ), { region: this.MainRegion } ) ) );
 
 		this.PanelRegion.$el.panel();
 		this.PopupRegion.$el.popup();
@@ -41,15 +40,15 @@ View.Layout = Marionette.LayoutView.extend({
 
 		return this;
 	}
-});
+} );
 
-let Header = React.createClass({ // jshint ignore:line
+const Header = React.createClass( { // jshint ignore:line
 	displayName: "Header"
-	, mixins: [AppManager.PureRenderMixin]
-	, componentDidMount () {
-		$(ReactDOM.findDOMNode(this)).toolbar();
+	, mixins: [ ReactPureRenderMixin ]
+	, componentDidMount() {
+		$( ReactDOM.findDOMNode( this ) ).toolbar();
 	}
-	, render () {
+	, render() {
 		/* jshint ignore:start */
 		return (
 			<div data-role="header" data-position="fixed" data-theme="a">
@@ -60,50 +59,50 @@ let Header = React.createClass({ // jshint ignore:line
 		);
 		/* jshint ignore:end */
 	}
-});
+} );
 
-View.Header = Marionette.ItemView.extend({
+_view.Header = Marionette.ItemView.extend( {
 	initialize( options ) {
-		this.parentEl = options.region ? options.region.$el[0] : this.el;
+		this.parentEl = options.region ? options.region.$el[ 0 ] : this.el;
 		this.title = options.title;
 	}
-	, render () {
+	, render() {
 		/* jshint ignore:start */
-		this.view = ReactDOM.render(<Header title={ this.title } />, this.parentEl);
+		this.view = ReactDOM.render( <Header title={ this.title } />, this.parentEl );
 		/* jshint ignore:end */
 		this.el = this.view.el;
-		this.setElement(this.el);
+		this.setElement( this.el );
 	}
-});
+} );
 
-View.Content = Marionette.ItemView.extend({
-	render () {
+_view.Content = Marionette.ItemView.extend( {
+	render() {
 		/* jshint ignore:start */
-		this.page = ReactDOM.render(<this.ReactClass id={ this.id } view={ this } />, this.options.region ? this.options.region.$el[0] : this.el);
+		this.page = ReactDOM.render( <this.ReactClass id={ this.id } view={ this } />, this.options.region ? this.options.region.$el[ 0 ] : this.el );
 		/* jshint ignore:end */
-		this.el = ReactDOM.findDOMNode(this.page); // HACK: Avoid conflict between Marionette region show and react render.
+		this.el = ReactDOM.findDOMNode( this.page ); // HACK: Avoid conflict between Marionette region show and react render.
 
 		return this;
 	}
-});
+} );
 
-View.IFrame = Marionette.ItemView.extend({
+_view.IFrame = Marionette.ItemView.extend( {
 	initialize( options ) {
-		this.parentEl = options.region ? options.region.$el[0] : this.el;
+		this.parentEl = options.region ? options.region.$el[ 0 ] : this.el;
 		this.src = options.src;
 		this.width = options.width;
 		this.height = options.height;
 		this.seamless = "";
 	}
-	, render () {
+	, render() {
 		/* jshint ignore:start */
-		this.view = ReactDOM.render(<iframe { ...this } />, this.parentEl);
+		this.view = ReactDOM.render( <iframe { ...this } />, this.parentEl );
 		/* jshint ignore:end */
 		this.el = this.view.el;
-		this.setElement(this.el);
+		this.setElement( this.el );
 	}
-});
+} );
 
-View.UI = UI;
+_view.UI = UI;
 
-export default View;
+export default _view;

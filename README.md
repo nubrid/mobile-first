@@ -1,8 +1,8 @@
 # TODO Sample
 
-Hybrid Web + Mobile Framework v3.0.0 ~~using VS.Net~~ (JUN 13, 2016)
+Hybrid Web + Mobile Framework v4.0.0 ~~using VS.Net~~ (JUL 20, 2016)
 
-_For use in my company, Excent One, starting with NCC NOAH._
+_For use in my company, Excent One_
 
 By this time, we're now able to perform CRUD operations `OFFLINE` and sync the changes once `ONLINE` using `PouchDB`, `PWA` and `WebSockets`. We're using `LevelDB`, `GraphQL` and `PostgreSQL` saving data in `JSON` format. Form is also dynamic and configurable using schemas.
 
@@ -39,13 +39,13 @@ By this time, we're now able to perform CRUD operations `OFFLINE` and sync the c
 - PhantomJS
 - PM2
 - PostgreSQL
-- PouchDB
+- PouchDB `replication`
 - PWA `cache-manifest`
 - ReactJS `react-dom` `JSX` `mixins` `subschema` `transformer` `transitions`
 - Recaptcha
-- RequireJS `cache buster`
+- ~~RequireJS `cache buster`~~
 - REST API
-- SharePoint
+- ~~SharePoint~~
 - Sprity
 - Svg-sprite
 - TDD/BDD `chai` `karma` `mocha` `sinon` `testem`
