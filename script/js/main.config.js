@@ -42,15 +42,18 @@
 			, "backbone.iobind": "empty:"
 			, "backbone.iosync": "empty:"
 			, "backbone.marionette": "empty:"
+			, "backbone.pouchdb": "empty:"
 			, "backbone.react": "empty:"
 			, "cordova": "empty:"
 			, "jquery": "empty:"
 			, "jquery.mobile": "empty:"
-			, "modernizr": "libs/modernizr.min"
+			, "modernizr": "empty:"
+			, "pouchdb": "empty:"
+			, "pouchdb.socket": "empty:"
 			, "primus.io": "empty:"
 			, "react": "empty:"
 			, "react.dom": "empty:"
-			, "react.subschema": "libs/react/subschema.min"
+			, "react.subschema": "empty:"
 			, "underscore": "empty:"
 			, "main.config": "main.config"
 			, "main.config.version": "main.config.version"
@@ -93,6 +96,14 @@
 				]
 				, exports: "Marionette"
 			}
+			, "backbone.pouchdb": {
+				deps: [
+					"backbone"
+					, "pouchdb"
+					, "primus.io"
+				]
+				, exports: "BackbonePouch"
+			}
 			, "backbone.react": {
 				deps: [
 					"backbone"
@@ -107,6 +118,14 @@
 			}
 			, "modernizr": {
 				exports: "Modernizr"
+			}
+			, "pouchdb": {
+				exports: "PouchDB"
+			}
+			, "pouchdb.socket": {
+				deps: [
+					"pouchdb"
+				]
 			}
 			, "react.dom": {
 				deps: [
@@ -137,10 +156,14 @@
 				, "backbone.iobind": _getPath("libs/backbone/backbone.iobind")
 				, "backbone.iosync": _getPath("libs/backbone/backbone.iosync")
 				, "backbone.marionette": _getPath("libs/backbone/backbone.marionette", `//cdnjs.cloudflare.com/ajax/libs/backbone.marionette/${version["backbone.marionette"]}/backbone.marionette`)
+				, "backbone.pouchdb": _getPath("libs/backbone/backbone.pouchdb")
 				, "backbone.react": _getPath("libs/backbone/backbone.react", `//cdnjs.cloudflare.com/ajax/libs/backbone-react-component/${version["backbone-react-component"]}/backbone-react-component`, "-", true)
 				, "cordova": "../cordova"
 				, "jquery": _getPath("libs/jquery/jquery", `//ajax.googleapis.com/ajax/libs/jquery/${getjQueryVersion(version.jquery)}/jquery`)
 				, "jquery.mobile": _getPath("libs/jquery/jquery.mobile", `//ajax.googleapis.com/ajax/libs/jquerymobile/${version["jquery-mobile"]}/jquery.mobile`)
+				, "modernizr": _getPath("libs/modernizr")
+				, "pouchdb": _getPath("libs/pouchdb/pouchdb")
+				, "pouchdb.socket": _getPath("libs/pouchdb/pouchdb.socket")
 				, "primus.io": _getPath("libs/primus.io")
 				, "react": _getPath("libs/react/react", `//fb.me/react-with-addons-${version.react}`, null, true)
 				, "react.dom": _getPath("libs/react/react.dom", `//fb.me/react-dom-${version["react-dom"]}`, null, true)

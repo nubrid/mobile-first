@@ -18,6 +18,7 @@ let _todos = React.createClass({
 		this.setState(state);
 	}
 	, componentDidMount () {
+		// TODO: Update the query to be backend-agnostic
 		let entity = AppManager.request("entity", { url: this.props.id, query: "{todos{id, title, completed}}", dispatcher: this.props.view.options.dispatcher });
 		// this.props.view.dispatcher = entity.dispatcher; // Need to set this so that the Controller can properly dispatch.
 		this.actionType = entity.actionType;
@@ -56,35 +57,36 @@ let _todosForm = React.createClass({
 			, completed: false
 		};
 	}
-	, handleCancelClick () {
-		this.reset = true;
+	, reset () {
+		this.isReset = true;
 		this.props.onReset(this.getInitialState());
+	}
+	, handleCancelClick () {
+		this.reset();
 	}
 	, handleChange( event ) {
 		this.setState({ title: event.target.value });
 	}
 	, handleSubmitClick () {
-		this.props.view.trigger(this.state.id > 0 ? this.props.actionType.UPDATE : this.props.actionType.CREATE, this.state);
+		this.props.view.trigger(this.state.id === -1 ? this.props.actionType.CREATE : this.props.actionType.UPDATE, { id: this.state.id, attrs: this.state });
 
-		this.reset = true;
-		this.props.onReset(this.getInitialState());
+		this.reset();
 	}
 	, componentDidUpdate () {
-		if (this.reset || (typeof this.props.data.id !== "undefined" && !_.isEqual(this.props.data, this.data))) {
+		if (this.isReset || (this.props.data.id !== -1 && !_.isEqual(this.props.data, this.data))) {
 			this.data = this.props.data;
-			this.setState(this.props.data);
-			this.reset = false;
+			this[this.isReset ? "replaceState" : "setState"](this.props.data);
+			this.isReset = false;
 		}
 	}
 	, render () {
 		/* jshint ignore:start */
 		return (
 			<div>
-				<label>{ this.state.id ? "Edit Todo" : "Create a new Todo" }</label>
-				<input type="hidden" value={ this.state.id } />
+				<label>{ this.state.id !== -1 ? "Edit Todo" : "Create a new Todo" }</label>
 				<UI.input value={ this.state.title } onChange={ this.handleChange } />
-				<UI.button onClick={ this.handleSubmitClick }>{ this.state.id > 0 ? "Update" : "Add" }</UI.button>
-				{ this.state.id > 0 ? <UI.button onClick={ this.handleCancelClick }>Cancel</UI.button> : null }</div>
+				<UI.button onClick={ this.handleSubmitClick }>{ this.state.id !== -1 ? "Update" : "Add" }</UI.button>
+				{ this.state.id !== -1 ? <UI.button onClick={ this.handleCancelClick }>Cancel</UI.button> : null }</div>
 		);
 		/* jshint ignore:end */
 	}
@@ -95,19 +97,22 @@ let _todosList = React.createClass({
 	, mixins: [AppManager.BackboneMixin, PureRenderMixin]
 	, handleItemClick( event ) {
 		event.preventDefault();
-		let el = $(event.target);
+		let el = $(event.target)
+			, attrs = {};
 
 		switch (el.text()) {
 			case "Complete":
-				let chkComplete = el.next("input")
-					, attrs = _.defaults({ completed: !chkComplete.prop("checked") }, _.findWhere(this.state.collection, { id: chkComplete.data("id") }));
-				this.props.view.trigger(this.props.collection.actionType.UPDATE, attrs);
+				let chkComplete = el.next("input");
+				attrs = { completed: !chkComplete.prop("checked") };
+				this.props.view.trigger(this.props.collection.actionType.UPDATE, { id: chkComplete.data("id"), attrs });
 				break;
 			case "Edit":
-				this.props.onEdit(_.findWhere(this.state.collection, { id: el.data("id") }));
+				let id = el.data("id");
+				attrs = _.clone(this.props.collection.get(id).attributes);
+				this.props.onEdit(_.defaults(attrs, { id }));
 				break;
 			case "Delete":
-				this.props.view.trigger(this.props.collection.actionType.DELETE, _.findWhere(this.state.collection, { id: el.data("id") }));
+				this.props.view.trigger(this.props.collection.actionType.DELETE, { id: el.data("id") });
 				break;
 		}
 	}

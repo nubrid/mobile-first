@@ -162,23 +162,23 @@ define(['exports'], function (exports) {
   }
 
   exports.PureRenderMixin = {
-    componentDidMount: function componentDidMount() {
+    componentDidMount: function () {
       this._immutableBackbonePropsStash = this.stashBackbone({}, {}, this.props).stash;
       this._immutableBackboneStateStash = this.stashBackbone({}, {}, this.state).stash;
     },
-    componentWillUpdate: function componentWillUpdate(nextProps, nextState) {
+    componentWillUpdate: function (nextProps, nextState) {
       this._immutableBackbonePropsStash = this.stashBackbone(this._immutableBackbonePropsStash, this.props, nextProps).stash;
       this._immutableBackboneStateStash = this.stashBackbone(this._immutableBackboneStateStash, this.state, nextState).stash;
     },
-    componentWillUnmount: function componentWillUnmount() {
+    componentWillUnmount: function () {
       delete this._immutableBackbonePropsStash;
       delete this._immutableBackboneStateStash;
     },
-    shouldComponentUpdate: function shouldComponentUpdate(nextProps, nextState) {
+    shouldComponentUpdate: function (nextProps, nextState) {
       var changed = this.stashBackbone(this._immutableBackbonePropsStash, this.props, nextProps).changed || this.stashBackbone(this._immutableBackboneStateStash, this.state, nextState).changed;
       return changed;
     },
-    stashBackbone: function stashBackbone(oldStash, oldObjects, newObjects) {
+    stashBackbone: function (oldStash, oldObjects, newObjects) {
       var key,
           modelOrCollection,
           changed = false,

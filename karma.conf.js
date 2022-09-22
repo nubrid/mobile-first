@@ -23,8 +23,7 @@ module.exports = function (config) {
 
 		// list of files to exclude
 		exclude: [
-			"src/js/main.js",
-			"src/js/main.build.js"
+			"src/js/main.js"
 		],
 
 		// preprocess matching files before serving them to the browser

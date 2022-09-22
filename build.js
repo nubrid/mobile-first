@@ -49,5 +49,5 @@
 	, removeCombined: true
 	, preserveLicenseComments: false
 	, writeBuildTxt: false
-	, fileExclusionRegExp: /^(main.build.js|libs|img)$/
+	, fileExclusionRegExp: /^(libs|img)$/
 });

@@ -192,7 +192,8 @@ else {
 		, cookieParser = require("cookie-parser")
 		, bodyParser = require("body-parser")
 		, cookieSession = require("cookie-session")
-		, helmet = require("helmet");
+		, helmet = require("helmet")
+		, appCache = require("connect-cache-manifest");
 		//, session = require("express-session")
 		//, cookie = { secure: false }; // session
 
@@ -251,6 +252,14 @@ else {
 
 		app.set("trust proxy", 1);
 		//cookie.secure = true; // session
+
+		app.use(appCache({
+			manifestPath: "/.appcache"
+			, cdn: [] // TODO: All CDN files specified in main.config.js
+			, files: [{ dir: "src", prefix: "/", ignore: x => /(\.dev\.html|\.home\.html)$/.test(x) }]
+			, networks: ["*"]
+			, fallbacks: []
+		}));
 	}
 	else {
 		let serveStatic = require("serve-static");
@@ -278,171 +287,241 @@ else {
 			// Default since v0.10.33, secureOptions: constants.SSL_OP_NO_SSLv3 | constants.SSL_OP_NO_SSLv2
 		};
 	}
-	
+
 	let server = null
 		, primus = null;
 		// TODO: node-rest-client
 		// , client = null;
-	{
+	(function () {
 		let http = require(argv.s ? "https" : "http");
 		http.globalAgent.maxSockets = config.web.maxSockets;
 		server = argv.s ? http.createServer(options, app) : http.createServer(app);
-	
+
 		let Primus = require("primus.io");
 		primus = new Primus(server, { transformer: config.primus.transformer });
 
 		// TODO: node-rest-client
 		// let Client = require("node-rest-client").Client;
 		// client = new Client();
-	}
+	})();
 
-	primus.use("broadcast", require("primus-broadcast"));
+	let PouchDB = require("pouchdb")
+		, proxyquire = require("proxyquire")
 
-	require("babel-core/register")({
-		"plugins": [
-			"transform-es2015-function-name",
-			"transform-es2015-modules-commonjs"
-		]
-	});
-	let graphql = require("./data/graphql.js")
-		, Schema = require("./data/schema.js");
+		, engineStub = {}
+		, pouchServer = proxyquire("socket-pouch/lib/server", { "engine.io": engineStub })
 
+		, encodingStub = {}
+		, sqldown = proxyquire("sqldown", { "./encoding": encodingStub });
+
+	// HACK: Override engine.io with primus
+	engineStub.listen = () => primus;
 	primus.on("connection", (spark) => {
-		let _operation = {
-			CREATE: "create"
-			, READ: "read"
-			, UPDATE: "update"
-			, DELETE: "delete"
-		};
-
-		//let extend = (target) => {
-		//	let sources = [].slice.call(arguments, 1);
-		//	sources.forEach((source) => {
-		//		for (let prop in source) {
-		//			if (source[prop]) target[prop] = source[prop];
-		//		}
-		//	});
-		//	return target;
-		//}
-
-		//let useragent = require("express-useragent");
-		let crud = (event, data, url, callback) => {
-			let query = event === _operation.READ
-				? `${data.query}`
-				: `mutation Mutation {${event}}`;
-
-			let _args = [
-				url
-				, data
-			];
-
-			if (event === _operation.UPDATE || event === _operation.DELETE) url = `${url}/${data.id}`;
-			// TODO: node-rest-client
-			// let _args = [
-			// 	`${config.api.url}/${url}`
-			// 	, {
-			// 		data: JSON.stringify(data),//JSON.stringify(extend({}, data, useragent.parse(spark.headers["user-agent"]))),
-			// 		headers: { "Content-Type": "application/json" }
-			// 	}
-			// ];
-
-			let _callback = result/*, response*/ => {
-				let data = event === _operation.READ
-					? result.data[url]
-					: JSON.parse(result.data[event]);
-
-				if (event !== _operation.READ) {
-					event = `${url}:${event}`;
-					spark.send(event, data);
-					spark.broadcast(event, data);
-				}
-
-				callback(null, data);
-			};
-
-			if (event === _operation.READ) _args.splice(1, 1);
-
-			graphql(Schema, query, {args: _args}).then(_callback);
-
-			// switch (event) {
-			// 	case _operation.CREATE:
-			// 		client.post.apply(this, _args);
-			// 		break;
-			// 	case _operation.READ:
-			// 		client.get.apply(this, _args);
-			// 		break;
-			// 	case _operation.UPDATE:
-			// 		client.put.apply(this, _args);
-			// 		break;
-			// 	case _operation.DELETE:
-			// 		client.delete.apply(this, _args);
-			// 		break;
-			// }
-		};
-
-		console.log(`connected: ${spark.address.ip}`);
-
-		/*
-		Temp DB
-		*/
-		// TODO: node-rest-client
-		// let Seed = require("seed")
-		// 	, guid = new Seed.ObjectId();
-		/*
-		Temp DB
-		*/
-
-		/*
-		Triggered when *.save() is called.
-		We listen on model namespace, but emit on the collection namespace.
-		*/
-		spark.on(`*:${_operation.CREATE}`, (data, url, callback) => {
-			// TODO: node-rest-client
-			// data.id = guid.gen();
-			crud(_operation.CREATE, data, url, callback);
-		});
-
-		/*
-		Triggered when *.fetch() is called.
-		*/
-		spark.on(`*:${_operation.READ}`, (data, url, callback) => {
-			crud(_operation.READ, data, url, callback);
-		});
-
-		/*
-		Triggered when *.save() is called.
-		*/
-		spark.on(`*:${_operation.UPDATE}`, (data, url, callback) => {
-			crud(_operation.UPDATE, data, url, callback);
-		});
-
-		/*
-		Triggered when *.destroy() is called.
-		*/
-		spark.on(`*:${_operation.DELETE}`, (data, url, callback) => {
-			crud(_operation.DELETE, data, url, callback);
-		});
-
-		// TODO: Sample postgres
-		//spark.on("getById", (userId, callback) => {
-		//	let pg = require("pg");
-		//	let connString = "tcp://postgres:Password1@localhost:5432/ThreeDegree";
-		//	let client = new pg.Client(connString);
-		//	client.connect();
-
-		//	let query = client.query('SELECT "ID", "FirstName", "LastName", "Email" FROM "3"."User" WHERE "ID" = $1', [userId]);
-
-		//	query.on("row", row => {
-		//		callback(row);
-		//	});
-
-		//	query.on("end", () => { client.end(); });
-		//});
-
-		spark.on("end", () => {
-			console.log(`closed: ${spark.address.ip}`);
+		spark.on("data", message => {
+			let sparkMessage = spark.emits("message");
+			sparkMessage( message.data[0] );
 		});
 	});
+
+	// HACK: Disable SQLDown encoding
+	encodingStub.encode = (value, isValue) => isValue ? JSON.stringify(value) : value;
+	encodingStub.decode = (value, isValue) => isValue ? JSON.parse(value) : value;
+
+	let db = function SQLdown () {
+		return sqldown(`postgres://songokou:P@ssw0rd@localhost/nubrid`);
+	};
+	db.destroy = sqldown.destroy;
+
+	pouchServer.listen(8000, {
+		pouchCreator (name) {
+			return new PouchDB({
+				name
+				, db: db
+				, table: "sqldown"
+			}).then(response => Object.assign(response, { pouch: response })); // Return a promise with { pouch: <PouchDB Instance> }
+		}
+	});
+
+	// TODO: Test PouchDB
+	// let pouchdb = new PouchDB({
+	// 	name: "nubrid"
+	// 	, db: db
+	// 	, table: "sqldown"
+	// });
+
+	// pouchdb.put({
+	// 	"_id": "mittens",
+	// 	"name": "Mittens",
+	// 	"occupation": "kitten",
+	// 	"age": 3,
+	// 	"hobbies": [
+	// 		"playing with balls of yarn",
+	// 		"chasing laser pointers",
+	// 		"lookin' hella cute"
+	// 	]
+	// }).then(result => console.log(result)).catch(error => console.log(error));
+	// pouchdb.put({
+	// 	"_id": "dogs",
+	// 	"name": "Dogs",
+	// 	"occupation": "puppy",
+	// 	"age": 3,
+	// 	"hobbies": [
+	// 		"playing with cats",
+	// 		"chasing cats",
+	// 		"lookin' for cats"
+	// 	]
+	// }).then(result => console.log(result)).catch(error => console.log(error));
+	// pouchdb.get("mittens").then(result => console.log(result));
+	// pouchdb.get("dogs").then(result => console.log(result));
+	// pouchdb.allDocs({ include_docs:true }).then(result => console.log(result));
+			
+	// primus.use("broadcast", require("primus-broadcast"));
+
+	// require("babel-core/register")({
+	// 	"plugins": [
+	// 		"transform-es2015-function-name",
+	// 		"transform-es2015-modules-commonjs"
+	// 	]
+	// });
+	// let graphql = require("./data/graphql.js")
+	// 	, Schema = require("./data/schema.js");
+
+	// primus.on("connection", (spark) => {
+	// 	let _operation = {
+	// 		CREATE: "create"
+	// 		, READ: "read"
+	// 		, UPDATE: "update"
+	// 		, DELETE: "delete"
+	// 	};
+
+	// 	//let extend = (target) => {
+	// 	//	let sources = [].slice.call(arguments, 1);
+	// 	//	sources.forEach((source) => {
+	// 	//		for (let prop in source) {
+	// 	//			if (source[prop]) target[prop] = source[prop];
+	// 	//		}
+	// 	//	});
+	// 	//	return target;
+	// 	//}
+
+	// 	//let useragent = require("express-useragent");
+	// 	let crud = (event, data, url, callback) => {
+	// 		let query = event === _operation.READ
+	// 			? `${data.query}`
+	// 			: `mutation Mutation {${event}}`;
+
+	// 		let _args = [
+	// 			url
+	// 			, data
+	// 		];
+
+	// 		if (event === _operation.UPDATE || event === _operation.DELETE) url = `${url}/${data.id}`;
+	// 		// TODO: node-rest-client
+	// 		// let _args = [
+	// 		// 	`${config.api.url}/${url}`
+	// 		// 	, {
+	// 		// 		data: JSON.stringify(data),//JSON.stringify(extend({}, data, useragent.parse(spark.headers["user-agent"]))),
+	// 		// 		headers: { "Content-Type": "application/json" }
+	// 		// 	}
+	// 		// ];
+
+	// 		let _callback = result/*, response*/ => {
+	// 			let data = event === _operation.READ
+	// 				? result.data[url]
+	// 				: JSON.parse(result.data[event]);
+
+	// 			if (event !== _operation.READ) {
+	// 				event = `${url}:${event}`;
+	// 				spark.send(event, data);
+	// 				spark.broadcast(event, data);
+	// 			}
+
+	// 			callback(null, data);
+	// 		};
+
+	// 		if (event === _operation.READ) _args.splice(1, 1);
+
+	// 		graphql(Schema, query, {args: _args}).then(_callback);
+
+	// 		// switch (event) {
+	// 		// 	case _operation.CREATE:
+	// 		// 		client.post.apply(this, _args);
+	// 		// 		break;
+	// 		// 	case _operation.READ:
+	// 		// 		client.get.apply(this, _args);
+	// 		// 		break;
+	// 		// 	case _operation.UPDATE:
+	// 		// 		client.put.apply(this, _args);
+	// 		// 		break;
+	// 		// 	case _operation.DELETE:
+	// 		// 		client.delete.apply(this, _args);
+	// 		// 		break;
+	// 		// }
+	// 	};
+
+	// 	console.log(`connected: ${spark.address.ip}`);
+
+	// 	/*
+	// 	Temp DB
+	// 	*/
+	// 	// TODO: node-rest-client
+	// 	// let Seed = require("seed")
+	// 	// 	, guid = new Seed.ObjectId();
+	// 	/*
+	// 	Temp DB
+	// 	*/
+
+	// 	/*
+	// 	Triggered when *.save() is called.
+	// 	We listen on model namespace, but emit on the collection namespace.
+	// 	*/
+	// 	spark.on(`*:${_operation.CREATE}`, (data, url, callback) => {
+	// 		// TODO: node-rest-client
+	// 		// data.id = guid.gen();
+	// 		crud(_operation.CREATE, data, url, callback);
+	// 	});
+
+	// 	/*
+	// 	Triggered when *.fetch() is called.
+	// 	*/
+	// 	spark.on(`*:${_operation.READ}`, (data, url, callback) => {
+	// 		crud(_operation.READ, data, url, callback);
+	// 	});
+
+	// 	/*
+	// 	Triggered when *.save() is called.
+	// 	*/
+	// 	spark.on(`*:${_operation.UPDATE}`, (data, url, callback) => {
+	// 		crud(_operation.UPDATE, data, url, callback);
+	// 	});
+
+	// 	/*
+	// 	Triggered when *.destroy() is called.
+	// 	*/
+	// 	spark.on(`*:${_operation.DELETE}`, (data, url, callback) => {
+	// 		crud(_operation.DELETE, data, url, callback);
+	// 	});
+
+	// 	// TODO: Sample postgres
+	// 	//spark.on("getById", (userId, callback) => {
+	// 	//	let pg = require("pg");
+	// 	//	let connString = "tcp://postgres:Password1@localhost:5432/ThreeDegree";
+	// 	//	let client = new pg.Client(connString);
+	// 	//	client.connect();
+
+	// 	//	let query = client.query('SELECT "ID", "FirstName", "LastName", "Email" FROM "3"."User" WHERE "ID" = $1', [userId]);
+
+	// 	//	query.on("row", row => {
+	// 	//		callback(row);
+	// 	//	});
+
+	// 	//	query.on("end", () => { client.end(); });
+	// 	//});
+
+	// 	spark.on("end", () => {
+	// 		console.log(`closed: ${spark.address.ip}`);
+	// 	});
+	// });
 
 	process.on("uncaughtException", error => {
 		console.log(error);

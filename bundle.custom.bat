@@ -2,9 +2,9 @@ git clone git://github.com/jquery/jquery.git dist/jquery
 cd dist/jquery
 git stash save
 git stash drop
-REM git checkout 2.2-stable
+REM git checkout 3.0-stable
 git fetch --tags
-git checkout 2.2.4
+git checkout 3.0.0
 call npm install
 call grunt custom:-ajax,-ajax/xhr,-ajax/script,-ajax/jsonp,-css/showHide,-effects,-event/focusin,-core/ready
 cd ..\..
