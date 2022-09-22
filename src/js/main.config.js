@@ -1,8 +1,11 @@
 /* jshint maxcomplexity: false */
 (function () {
 	"use strict";
-	window.isDEV = window.isDEV || !!window.__karma__ || !!window.testem;
+	if (!!window.__karma__ || !!window.testem) window.isDEV = true;
 	window.phonegap = document.location.protocol === "file:";
+	window.url = window.phonegap
+		? (window.isDEV ? "http:" : "https:") + "//" + document.body.getAttribute("data-host")
+		: document.location.protocol + "//" + document.location.host;
 
 	function getjQueryVersion (version) {
 		if (!("querySelector" in document
@@ -20,7 +23,7 @@
 		
 		if (!window.phonegap) {
 			min = window.isDEV && noSourceMap ? "" : min;
-			path.push(document.location.protocol + cdnPath + min);
+			if (cdnPath) path.push(document.location.protocol + cdnPath + min);
 			path.push(localPath + min);
 		}
 		else 
@@ -35,15 +38,16 @@
 		baseUrl: "js"
 		, paths: {
 			"backbone": "empty:"
-			, "backbone.iobind": "libs/backbone/backbone.iobind.min"
-			, "backbone.iosync": "libs/backbone/backbone.iosync.min"
+			, "backbone.immutable": "empty:"
+			, "backbone.iobind": "empty:"
+			, "backbone.iosync": "empty:"
 			, "backbone.marionette": "empty:"
 			, "backbone.react": "empty:"
 			, "cordova": "empty:"
 			, "jquery": "empty:"
 			, "jquery.mobile": "empty:"
 			, "modernizr": "libs/modernizr.min"
-			, "primus.io": "libs/primus.io.min"
+			, "primus.io": "empty:"
 			, "react": "empty:"
 			, "react.dom": "empty:"
 			, "react.subschema": "libs/react/subschema.min"
@@ -66,6 +70,11 @@
 					, "underscore"
 				]
 				, exports: "Backbone"
+			}
+			, "backbone.immutable": {
+				deps: [
+					"backbone"
+				]
 			}
 			, "backbone.iobind": {
 				deps: [
@@ -124,11 +133,15 @@
 			urlArgs: "bust=v1.0.x" // TODO: For PROD, replace with latest release
 			, paths: {
 				"backbone": _getPath("libs/backbone/backbone", "//cdnjs.cloudflare.com/ajax/libs/backbone.js/" + version.backbone + "/backbone", "-")
+				, "backbone.immutable": _getPath("libs/backbone/backbone.immutable")
+				, "backbone.iobind": _getPath("libs/backbone/backbone.iobind")
+				, "backbone.iosync": _getPath("libs/backbone/backbone.iosync")
 				, "backbone.marionette": _getPath("libs/backbone/backbone.marionette", "//cdnjs.cloudflare.com/ajax/libs/backbone.marionette/" + version["backbone.marionette"] + "/backbone.marionette")
 				, "backbone.react": _getPath("libs/backbone/backbone.react", "//cdnjs.cloudflare.com/ajax/libs/backbone-react-component/" + version["backbone-react-component"] + "/backbone-react-component", "-", true)
 				, "cordova": "../cordova"
 				, "jquery": _getPath("libs/jquery/jquery", "//ajax.googleapis.com/ajax/libs/jquery/" + getjQueryVersion(version.jquery) + "/jquery")
 				, "jquery.mobile": _getPath("libs/jquery/jquery.mobile", "//ajax.googleapis.com/ajax/libs/jquerymobile/" + version["jquery-mobile"] + "/jquery.mobile")
+				, "primus.io": _getPath("libs/primus.io")
 				, "react": _getPath("libs/react/react", "//fb.me/react-with-addons-" + version.react, null, true)
 				, "react.dom": _getPath("libs/react/react.dom", "//fb.me/react-dom-" + version["react-dom"], null, true)
 				, "underscore": _getPath("libs/underscore/underscore", "//cdnjs.cloudflare.com/ajax/libs/underscore.js/" + version.underscore + "/underscore", "-")

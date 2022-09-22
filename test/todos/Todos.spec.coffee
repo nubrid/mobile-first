@@ -26,14 +26,17 @@ define ["apps/AppManager", "apps/todos/App", "apps/todos/show/Controller", "apps
 		describe "Common View", ->
 			before ->
 				$("#fixture").append("<div id='PanelRegion' /><div id='HeaderRegion' /><div id='MainRegion' /><div id='FooterRegion' />").appendTo("body");
-				_.extend @options, { main: Marionette.ItemView.extend { render: -> } }
-				new CommonView.Layout @options
+				Marionette.Region.prototype.attachHtml = ->
+				@render = ->
+				@renderSpy = sinon.spy @, "render"
+				_.extend @options, { Main: Marionette.ItemView.extend { render: @render } }
+				layout = new CommonView.Layout @options
 			after ->
 				$("#fixture").empty()
 			it "displays the header", ->
 				$("#fixture #HeaderRegion h1.ui-title").should.have.text @options.title
 			it "displays the content", ->
-				$("#fixture #MainRegion #todos").should.exist
+				@renderSpy.should.have.been.calledOnce
 		describe "View", ->
 			before ->
 				name = "todos"
@@ -43,8 +46,8 @@ define ["apps/AppManager", "apps/todos/App", "apps/todos/show/Controller", "apps
 					DELETE: name + ":delete"
 
 				$("#fixture").append("<div id='PanelRegion' /><div id='HeaderRegion' /><div id='MainRegion' /><div id='FooterRegion' />").appendTo("body");
-				mainRegion = Marionette.Region.extend el: "#MainRegion"
-				@view = new View.Content _.extend @options, region: new mainRegion()
+				MainRegion = Marionette.Region.extend el: "#MainRegion"
+				@view = new View.Content _.extend @options, region: new MainRegion()
 
 				@react = React.addons.TestUtils
 
@@ -58,14 +61,15 @@ define ["apps/AppManager", "apps/todos/App", "apps/todos/show/Controller", "apps
 						todos.actionType = @actionType
 						defer.resolve todos
 					, @)
-					return fetch: defer.promise(), actionType: @actionType, dispatcher: new Dispatcher()
+					return fetch: defer.promise(), actionType: @actionType
 				, @)
 				@submitForm = (form, inputValue, actionType) ->
-					input = $(ReactDOM.findDOMNode form).find ".ui-input-text input"
+					form = $(ReactDOM.findDOMNode form)
+					input = form.find ".ui-input-text input"
 
 					@react.Simulate.change input[0], target: value: inputValue
 
-					submit = ReactDOM.findDOMNode form.btnSubmit
+					submit = form.find "button.ui-btn"
 					$(submit).click()
 
 					@trigger.should.have.been.calledOnce
@@ -78,13 +82,16 @@ define ["apps/AppManager", "apps/todos/App", "apps/todos/show/Controller", "apps
 				$("#fixture").empty()
 			afterEach ->
 				@trigger.restore()
-			it "renders a page", ->
+			it "renders a page", (done) ->
 				@view.render()
 				$.mobile.initializePage()
 
 				@view.page.should.exist
 				@view.el.should.exist
 				@react.findRenderedComponentWithType(@view.page, View.React.Todos).should.exist
+				setTimeout -> 
+					done()
+				, 1
 			describe "Form", ->
 				it "renders a form", ->
 					@form = @react.findRenderedComponentWithType @view.page, View.React.TodosForm

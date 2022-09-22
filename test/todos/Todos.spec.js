@@ -38,13 +38,17 @@
       });
       describe("Common View", function() {
         before(function() {
+          var layout;
           $("#fixture").append("<div id='PanelRegion' /><div id='HeaderRegion' /><div id='MainRegion' /><div id='FooterRegion' />").appendTo("body");
+          Marionette.Region.prototype.attachHtml = function() {};
+          this.render = function() {};
+          this.renderSpy = sinon.spy(this, "render");
           _.extend(this.options, {
-            main: Marionette.ItemView.extend({
-              render: function() {}
+            Main: Marionette.ItemView.extend({
+              render: this.render
             })
           });
-          return new CommonView.Layout(this.options);
+          return layout = new CommonView.Layout(this.options);
         });
         after(function() {
           return $("#fixture").empty();
@@ -53,12 +57,12 @@
           return $("#fixture #HeaderRegion h1.ui-title").should.have.text(this.options.title);
         });
         return it("displays the content", function() {
-          return $("#fixture #MainRegion #todos").should.exist;
+          return this.renderSpy.should.have.been.calledOnce;
         });
       });
       return describe("View", function() {
         before(function() {
-          var mainRegion, name;
+          var MainRegion, name;
           name = "todos";
           this.actionType = {
             CREATE: name + ":create",
@@ -66,11 +70,11 @@
             DELETE: name + ":delete"
           };
           $("#fixture").append("<div id='PanelRegion' /><div id='HeaderRegion' /><div id='MainRegion' /><div id='FooterRegion' />").appendTo("body");
-          mainRegion = Marionette.Region.extend({
+          MainRegion = Marionette.Region.extend({
             el: "#MainRegion"
           });
           this.view = new View.Content(_.extend(this.options, {
-            region: new mainRegion()
+            region: new MainRegion()
           }));
           this.react = React.addons.TestUtils;
           this.request = sinon.stub(AppManager, "request", $.proxy(function() {
@@ -94,19 +98,19 @@
             }, this));
             return {
               fetch: defer.promise(),
-              actionType: this.actionType,
-              dispatcher: new Dispatcher()
+              actionType: this.actionType
             };
           }, this));
           return this.submitForm = function(form, inputValue, actionType) {
             var input, submit;
-            input = $(ReactDOM.findDOMNode(form)).find(".ui-input-text input");
+            form = $(ReactDOM.findDOMNode(form));
+            input = form.find(".ui-input-text input");
             this.react.Simulate.change(input[0], {
               target: {
                 value: inputValue
               }
             });
-            submit = ReactDOM.findDOMNode(form.btnSubmit);
+            submit = form.find("button.ui-btn");
             $(submit).click();
             this.trigger.should.have.been.calledOnce;
             return this.trigger.should.have.been.calledWithMatch(actionType, {
@@ -124,12 +128,15 @@
         afterEach(function() {
           return this.trigger.restore();
         });
-        it("renders a page", function() {
+        it("renders a page", function(done) {
           this.view.render();
           $.mobile.initializePage();
           this.view.page.should.exist;
           this.view.el.should.exist;
-          return this.react.findRenderedComponentWithType(this.view.page, View.React.Todos).should.exist;
+          this.react.findRenderedComponentWithType(this.view.page, View.React.Todos).should.exist;
+          return setTimeout(function() {
+            return done();
+          }, 1);
         });
         describe("Form", function() {
           it("renders a form", function() {

@@ -14,8 +14,8 @@ require(["main.config"], function () {
 			$.mobile.keepNative = "a,button,input";
 		});
 
-		require(["backbone.iobind", "jquery.mobile", "modernizr"], function () {
-			require(["app"], function (app) {
+		require(["jquery.mobile", "modernizr"], function () {
+			require(["apps/AppManager"], function (app) {
 				app.start();
 			});
 		});

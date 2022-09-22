@@ -5,38 +5,24 @@ define(
 ["apps/AppManager"
 , "apps/common/View"
 , "entities/Common"]
-, function (AppManager, CommonView) {
+, function (AppManager, CommonView, CommonEntity) {
 	"use strict";
 	var List = {};
 
 	var _todos = React.createClass({
 		displayName: "Todos"
-		, mixins: [React.addons.LinkedStateMixin]
 		, getInitialState: function () {
-			return {
-				id: null
-				, title: ""
-				, completed: false
-			};
+			return { collection: null };
 		}
-		, handleSubmitClick: function () {
-			var initialState = this.getInitialState();
-			var attrs = _.pick(_.omit(this.state, "collection"), _.keys(initialState));
-
-			this.props.view.trigger(attrs.id ? this.actionType.UPDATE : this.actionType.CREATE, attrs);
-
-			this.setState(initialState);
+		, handleFormReset: function (state) {
+			this.setState(state);
 		}
-		, handleCancelClick: function () {
-			var initialState = this.getInitialState();
-			this.setState(initialState);
-		}
-		, handleEditClick: function (attrs) {
-			this.setState(attrs);
+		, handleListEdit: function (state) {
+			this.setState(state);
 		}
 		, componentDidMount: function () {
-			var entity = AppManager.request("entity", { url: "todos", query: "{todos{id, title, completed}}" });
-			this.props.view.dispatcher = entity.dispatcher; // Need to set this so that the Controller can properly dispatch.
+			var entity = AppManager.request("entity", { url: this.props.id, query: "{todos{id, title, completed}}", dispatcher: this.props.view.options.dispatcher });
+			// this.props.view.dispatcher = entity.dispatcher; // Need to set this so that the Controller can properly dispatch.
 			this.actionType = entity.actionType;
 
 			$.when(entity.fetch).done($.proxy(function (todos) {
@@ -49,46 +35,68 @@ define(
 		, render: function () {
 			return CommonView.UI.page({ id: this.props.id, direction: "right" }
 				, React.createElement(List.React.TodosForm, {
-					id: this.state.id
-					, linkState: this.linkState
-					, handleSubmitClick: this.handleSubmitClick
-					, handleCancelClick: this.handleCancelClick
-				})
-				, React.createElement(List.React.TodosList, {
-					collection: this.state.collection
+					data: _.omit(this.state, "collection")
+					, actionType: this.actionType
 					, view: this.props.view
-					, handleEditClick: this.handleEditClick
+					, onReset: this.handleFormReset
 				})
+				, this.state.collection
+					? React.createElement(List.React.TodosList, {
+						collection: this.state.collection
+						, view: this.props.view
+						, onEdit: this.handleListEdit
+					}) : null
 			);
 		}
 	});
 
 	var _todosForm = React.createClass({
 		displayName: "TodosForm"
-		, componentDidMount: function () {
-			$(this.btnSubmit).on("click", this.props.handleSubmitClick);
+		, getInitialState: function () {
+			return {
+				id: -1
+				, title: ""
+				, completed: false
+			};
+		}
+		, handleCancelClick: function () {
+			this.reset = true;
+			this.props.onReset(this.getInitialState());
+		}
+		, handleChange: function (event) {
+			this.setState({ title: event.target.value });
+		}
+		, handleSubmitClick: function () {
+			this.props.view.trigger(this.state.id > 0 ? this.props.actionType.UPDATE : this.props.actionType.CREATE, this.state);
+
+			this.reset = true;
+			this.props.onReset(this.getInitialState());
 		}
 		, componentDidUpdate: function () {
-			if (this.btnCancel) $(this.btnCancel).on("click", this.props.handleCancelClick);
+			if (this.reset || (typeof this.props.data.id !== "undefined" && !_.isEqual(this.props.data, this.data))) {
+				this.data = this.props.data;
+				this.setState(this.props.data);
+				this.reset = false;
+			}
 		}
 		, render: function () {
 			return React.createElement("div", null
-				, React.createElement("label", null, this.props.id ? "Edit Todo" : "Create a new Todo")
-				, React.createElement("input", { type: "hidden", value: this.props.id })
-				, CommonView.UI.input({ valueLink: this.props.linkState("title") })
-				, CommonView.UI.button({ ref: CommonView.UI.ref("btnSubmit", this) }, this.props.id ? "Update" : "Add")
-				, this.props.id ? CommonView.UI.button({ ref: CommonView.UI.ref("btnCancel", this) }, "Cancel") : null
+				, React.createElement("label", null, this.state.id ? "Edit Todo" : "Create a new Todo")
+				, React.createElement("input", { type: "hidden", value: this.state.id })
+				, CommonView.UI.input({ value: this.state.title, onChange: this.handleChange })
+				, CommonView.UI.button({ onClick: this.handleSubmitClick }, this.state.id > 0 ? "Update" : "Add")
+				, this.state.id > 0 ? CommonView.UI.button({ onClick: this.handleCancelClick }, "Cancel") : null
 			);
 		}
 	});
 
 	var _todosList = React.createClass({
 		displayName: "TodosList"
-		, mixins: [AppManager.BackboneMixin]
+		, mixins: [AppManager.BackboneMixin, CommonEntity.PureRenderMixin]
 		, handleChange: function (event) {
 			var el = $(event.target);
 
-			var attrs = _.extend(_.findWhere(this.state.collection, { id: parseInt(el.attr("data-id"), 10) }), { completed: el[0].checked });
+			var attrs = _.defaults({ completed: el[0].checked }, _.findWhere(this.state.collection, { id: parseInt(el.attr("data-id"), 10) }));
 			this.props.view.trigger(this.props.collection.actionType.UPDATE, attrs);
 		}
 		, handleClick: function (event) {
@@ -97,7 +105,7 @@ define(
 
 			switch (el.attr("id")) {
 				case "btnEditTodo":
-					this.props.handleEditClick(_.findWhere(this.state.collection, { id: id }));
+					this.props.onEdit(_.findWhere(this.state.collection, { id: id }));
 					break;
 				case "btnDeleteTodo":
 					this.props.view.trigger(this.props.collection.actionType.DELETE, _.findWhere(this.state.collection, { id: id }));
@@ -128,7 +136,7 @@ define(
 		}
 		, render: function () {
 			return React.createElement(React.addons.CSSTransitionGroup, AppManager.Transition.ListItem
-				, this.state.collection ? this.state.collection.map(this.createItem) : null);
+				, this.state.collection.map(this.createItem));
 		}
 	});
 

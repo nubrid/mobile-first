@@ -29,7 +29,7 @@ const Todo = new GraphQLObjectType({
 	})
 });
 
-let _resolve = ({args}, fieldArgs, ast) => {
+let _resolve = ({args}, fieldArgs, args3, ast) => {
 	return new Promise((resolve, reject) => {
 		// TODO: node-rest-client
 		// args.push(data => resolve(ast.operation.operation === "mutation" ? data : JSON.parse(data)));

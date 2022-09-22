@@ -8,7 +8,6 @@ define(
 	"use strict";
 	var Home = React.createClass({
 		displayName: "Home"
-		, mixins: [AppManager.BackboneMixin]
 		, handleOpenBrowserClick: function () {
 			this.props.view.trigger("home:openBrowser", $(this.txtInput).val());
 		}

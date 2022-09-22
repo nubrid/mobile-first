@@ -3,9 +3,8 @@ PointMe Controller
 */
 define(
 ["apps/common/Controller"
-, "apps/common/View"
 , "apps/pointme/show/View"]
-, function (CommonController, CommonView, ShowView) {
+, function (CommonController, ShowView) {
 	"use strict";
-	return CommonController.extend({ title: "PointMe List", layout: CommonView.Layout, main: ShowView.Content });
+	return CommonController.extend({ title: "PointMe List", Main: ShowView.Content });
 });

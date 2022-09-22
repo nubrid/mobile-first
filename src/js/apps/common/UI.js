@@ -48,8 +48,11 @@ define([], function () {
 
 	function _getRefCallback (ref, widget, options) {
 		return ref
-			? $.proxy(function (ref) { $(ref)[widget](options); this(ref); }, ref)
-			: function (ref) { $(ref)[widget](options); };
+			? $.proxy(function (ref) { 
+				if (ref) $(ref)[widget](options);
+				this(ref); }, ref)
+			: function (ref) {
+				if (ref) $(ref)[widget](options); };
 	}
 
 	function _ref (ref, proxy) {
@@ -138,6 +141,7 @@ define([], function () {
 	}
 
 	function _transition (props, contents) {
+		// TODO: Check in common view.
 		if (window.phonegap) {
 			var transitionGroup = React.createClass({
 				componentWillAppear: function () {

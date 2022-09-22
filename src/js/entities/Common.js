@@ -1,9 +1,87 @@
 ﻿define(
 ["apps/AppManager"
-, "apps/common/Dispatcher"]
-, function (AppManager) {
+, "backbone.immutable"
+, "backbone.iobind"]
+, function (AppManager, BackboneImmutable) {
 	"use strict";
+
 	var Common = {};
+
+	BackboneImmutable.infect(Backbone);
+	Common.PureRenderMixin = BackboneImmutable.PureRenderMixin;
+
+	// HACK: Force websocket if available.
+	if (Modernizr.websockets) {
+		var _merge = Primus.prototype.merge;
+		Primus.prototype.merge = function () {
+			var target = _merge.apply(this, arguments);
+
+			return _.extend(target, {
+				transports: [
+					"websocket"
+				]
+			});
+		};
+	}
+
+	// HACK: For compatibility of primus with backbone.iobind.
+	var _emit = Primus.prototype.emit;
+	var _sendMethods = [
+	"*:create"
+	, "*:delete"
+	, "*:read"
+	, "*:update"
+	];
+	Primus.prototype.emit = function () {
+		var message = arguments[0];
+		var delimiterIndex = message.lastIndexOf(":");
+		var method = "*" + message.substring(delimiterIndex);
+		if (arguments.length === 3 && _.indexOf(_sendMethods, method) !== -1) {
+			var args = _.extend([], arguments);
+			args.splice(0, 1, method);
+			args.splice(2, 0, message.substring(0, delimiterIndex));
+			Primus.prototype.send.apply(this, args);
+		}
+		else {
+			_emit.apply(this, arguments);
+		}
+	};
+
+	function _connect (options) {
+		if (_.isFunction(options)) {
+			options = { callback: options };
+		}
+
+		var primus = options.socket || new Primus(window.url
+			, options.closeOnOpen
+			? { manual: true, strategy: false }
+			: { manual: true });
+
+		function primus_onOpen() {
+			if (options.callback) options.callback();
+			if (options.closeOnOpen) {
+				primus.end();
+			}
+		}
+
+		if (primus.readyState === Primus.OPEN) {
+			primus_onOpen();
+
+			return primus;
+		}
+
+		if (primus.readyState !== Primus.OPENING) primus.open();
+		primus.on("open", function () {
+			console.log("connection established");
+			primus_onOpen();
+		});
+
+		primus.on("error", function (error) {
+			console.log(error);
+		});
+
+		return primus;
+	}
 
 	Common.ActionType = function (name) {
 		name = name || "";
@@ -19,7 +97,7 @@
 		urlRoot: "*"
 		, noIoBind: false
 		, initialize: function () {
-			this.socket = AppManager.connect({
+			this.socket = _connect({
 				socket: this.socket
 				, callback: $.proxy(function () {
 					// Only bind new models from the server because the server assigns the id.
@@ -103,13 +181,12 @@
 		, noIoBind: false
 		, model: Common.Model
 		, initialize: function () {
-			this.dispatcher = this.dispatcher || AppManager.request("dispatcher", this.url);
 			this.actionType = Common.ActionType(this.url);
 
 			this.listenTo(this.dispatcher, "dispatch", $.proxy(function (payload) {
 				switch (payload.actionType) {
 					case this.actionType.CREATE:
-						this.create(payload.attrs, { wait: true });
+						this.create(_.omit(payload.attrs, "id"), { wait: true });
 
 						break;
 					case this.actionType.UPDATE:
@@ -124,7 +201,7 @@
 			}, this));
 
 			this.on("before:fetch", function () {
-				this.socket = AppManager.connect({
+				this.socket = _connect({
 					socket: this.socket
 					, callback: $.proxy(function () {
 						if (!this.noIoBind) {
@@ -189,7 +266,7 @@
 		getModel: function (Model, attributes) {
 			var model = new Model(attributes);
 			var defer = $.Deferred();
-			model.socket = AppManager.connect({
+			model.socket = _connect({
 				socket: model.socket
 				, callback: function () {
 					model.fetch({
@@ -206,7 +283,7 @@
 		, getEntity: function (Collection, options) {
 			var collection = new Collection(null, options);
 			var defer = $.Deferred();
-			collection.socket = AppManager.connect({
+			collection.socket = _connect({
 				socket: collection.socket
 				, callback: function () {
 					collection.fetch({
@@ -222,7 +299,6 @@
 
 			return {
 				fetch: promise
-				, dispatcher: collection.dispatcher
 				, actionType: collection.actionType
 			};
 		}
@@ -235,6 +311,7 @@
 					urlRoot: options.url
 				})
 				, url: options.url
+				, dispatcher: options.dispatcher
 			})
 			, options);
 	});

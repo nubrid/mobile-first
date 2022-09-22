@@ -1,3 +1,4 @@
+call npm prune
 call npm update
 call npm update -g phonegap
 call npm update -g cordova
@@ -24,8 +25,10 @@ call npm run -s modernizr -- -c modernizr-config.json -d src/js/libs/modernizr.m
 
 copy /Y .\node_modules\backbone\backbone*.* .\src\js\libs\backbone\
 copy /Y .\node_modules\backbone.marionette\lib\backbone.marionette.* .\src\js\libs\backbone\
-copy /Y .\node_modules\backbone-react-component\dist\backbone-react-component.js .\src\js\libs\backbone\backbone.react.js
-copy /Y .\node_modules\backbone-react-component\dist\backbone-react-component-min.js .\src\js\libs\backbone\backbone.react-min.js
+REM copy /Y .\node_modules\backbone-react-component\dist\backbone-react-component.js .\src\js\libs\backbone\backbone.react.js
+REM copy /Y .\node_modules\backbone-react-component\dist\backbone-react-component-min.js .\src\js\libs\backbone\backbone.react-min.js
+:: copy /Y .\node_modules\immutable-backbone\index.js .\src\js\libs\backbone\backbone.immutable.js
+call npm run -s babel -- node_modules/immutable-backbone/index.js -o src/js/libs/backbone/backbone.immutable.js
 
 call bundle.custom.bat
 copy /Y .\dist\jquery\dist\jquery.* .\src\js\libs\jquery\
@@ -49,12 +52,15 @@ call log :i "build libs: download cdn"
 call npm run -s download -- --out src/js/libs/ http://www.nubrid.com/primus/primus.io.js
 call npm run -s download -- --out src/js/libs/backbone/ https://raw.githubusercontent.com/noveogroup/backbone.iobind/master/dist/backbone.iobind.js
 call npm run -s download -- --out src/js/libs/backbone/ https://raw.githubusercontent.com/noveogroup/backbone.iobind/master/dist/backbone.iosync.js
+call npm run -s download -- https://raw.githubusercontent.com/magalhas/backbone-react-component/master/dist/backbone-react-component.js > src/js/libs/backbone/backbone.react.js
+call npm run -s download -- https://raw.githubusercontent.com/magalhas/backbone-react-component/master/dist/backbone-react-component-min.js > src/js/libs/backbone/backbone.react-min.js
 :: call npm run -s download -- --out src/js/libs/require/ https://raw.githubusercontent.com/requirejs/text/latest/text.js
 
 call log :i "build libs: update paths"
 call npm run -s replace -- images\/ ../img/ src/css/jquery.mobile.theme.css
 
 call log :i "build libs: minify"
+call npm run -s uglifyjs -- src/js/libs/backbone/backbone.immutable.js -o src/js/libs/backbone/backbone.immutable.min.js -p relative -c -m
 call npm run -s uglifyjs -- src/js/libs/primus.io.js -o src/js/libs/primus.io.min.js -p relative -c -m
 call npm run -s uglifyjs -- src/js/libs/backbone/backbone.iobind.js -o src/js/libs/backbone/backbone.iobind.min.js -p relative -c -m
 :: --source-map src/js/libs/backbone/backbone.iobind.map
@@ -70,3 +76,7 @@ call npm run -s replace -- ":(\D)\D" ":$1" src/js/main.config.version.js
 call npm run -s replace -- "\]" ";});" src/js/main.config.version.js
 call npm run -s replace -- "\[" "define([],function(){""use strict"";return" src/js/main.config.version.js
 :: call npm run -s uglifyjs -- src/js/main.config.version.js -o src/js/main.config.version.js -p relative -c -m
+
+set arg=npm run -s replace -- ",\n    \""react\"":[^\n,]*(\n)" "$1" node_modules/backbone-react-component/package.json && call run arg
+set arg=npm run -s replace -- "(\{\n)    \""fbjs\"":[^\n]*\n" "$1" node_modules/subschema/package.json && call run arg
+set arg=npm run -s replace -- "(\{\n)    \""lodash\"":[^\n]*\n" "$1" node_modules/subschema/package.json && call run arg

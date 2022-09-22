@@ -16,7 +16,7 @@ db.create = (table, data, callback) => {
 	});
 };
 db.read = (table, callback) => {
-	db.query(`SELECT * FROM ${table.replace(/[^A-Z0-9]/ig, "_")}`, (error, result) => {
+	db.query(`SELECT * FROM ${table.replace(/[^A-Z0-9]/ig, "_")} ORDER BY id`, (error, result) => {
 		let args = error ? [null, error] : [_.map(result.rows, row => _.extend({ id: row.id }, row.data))];  
 		callback.apply(this, args);
 	});

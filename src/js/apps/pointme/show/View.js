@@ -5,25 +5,27 @@ define(
 ["apps/AppManager"
 , "apps/common/View"
 , "entities/Common"]
-, function (AppManager, CommonView) {
+, function (AppManager, CommonView, CommonEntity) {
 	"use strict";
 	var List = {};
 
 	var _pointme = React.createClass({
 		displayName: "PointMe"
-		, mixins: [React.addons.LinkedStateMixin]
 		, getInitialState: function () {
 			return {
-				id: null
+				id: -1
 				, title: ""
 				, completed: false
 			};
+		}
+		, handleChange: function (event) {
+			this.setState({ title: event.target.value });
 		}
 		, handleSubmitClick: function () {
 			var initialState = this.getInitialState();
 			var attrs = _.pick(_.omit(this.state, "collection"), _.keys(initialState));
 
-			this.props.view.trigger(attrs.id ? this.actionType.UPDATE : this.actionType.CREATE, attrs);
+			this.props.view.trigger(attrs.id > 0 ? this.actionType.UPDATE : this.actionType.CREATE, attrs);
 
 			this.setState(initialState);
 		}
@@ -35,8 +37,8 @@ define(
 			this.setState(attrs);
 		}
 		, componentDidMount: function () {
-			var entity = AppManager.request("entity", { url: "todos", query: "{todos{id, title, completed}}" });
-			this.props.view.dispatcher = entity.dispatcher; // Need to set this so that the Controller can properly dispatch.
+			var entity = AppManager.request("entity", { url: this.props.id, query: "{todos{id, title, completed}}", dispatcher: this.props.view.options.dispatcher });
+			// this.props.view.dispatcher = entity.dispatcher; // Need to set this so that the Controller can properly dispatch.
 			this.actionType = entity.actionType;
 
 			$.when(entity.fetch).done($.proxy(function (pointme) {
@@ -51,7 +53,8 @@ define(
 				, React.createElement("div", { role: "main", className: "ui-content" }
 					, React.createElement(List.React.PointMeForm, {
 						id: this.state.id
-						, linkState: this.linkState
+						, title: this.state.title
+						, handleChange: this.handleChange
 						, handleSubmitClick: this.handleSubmitClick
 						, handleCancelClick: this.handleCancelClick
 					})
@@ -77,20 +80,20 @@ define(
 			return React.createElement("div", null
 				, React.createElement("label", null, this.props.id ? "Edit Todo" : "Create a new Todo")
 				, React.createElement("input", { type: "hidden", value: this.props.id })
-				, React.createElement("input", { type: "text", valueLink: this.props.linkState("title") })
-				, CommonView.UI.button({ ref: CommonView.UI.ref("btnSubmit", this), value: this.props.id ? "Update" : "Add" })
-				, this.props.id ? CommonView.UI.button({ ref: CommonView.UI.ref("btnCancel", this), value: "Cancel" }) : null
+				, React.createElement("input", { type: "text", value: this.props.title, onChange: this.props.handleChange })
+				, CommonView.UI.button({ ref: CommonView.UI.ref("btnSubmit", this), value: this.props.id > 0 ? "Update" : "Add" })
+				, this.props.id > 0 ? CommonView.UI.button({ ref: CommonView.UI.ref("btnCancel", this), value: "Cancel" }) : null
 			);
 		}
 	});
 
 	var _pointmeList = React.createClass({
 		displayName: "PointMeList"
-		, mixins: [AppManager.BackboneMixin]
+		, mixins: [AppManager.BackboneMixin, CommonEntity.PureRenderMixin]
 		, handleChange: function (event) {
 			var el = $(event.target);
 
-			var attrs = _.extend(_.findWhere(this.state.collection, { id: parseInt(el.attr("data-id"), 10) }), { completed: el[0].checked });
+			var attrs = _.defaults({ completed: el[0].checked }, _.findWhere(this.state.collection, { id: parseInt(el.attr("data-id"), 10) }));
 			this.props.view.trigger(this.props.collection.actionType.UPDATE, attrs);
 		}
 		, handleClick: function (event) {

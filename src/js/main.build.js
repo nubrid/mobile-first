@@ -18,15 +18,6 @@
 			]
 		}
 		, {
-			name: "apps/form/App"
-			, include: [
-				"apps/form/show/Controller"
-			]
-			, exclude: [
-				"main"
-			]
-		}
-		, {
 			name: "apps/home/App"
 			, include: [
 				"apps/home/show/Controller"

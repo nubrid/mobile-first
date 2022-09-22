@@ -4,7 +4,7 @@ git stash save
 git stash drop
 REM git checkout 2.2-stable
 git fetch --tags
-git checkout 2.2.3
+git checkout 2.2.4
 call npm install
 call grunt custom:-ajax,-ajax/xhr,-ajax/script,-ajax/jsonp,-css/showHide,-effects,-event/focusin,-core/ready
 cd ..\..
