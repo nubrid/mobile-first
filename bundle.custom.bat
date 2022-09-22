@@ -77,12 +77,12 @@ cd ..\..
 call npm run -s download -- --out dist/jquery.mobile/dist/ http://jquerymobile.com/resources/download/jquery.mobile.images-1.4.5.zip
 call npm run -s 7z -- x dist/jquery.mobile/dist/jquery.mobile.images-1.4.5.zip -odist/jquery.mobile/dist/ -y
 
-call npm run -s sprity -- create dist/jquery.mobile/dist/img dist/jquery.mobile/dist/images/icons-png/**/* -e gm --style-indent-size 0 --orientation horizontal -c ../img -n jquery.mobile.icons -s ../css/jquery.mobile.icons.png.css
-set arg=npm run -s replace -- "^\n\.icon \{" ".ui-nosvg [class*=""ui-icon-""]::after,.ui-nosvg [class*=""ui-checkbox-on""]::after {" dist/jquery.mobile/dist/css/jquery.mobile.icons.png.css && call run arg
-set arg=npm run -s replace -- "\.icon-([^\{]+)-black \{" ".ui-nosvg .ui-alt-icon.ui-icon-$1:after,.ui-nosvg .ui-alt-icon .ui-icon-$1:after {" dist/jquery.mobile/dist/css/jquery.mobile.icons.png.css && call run arg
-set arg=npm run -s replace -- "\.icon-([^\{]+)-white \{" ".ui-nosvg .ui-icon-$1:after {" dist/jquery.mobile/dist/css/jquery.mobile.icons.png.css && call run arg
-set arg=npm run -s replace -- "\.ui-nosvg \.ui-icon-check\:after \{" ".ui-nosvg .ui-icon-check:after,html.ui-nosvg .ui-btn.ui-checkbox-on:after {" dist/jquery.mobile/dist/css/jquery.mobile.icons.png.css && call run arg
-set arg=npm run -s replace -- "\.ui-nosvg \.ui-alt-icon\.ui-icon-check\:after,\.ui-nosvg \.ui-alt-icon \.ui-icon-check\:after \{" ".ui-nosvg .ui-alt-icon.ui-icon-check:after,.ui-nosvg .ui-alt-icon .ui-icon-check:after,.ui-nosvg .ui-alt-icon.ui-btn.ui-checkbox-on:after,.ui-nosvg .ui-alt-icon .ui-btn.ui-checkbox-on:after {" dist/jquery.mobile/dist/css/jquery.mobile.icons.png.css && call run arg
+REM TODO: call npm run -s sprity -- create dist/jquery.mobile/dist/img dist/jquery.mobile/dist/images/icons-png/**/* -e gm --style-indent-size 0 --orientation horizontal -c ../img -n jquery.mobile.icons -s ../css/jquery.mobile.icons.png.css
+REM set arg=npm run -s replace -- "^\n\.icon \{" ".ui-nosvg [class*=""ui-icon-""]::after,.ui-nosvg [class*=""ui-checkbox-on""]::after {" dist/jquery.mobile/dist/css/jquery.mobile.icons.png.css && call run arg
+REM set arg=npm run -s replace -- "\.icon-([^\{]+)-black \{" ".ui-nosvg .ui-alt-icon.ui-icon-$1:after,.ui-nosvg .ui-alt-icon .ui-icon-$1:after {" dist/jquery.mobile/dist/css/jquery.mobile.icons.png.css && call run arg
+REM set arg=npm run -s replace -- "\.icon-([^\{]+)-white \{" ".ui-nosvg .ui-icon-$1:after {" dist/jquery.mobile/dist/css/jquery.mobile.icons.png.css && call run arg
+REM set arg=npm run -s replace -- "\.ui-nosvg \.ui-icon-check\:after \{" ".ui-nosvg .ui-icon-check:after,html.ui-nosvg .ui-btn.ui-checkbox-on:after {" dist/jquery.mobile/dist/css/jquery.mobile.icons.png.css && call run arg
+REM set arg=npm run -s replace -- "\.ui-nosvg \.ui-alt-icon\.ui-icon-check\:after,\.ui-nosvg \.ui-alt-icon \.ui-icon-check\:after \{" ".ui-nosvg .ui-alt-icon.ui-icon-check:after,.ui-nosvg .ui-alt-icon .ui-icon-check:after,.ui-nosvg .ui-alt-icon.ui-btn.ui-checkbox-on:after,.ui-nosvg .ui-alt-icon .ui-btn.ui-checkbox-on:after {" dist/jquery.mobile/dist/css/jquery.mobile.icons.png.css && call run arg
 
 call npm run -s svg-sprite -- --cl horizontal -p 4,4,4,4 -b padding --css-dimensions "" --css-common svg --ccss -cD dist/jquery.mobile/dist/css --cs ../img/jquery.mobile.icons.svg --css-dest "" --css-render-css-dest jquery.mobile.icons.svg.css --css-bust false dist/jquery.mobile/dist/images/icons-svg/**/*
 set arg=npm run -s replace -- "^\.svg \{" "[class*=""ui-icon-""]::after,[class*=""ui-checkbox-on""]::after {" dist/jquery.mobile/dist/css/jquery.mobile.icons.svg.css && call run arg

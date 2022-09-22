@@ -1,7 +1,9 @@
-﻿import CommonApp from "apps/common/App";
+﻿import CommonApp from "common/App";
+import View from "./View";
 
-const HomeApp = ( props ) => (
-	<CommonApp { ...props } View={ require( "./View" ) } />
-);
+const HomeApp = () => {
+  const children = (/*CommonApp this.state*/) => <View />;
+  return <CommonApp name="home">{children}</CommonApp>;
+};
 
 export default HomeApp;

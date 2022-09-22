@@ -1,53 +1,57 @@
-﻿import _ from "lodash";
-import A from "apps/common/ui/A";
-import Button from "apps/common/ui/Button";
-import Input from "apps/common/ui/Input";
-import Page from "apps/common/ui/Page";
-import ref from "apps/common/ui/ref";
+﻿import A from "common/ui/A";
+import Button from "common/ui/Button";
+import Input from "common/ui/Input";
+import popupTools from "popup-tools";
 
-const HomeView = ( { name }) => {
-	const handleOpenBrowserClick = () => {
-		const referrer = window.open( this.txtInput.value, "_blank", "location=no" );
+const HomeView = () => {
+  const txtInput = React.createRef();
 
-		setTimeout( function() {
-			referrer.close();
-		}, 5000 );
-	};
+  const handleOpenBrowserClick = () => {
+    const referrer = window.open(
+      txtInput.current.value,
+      "_blank",
+      "location=no",
+    );
 
-	const handleLoginClick = ( event ) => {
-		const provider = event.target.hash.substring( 1 )
-			, referrer = window.open( `${AppManager.url}/auth/${provider}`, "_blank", "location=no" );
+    setTimeout(function() {
+      referrer.close();
+    }, 5000);
+  };
 
-		referrer.addEventListener( "loadstop", event => {
-			if ( _.startsWith( event.url, AppManager.url ) ) {
-				if ( _.startsWith( event.url, `${AppManager.url}/#failed` ) ) {
-					alert( "Login failed!" );
-				}
-				else if ( _.startsWith( event.url, `${AppManager.url}/` ) ) {
-					alert( "Login succeeded! See console for profile." );
-				}
+  const handleLoginClick = event => {
+    const provider = event.target.hash.substring(1);
 
-				referrer.close();
-			}
-		});
+    popupTools.popup(
+      `${AppManager.url}/auth/${provider}`,
+      `${provider} connect`,
+      {},
+      (error, user) => console.log(user), // eslint-disable-line no-console
+    );
 
-		event.preventDefault();
-		return false;
-	};
+    event.preventDefault();
+    return false;
+  };
 
-	return (
-		<Page id={ name }>
-			<Input _ref={ ref( "txtInput", this ) } />
-			<Button onClick={ handleOpenBrowserClick }>Open Browser</Button>
-			<div><A href="#todos">Todos</A></div>
-			<div onClick={ handleLoginClick } className="social-media">
-				<A href="#facebook" title="facebook" className="facebook">Facebook</A>
-				<A href="#twitter" title="twitter" className="twitter">Twitter</A>
-				<A href="#linkedin" title="linkedin" className="linkedin">LinkedIn</A></div></Page>
-	);
-};
-HomeView.propTypes = {
-	name: React.PropTypes.string.isRequired,
+  return (
+    <>
+      <Input ref={txtInput} />
+      <Button onClick={handleOpenBrowserClick}>Open Browser</Button>
+      <div>
+        <A href="#todos">Todos</A>
+      </div>
+      <div onClick={handleLoginClick} className="social-media">
+        <A href="#facebook" title="facebook" className="facebook">
+          Facebook
+        </A>
+        <A href="#twitter" title="twitter" className="twitter">
+          Twitter
+        </A>
+        <A href="#linkedin" title="linkedin" className="linkedin">
+          LinkedIn
+        </A>
+      </div>
+    </>
+  );
 };
 
 export default HomeView;

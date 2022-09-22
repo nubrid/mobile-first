@@ -1,4 +1,7 @@
-﻿export default class Dispatcher {
+﻿/*
+Common Dispatcher
+*/
+export default class Dispatcher {
 	_dispatcher = { ...Backbone.Events };
 
 	constructor() {

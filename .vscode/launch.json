@@ -1,60 +1,38 @@
 {
 	"version": "0.1.0",
 	// List of configurations. Add new configurations or edit existing ones.
-	"compounds": [
-		{
-			"name": "Launch All",
-			"configurations": [
-				"Launch Node",
-				"Launch Chrome"
-			]
-		}
-	],
 	"configurations": [
 		{
-			// Name of configuration; appears in the launch configuration drop down menu.
-			"name": "Launch Chrome",
-			// Type of configuration.
 			"type": "chrome",
 			"request": "launch",
-			// "diagnosticLogging": true,
-			"runtimeArgs": [ "-incognito" ],
-			// Use JavaScript source maps (if they exist).
-			"sourceMaps": true,
+			"name": "Launch Chrome",
+			"runtimeArgs": [
+				"--incognito"
+			],
 			"url": "http://www.nubrid.com",
-			"userDataDir": "${workspaceRoot}/.vscode/chrome",
-			"webRoot": "${workspaceRoot}"
-		},
-		{
-			"name": "Attach Chrome",
-			"type": "chrome",
-			"request": "attach",
-			// "diagnosticLogging": true,
-			// Port to attach to.
-			"port": 8600,
-			// Use JavaScript source maps (if they exist).
+			"webRoot": "${workspaceRoot}",
 			"sourceMaps": true,
-			"url": "http://www.nubrid.com*",
-			"webRoot": "${workspaceRoot}"
+			"skipFiles": [
+				"node_modules"
+			]
 		},
 		{
 			// Name of configuration; appears in the launch configuration drop down menu.
-			"name": "Launch Node",
+			"name": "Launch ./bin/app",
 			// Type of configuration.
 			"type": "node",
-			"request": "launch",
 			// Workspace relative or absolute path to the program.
 			"program": "${workspaceRoot}/./bin/app",
 			// Automatically stop program after launch.
 			"stopOnEntry": false,
 			// Command line arguments passed to the program.
-			"args": [ "-s", "false" ],
+			"args": ["-s", "false"],
 			// Workspace relative or absolute path to the working directory of the program being debugged. Default is the current workspace.
 			"cwd": "${workspaceRoot}/.",
 			// Workspace relative or absolute path to the runtime executable to be used. Default is the runtime executable on the PATH.
 			"runtimeExecutable": null,
 			// Optional arguments passed to the runtime executable.
-			"runtimeArgs": [ "--nolazy" ],
+			"runtimeArgs": ["--nolazy"],
 			// Environment variables passed to the program.
 			"env": {
 				"NODE_ENV": "development"
@@ -63,22 +41,17 @@
 			"sourceMaps": false,
 			// If JavaScript source maps are enabled, the generated code is expected in this directory.
 			"outFiles": [],
-			"skipFiles": [
-				"node_modules/**/*.js"
-			]
+			"request": "launch"
 		},
 		{
-			"name": "Attach Node",
+			"name": "Attach",
 			"type": "node",
-			"request": "attach",
 			// Port to attach to.
-			"port": 8501,
+			"port": 8501, // 5858
 			"sourceMaps": false,
+			"request": "attach",
 			"processId": "${command:PickProcess}",
-			"restart": true,
-			"skipFiles": [
-				"node_modules/**/*.js"
-			]
+			"restart": true
 		}
 	]
-}  
+}

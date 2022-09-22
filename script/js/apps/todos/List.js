@@ -1,51 +1,43 @@
-import _ from "lodash";
 import ListItem from "./ListItem";
+import { editTodo, deleteTodo } from "common/entities/actions";
 
-export default class TodosList extends React.Component {
-	// mixins: [ BackboneReactMixin, BackboneImmutable.PureRenderMixin ],
-	static propTypes = {
-		collection: React.PropTypes.object.isRequired,
-		onEdit: React.PropTypes.func.isRequired,
-	}
+const ConnectedList = ({ items, editItem, deleteItem }) => {
+  const handleItemClick = event => {
+    const el = event.target,
+      id = el.getAttribute("data-id");
 
-	componentWillMount() {
-		BackboneReactMixin.on( this, {
-			collections: {
-				collection: this.props.collection
-			}
-		});
-	}
+    switch (el.innerText) {
+      case "Delete":
+        deleteItem({ id });
+        break;
+      default: {
+        editItem({ id, completed: el.checked });
+      }
+    }
+  };
 
-	componentWillUnmount() {
-		BackboneReactMixin.off( this );
-	}
+  const createListItem = item => (
+    <ListItem key={item.id} item={item} onClick={handleItemClick} />
+  );
 
-	handleItemClick = ( event ) => {
-		event.preventDefault();
-		const el = event.target
-			, id = el.getAttribute( "data-id" );
+  return <div>{Array.from(items, createListItem)}</div>; // TODO: return <ReactCSSTransitionGroup transitionName="list-item" transitionEnterTimeout={ 500 } transitionLeaveTimeout={ 500 }>{ Array.from( todos, createListItem ) }</ReactCSSTransitionGroup>;
+};
+ConnectedList.propTypes = {
+  items: PropTypes.arrayOf(PropTypes.object).isRequired,
+  editItem: PropTypes.func.isRequired,
+  deleteItem: PropTypes.func.isRequired,
+};
 
-		switch ( el.innerText ) {
-			case "Edit":
-				this.props.onEdit( _.defaults( { ...this.props.collection.get( id ).attributes }, { id } ) );
+const mapStateToProps = ({ todos: items }) => ({ items });
+const mapDispatchToProps = dispatch => ({
+  editItem: item => dispatch(editTodo(item)),
+  deleteItem: item => dispatch(deleteTodo(item)),
+});
 
-				break;
-			case "Delete":
-				this.props.collection.dispatcher.trigger( this.props.collection.actionType.DELETE, { id });
+const { connect } = ReactRedux,
+  TodosList = connect(
+    mapStateToProps,
+    mapDispatchToProps,
+  )(ConnectedList);
 
-				break;
-			default:
-				this.props.collection.dispatcher.trigger( this.props.collection.actionType.UPDATE, { id, attrs: { completed: el.checked } });
-		}
-	}
-
-	createItem = ( item ) => {
-		return (
-			<ListItem key={ item.id } item={ item } onClick={ this.handleItemClick } />
-		);
-	}
-
-	render() {
-		return <ReactCSSTransitionGroup transitionName="list-item" transitionEnterTimeout={ 500 } transitionLeaveTimeout={ 500 }>{Array.from( this.props.collection.models, this.createItem )}</ReactCSSTransitionGroup>;
-	}
-}
+export default TodosList;

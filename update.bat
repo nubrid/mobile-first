@@ -1,25 +1,33 @@
+call log :i "version: retrieving..."
+for /f %%i in ('npm run -s scrape:node ^| npm run -s json -- version') do set node=%%i
+for /f %%i in ('npm run -s scrape:nginx ^| npm run -s json -- version') do set nginx=%%i
+call log :i "version: node-%node% %nginx%"
+
 call log :i "nginx: installing..."
 
-rd /s /q D:\Shared\Downloads\nginx\
-call npm run -s download -- --out D:/Shared/Downloads/ https://nginx.org/download/nginx-%~1.zip
-call npm run -s 7z -- x D:/Shared/Downloads/nginx-%~1.zip -oD:/Shared/Downloads/nginx/ -xr!nginx.conf -y
-xcopy D:\Shared\Downloads\nginx\nginx-%~1 .\Config\nginx\ /s /e /y
-rd /s /q D:\Shared\Downloads\nginx\
+rd /s /q ..\Downloads\nginx\
+call npm run -s download -- --out ../Downloads/ https://nginx.org/download/%nginx%.zip
+call npm run -s 7z -- x ../Downloads/%nginx%.zip -o../Downloads/nginx/ -xr!nginx.conf -y
+xcopy ..\Downloads\nginx\%nginx% .\Config\nginx\ /s /e /y
+rd /s /q ..\Downloads\nginx\
 
 call log :i "node: downloading..."
-call npm run -s download -- --out D:/Shared/Downloads/ https://nodejs.org/dist/v%~2/node-v%~2-x64.msi
+call npm run -s download -- --out ../Downloads/ https://nodejs.org/dist/v%node%/node-v%node%-x64.msi
 call log :i "node: installing..."
-msiexec /qn /i D:\Shared\Downloads\node-v%~2-x64.msi /l* D:\Shared\Downloads\node-v%~2-x64.msi.log
+cd ..
+msiexec /qn /i Downloads\node-v%node%-x64.msi /l* Downloads\node-v%node%-x64.msi.log
+cd /d %~dp0
+
 call log :i "node: installing... 90s remaining..."
 ping 127.0.0.1 -n 90 > nul
 
+call log :i "npm: updating packages..."
+call npm run ncu -- -a
+call npm update
+
 call log :i "npm: installing..."
-C: && cd "Program Files\nodejs"
+cd /d "C:\Program Files\nodejs"
 move /Y .\node_modules\npm\npmrc .
 call npm install npm@latest
 move /Y .\npmrc .\node_modules\npm\
-D: && cd D:\Shared\Nubrid\Nubrid.Mobile\
-
-call log :i "npm: updating packages..."
-call npm run ncu -- -a -x /^imagemin-/
-call npm update
+cd /d %~dp0

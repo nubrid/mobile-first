@@ -1,8 +1,4 @@
-# TODO Sample
-
-Hybrid Web + Mobile Framework v5.0.0 ~~using VS.Net~~ (JAN 16, 2017)
-
-_For use in my company, Excent One_
+# Hybrid Web + Mobile Framework v6.0.0 (SEP 17, 2018)
 
 By this time, we're now able to perform CRUD operations `OFFLINE` and sync the changes once `ONLINE` using `PouchDB`, `PWA` and `WebSockets`. We're using `LevelDB`, `GraphQL` and `PostgreSQL` saving data in `JSON` format. Form is also dynamic and configurable using schemas.
 
@@ -10,27 +6,28 @@ By this time, we're now able to perform CRUD operations `OFFLINE` and sync the c
 
 - 7zip
 - Babel
-- Backbone `immutable` `iobind` `iosync` ~~`modelbinder`~~ `picky` `syphon`
+- ~~Backbone `immutable` `iobind` `iosync` ~~`modelbinder`~~ `picky` `syphon`~~
 - CoffeeScript
-- Cordova ~~`Crosswalk`~~ `PhoneGap` `Telerik`
+- Cordova `Crosswalk` `PhoneGap` `Telerik`
 - CSP
 - EJS
 - ES6+ ~~`amd`~~ `esm`
-- Eslint
+- Eslint `immutable`
 - Express
 - Faker
 - Famous
 - FLUX
-- GraphQL
+- ~~GraphQL~~
 - Grunt
 - Helmet `CSRF/XSS protection`
+- HMR
 - Imagemin
 - IndexedDB/WebSQL
 - ~~jQuery, jQuery UI & jQuery Mobile~~
 - ~~JSHint~~
 - JSON Server
-- LevelDB
-- LiveReload
+- ~~LevelDB~~
+- ~~LiveReload~~
 - LocalStorage
 - Lodash
 - ~~MarionetteJS `v2`~~
@@ -42,16 +39,17 @@ By this time, we're now able to perform CRUD operations `OFFLINE` and sync the c
 - PhantomJS
 - PM2
 - PostgreSQL
-- PouchDB `replication`
+- ~~PouchDB `replication`~~
+- Prettier
 - PWA `cache-manifest`
-- ReactJS `react-dom` `redux` `class/functional components` `JSX` ~~`mixins` `subschema` `transformer`~~ `transitions`
+- ReactJS `react-dom` `redux` ~~`class/`~~`functional components` `JSX` ~~`mixins` `prop-types` `subschema` `transformer` `transitions`~~
 - Recaptcha
 - ~~RequireJS `cache buster`~~
 - REST API
 - ~~SharePoint~~
-- Sprity
+- ~~Sprity~~
 - Svg-sprite
-- TDD/BDD `chai` `karma` `mocha` `rewire` `sinon` ~~`testem`~~
+- TDD/BDD `chai` `karma` `mocha` ~~`rewire`~~ `sinon` ~~`testem`~~
 - UglifyJS `v2`
 - WebSockets ~~`Engine.io`~~ `Primus` ~~`Socket.io`~~
 - ~~Underscore~~
@@ -61,7 +59,7 @@ By this time, we're now able to perform CRUD operations `OFFLINE` and sync the c
 
 - 8000 - web and websocket
 - 8100 - livereload
-- 8200 - <vacant for testing>
+- 8200 - testem
 - 8300 - karma
 - 8400 - json-server
 - 8500 - node-inspector

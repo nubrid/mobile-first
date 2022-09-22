@@ -1,57 +1,56 @@
-import _ from "lodash";
-import Button from "apps/common/ui/Button";
-import Input from "apps/common/ui/Input";
+import Button from "common/ui/Button";
+import Input from "common/ui/Input";
+import { addTodo } from "common/entities/actions";
 
-export default class TodosForm extends React.Component {
-	state = {
-		id: -1,
-		title: "",
-		completed: false,
-	}
+class ConnectedForm extends React.Component {
+  state = {
+    title: "",
+    completed: false,
+  };
 
-	initialState = this.state;
+  initialState = this.state;
 
-	static propTypes = {
-		actionType: React.PropTypes.object,
-		collection: React.PropTypes.object,
-		data: React.PropTypes.object,
-		onReset: React.PropTypes.func,
-	}
+  static propTypes = {
+    addItem: PropTypes.func.isRequired,
+  };
 
-	reset = () => {
-		this.isReset = true;
-		this.props.onReset( this.initialState );
-	}
+  handleCancelClick = () => {
+    this.reset();
+  };
 
-	handleCancelClick = () => {
-		this.reset();
-	}
+  handleChange = event => {
+    this.setState({ title: event.target.value });
+  };
 
-	handleChange = ( event ) => {
-		this.setState( { title: event.target.value });
-	}
+  handleSubmitClick = event => {
+    event.preventDefault();
 
-	handleSubmitClick = () => {
-		this.props.collection.dispatcher.trigger( this.state.id === -1 ? this.props.actionType.CREATE : this.props.actionType.UPDATE, { id: this.state.id, attrs: this.state });
+    const { title } = this.state;
 
-		this.reset();
-	}
+    this.props.addItem({ title });
+    this.setState(this.initialState);
+  };
 
-	componentDidUpdate() {
-		if ( this.isReset || ( this.props.data.id !== -1 && !_.isEqual( this.props.data, this.data ) ) ) {
-			this.data = this.props.data;
-			this.setState( this.isReset ? this.initialState : this.props.data );
-			this.isReset = false;
-		}
-	}
-
-	render() {
-		return (
-			<div>
-				<label>{this.state.id !== -1 ? "Edit Todo" : "Create a new Todo"}</label>
-				<Input value={ this.state.title } onChange={ this.handleChange } />
-				<Button onClick={ this.handleSubmitClick }>{this.state.id !== -1 ? "Update" : "Add"}</Button>
-				{this.state.id !== -1 ? <Button onClick={ this.handleCancelClick }>Cancel</Button> : null}</div>
-		);
-	}
+  render() {
+    const { title } = this.state;
+    return (
+      <div>
+        <label>Create a new Todo</label>
+        <Input value={title} onChange={this.handleChange} />
+        <Button onClick={this.handleSubmitClick}>Add</Button>
+      </div>
+    );
+  }
 }
+
+const mapDispatchToProps = dispatch => ({
+  addItem: item => dispatch(addTodo(item)),
+});
+
+const { connect } = ReactRedux,
+  Form = connect(
+    null,
+    mapDispatchToProps,
+  )(ConnectedForm);
+
+export default Form;

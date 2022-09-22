@@ -1,0 +1,3 @@
+{
+	"version": "#content>table:first-of-type td:nth-child(2)>a:first-child"
+}

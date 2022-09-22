@@ -34,7 +34,7 @@ db.delete = ( table, data, callback ) => {
 		callback.apply( this, args );
 	} );
 };
-// TODO: node-rest-client
+// NOTE: node-rest-client
 // const { Client } = require( "node-rest-client" );
 // export const db = new Client();
 

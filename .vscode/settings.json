@@ -1,42 +1,44 @@
 // Place your settings in this file to overwrite default and user settings.
 {
-	"editor.formatOnType": true,
-	"editor.insertSpaces": false,
-	// "editor.mouseWheelZoom": true,
-	"editor.renderControlCharacters": true,
-	"editor.renderWhitespace": "all",
-	"editor.wordWrap": "on",
-	"eslint.enable": true,
-	"javascript.format.insertSpaceAfterFunctionKeywordForAnonymousFunctions": false,
-	"javascript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBrackets": true,
-	"javascript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyParenthesis": true,
-	// "javascript.format.placeOpenBraceOnNewLineForControlBlocks": true,
-	// "javascript.format.placeOpenBraceOnNewLineForFunctions": true,
-	"npm-intellisense.scanDevDependencies": true,
-	"path-intellisense.mappings": {
-		"apps": "${workspaceRoot}/script/js/apps"
-	},
-	"search.exclude": {
-		"**/.vscode/chrome": true,
-		"**/node_modules": true,
-		"**/bower_components": true,
-		"**/cecho/node_modules": true,
-		"**/Config/nginx/contrib": true,
-		"**/Config/nginx/docs": true,
-		"**/Config/nginx/html": true,
-		"**/Config/nginx/logs": true,
-		"**/Config/nginx/temp": true,
-		"**/Config/openssl": true,
-		"**/dist": true,
-		"**/logs": true,
-		"**/platforms": true,
-		"**/plugins": true,
-		"**/script/js/libs": true,
-		"**/src": true,
-		"**/typings": true,
-		"**/www": true
-	},
-	"typescript.check.workspaceVersion": false,
-	"typescript.tsdk": "./node_modules/typescript/lib",
-	"editor.guides.indentation": true
+  "editor.formatOnPaste": true,
+  "editor.formatOnSave": true,
+  "[javascript]": {
+    "editor.formatOnSave": false
+  },
+  "editor.formatOnType": true,
+  "editor.minimap.showSlider": "always",
+  "editor.renderControlCharacters": true,
+  "editor.renderIndentGuides": true,
+  "editor.renderWhitespace": "all",
+  "editor.tabSize": 2,
+  "editor.wordWrap": "on",
+  "emmet.includeLanguages": {
+    "javascript": "javascriptreact"
+  },
+  "eslint.alwaysShowStatus": true,
+  "eslint.enable": true,
+  "git.autofetch": true,
+  "javascript.format.insertSpaceAfterFunctionKeywordForAnonymousFunctions": false,
+  "javascript.validate.enable": false,
+  "prettier.disableLanguages": ["javascript"],
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/bower_components": true,
+    "**/cecho/node_modules": true,
+    "**/Config/nginx/contrib": true,
+    "**/Config/nginx/docs": true,
+    "**/Config/nginx/html": true,
+    "**/Config/nginx/logs": true,
+    "**/Config/nginx/temp": true,
+    "**/Config/openssl": true,
+    "**/dist": true,
+    "**/logs": true,
+    "**/platforms": true,
+    "**/plugins": true,
+    "**/script/js/libs": true,
+    "**/src": true,
+    "**/typings": true,
+    "**/www": true
+  },
+  "telemetry.enableTelemetry": false
 }
