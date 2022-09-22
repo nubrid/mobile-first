@@ -7,6 +7,8 @@ define(
 , "entities/Common"]
 , function (AppManager, CommonView) {
 	"use strict";
+	var List = {};
+
 	var _todos = React.createClass({
 		displayName: "Todos"
 		, mixins: [React.addons.LinkedStateMixin]
@@ -146,15 +148,13 @@ define(
 		}
 	});
 
-	var List = {};
-
 	List.React = {
 		Todos: _todos
 		, TodosForm: _todosForm
 		, TodosList: _todosList
 	};
 
-	List.Form = CommonView.Content.extend({
+	List.Content = CommonView.Content.extend({
 		ReactClass: List.React.Todos
 	});
 

@@ -40,7 +40,7 @@ define(
 
 	var Show = {};
 
-	Show.Panel = CommonView.Content.extend({
+	Show.Content = CommonView.Content.extend({
 		ReactClass: Home
 	});
 

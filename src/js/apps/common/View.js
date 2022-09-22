@@ -11,6 +11,7 @@ define(
 		el: "body"
 		, regions: {
 			PanelRegion: "#PanelRegion"
+			, PopupRegion: "#PopupRegion"
 			, HeaderRegion: "#HeaderRegion"
 			, MainRegion: "#MainRegion"
 			, FooterRegion: "#FooterRegion"
@@ -36,21 +37,10 @@ define(
 			if (!(this.MainRegion.currentView instanceof Main)) this.MainRegion.show(new Main(_.extend(options, { region: this.MainRegion })));
 
 			this.PanelRegion.$el.panel();
+			this.PopupRegion.$el.popup();
 			$.mobile.resetActivePageHeight();
 
 			return this;
-		}
-	});
-
-	View.Header = Marionette.ItemView.extend({
-		initialize: function (options) {
-			this.parentEl = options.region ? options.region.$el[0] : this.el;
-			this.title = options.title;
-		}
-		, render: function () {
-			this.view = ReactDOM.render(React.createElement(Header, this), this.parentEl);
-			this.el = this.view.el;
-			this.setElement(this.el);
 		}
 	});
 
@@ -71,15 +61,42 @@ define(
 		}
 	});
 
+	View.Header = Marionette.ItemView.extend({
+		initialize: function (options) {
+			this.parentEl = options.region ? options.region.$el[0] : this.el;
+			this.title = options.title;
+		}
+		, render: function () {
+			this.view = ReactDOM.render(React.createElement(Header, this), this.parentEl);
+			this.el = this.view.el;
+			this.setElement(this.el);
+		}
+	});
+
 	View.Content = Marionette.ItemView.extend({
 		initialize: function (options) {
 			this.parentEl = options.region ? options.region.$el[0] : this.el;
 		}
 		, render: function () {
 			this.page = ReactDOM.render(React.createElement(this.ReactClass, { id: this.id, view: this }), this.parentEl);
-			this.el = ReactDOM.findDOMNode(this.page); // HACK: Avoid conflict with Marionette region show and react render.
+			this.el = ReactDOM.findDOMNode(this.page); // HACK: Avoid conflict between Marionette region show and react render.
 
 			return this;
+		}
+	});
+
+	View.IFrame = Marionette.ItemView.extend({
+		initialize: function (options) {
+			this.parentEl = options.region ? options.region.$el[0] : this.el;
+			this.src = options.src;
+			this.width = options.width;
+			this.height = options.height;
+			this.seamless = "";
+		}
+		, render: function () {
+			this.view = ReactDOM.render(React.createElement("iframe", this), this.parentEl);
+			this.el = this.view.el;
+			this.setElement(this.el);
 		}
 	});
 

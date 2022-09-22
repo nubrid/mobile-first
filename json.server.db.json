@@ -1,14 +1,9 @@
 {
   "todos": [
     {
-      "id": 763133574557696,
-      "title": "test 1",
-      "completed": true
-    },
-    {
-      "id": 763135877525504,
-      "title": "test 4",
-      "completed": true
+      "id": 763158955089920,
+      "title": "test 3",
+      "completed": false
     }
   ]
 }

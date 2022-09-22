@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-
+(function(){
 var app = require("../app");
 
 if (!app) return;
@@ -8,19 +8,19 @@ if (!app) return;
  */
 
 function normalizePort(val) {
-  var port = parseInt(val, 10);
+	var port = parseInt(val, 10);
 
-  if (isNaN(port)) {
-    // named pipe
-    return val;
-  }
+	if (isNaN(port)) {
+		// named pipe
+		return val;
+	}
 
-  if (port >= 0) {
-    // port number
-    return port;
-  }
+	if (port >= 0) {
+		// port number
+		return port;
+	}
 
-  return false;
+	return false;
 }
 
 /**
@@ -71,3 +71,4 @@ function onListening() {
 		: "port " + port;
 	console.log("Listening on " + bind);
 }
+})();

@@ -110,10 +110,9 @@ if (window.__karma__) {
 	});
 }
 else if (window.testem) {
-	var _testem = "/testem";
 	_init({
-		config: ".." + _testem + "/mocha"
-		, module: _root + _testem
+		config: "../node_modules/mocha/mocha"
+		, module: _root + "/testem"
 		, callback: function () {
 			require(window.testem.files, function () {
 				mocha.run();

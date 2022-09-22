@@ -44,7 +44,7 @@ define ["apps/AppManager", "apps/todos/App", "apps/todos/show/Controller", "apps
 
 				$("#fixture").append("<div id='PanelRegion' /><div id='HeaderRegion' /><div id='MainRegion' /><div id='FooterRegion' />").appendTo("body");
 				mainRegion = Marionette.Region.extend el: "#MainRegion"
-				@view = new View.Todos _.extend @options, region: new mainRegion()
+				@view = new View.Content _.extend @options, region: new mainRegion()
 
 				@react = React.addons.TestUtils
 

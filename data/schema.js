@@ -37,11 +37,12 @@ const Operation = {
 
 let _resolve = ({args}, fieldArgs, ast) => {
 	return new Promise((resolve, reject) => {
-		args.push(data => resolve(ast.operation.operation === "mutation" ? data : JSON.parse(data)));
+		// TODO: node-rest-client
+		// args.push(data => resolve(ast.operation.operation === "mutation" ? data : JSON.parse(data)));
+		args.push((data, error) => error ? reject(error) : resolve(data));
 		
-		db[ast.operation.operation === "mutation" ? ast.fieldName : "get"]
-			.apply(this, args)
-			.on("error", error => reject(error));
+		db[ast.operation.operation === "mutation" ? ast.fieldName : "read"]
+			.apply(this, args);
 	});
 };
 

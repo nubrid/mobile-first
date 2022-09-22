@@ -59,10 +59,72 @@ if (cluster.isMaster && (argv.c || config.web.useCluster)) {
 	module.exports = null;
 }
 else {
+	let express = require("express")
+		, router = express.Router();
+
+	router.use((request, response, next) => {
+		let protocol = request.header("x-forwarded-proto") || request.protocol
+			, host = request.header("host");
+
+		if (argv.s && `${protocol}:\/\/${host}\/` !== request.header("referrer") && request.path.startsWith("/js/") && !request.path.endsWith(".map")) {
+			console.log(`CSRF: ${request.path} ${request.headers["user-agent"]}`);
+			response.send("rainbows and unicorns!");
+			response.end();
+			return;
+		}
+
+		request.sessionOptions.maxAge = request.session.maxAge || request.sessionOptions.maxAge; // cookie-session
+		if (argv.r && argv.r !== protocol) {
+			response.writeHead(301, { "Location": `${argv.r}:\/\/${host}${request.url}` });
+			response.end();
+
+			return;
+		}
+
+		next();
+	});
+
+	//router.get("/*", (request, response, next) => {
+	//	serve(request, response, next);
+	//});
+
 	let passport = require("passport")
-	, FacebookStrategy = require("passport-facebook").Strategy
-	, TwitterStrategy = require("passport-twitter").Strategy
-	, LinkedInStrategy = require("passport-linkedin").Strategy;
+		, passportRedirect = {
+			successRedirect: "/"
+			, failureRedirect: "/#failed"
+		};
+
+	router.get("/auth/facebook", passport.authenticate("facebook", {
+		display: "touch"
+		//, scope: [
+		//	"read_stream"
+		//	, "publish_actions"
+		//]
+	}));
+
+	router.get("/auth/facebook/callback", passport.authenticate("facebook", passportRedirect));
+
+	router.get("/auth/twitter", passport.authenticate("twitter", {
+		//scope: [
+		//	"read_stream"
+		//	, "publish_actions"
+		//]
+	}));
+
+	router.get("/auth/twitter/callback", passport.authenticate("twitter", passportRedirect));
+
+	router.get("/auth/linkedin", passport.authenticate("linkedin", {
+		//scope: [
+		//	"read_stream"
+		//	, "publish_actions"
+		//]
+	}));
+
+	router.get("/auth/linkedin/callback", passport.authenticate("linkedin", passportRedirect));
+
+	let FacebookStrategy = require("passport-facebook").Strategy
+		, TwitterStrategy = require("passport-twitter").Strategy
+		, LinkedInStrategy = require("passport-linkedin").Strategy;
 
 	passport.serializeUser((user, done) => {
 		done(null, user);
@@ -124,67 +186,6 @@ else {
 			//});
 		})
 	);
-
-	let express = require("express")
-		, router = express.Router();
-
-	router.use((request, response, next) => {
-		let protocol = request.header("x-forwarded-proto") || request.protocol
-			, host = request.header("host");
-
-		if (argv.s && request.path.startsWith("/js/") && !request.path.endsWith(".map") && `${protocol}://${host}/` !== request.header("referrer")) {
-			console.log(`CSRF: ${request.path} ${request.headers["user-agent"]}`);
-			response.send("rainbows and unicorns!");
-			response.end();
-			return;
-		}
-
-		request.sessionOptions.maxAge = request.session.maxAge || request.sessionOptions.maxAge; // cookie-session
-		if (argv.r && argv.r !== protocol) {
-			response.writeHead(301, { "Location": `${argv.r}://${host}${request.url}` });
-			response.end();
-
-			return;
-		}
-
-		next();
-	});
-
-	//router.get("/*", (request, response, next) => {
-	//	serve(request, response, next);
-	//});
-
-	let passportRedirect = {
-		successRedirect: "/"
-		, failureRedirect: "/#failed"
-	};
-
-	router.get("/auth/facebook", passport.authenticate("facebook", {
-		//scope: [
-		//	"read_stream"
-		//	, "publish_actions"
-		//]
-	}));
-
-	router.get("/auth/facebook/callback", passport.authenticate("facebook", passportRedirect));
-
-	router.get("/auth/twitter", passport.authenticate("twitter", {
-		//scope: [
-		//	"read_stream"
-		//	, "publish_actions"
-		//]
-	}));
-
-	router.get("/auth/twitter/callback", passport.authenticate("twitter", passportRedirect));
-
-	router.get("/auth/linkedin", passport.authenticate("linkedin", {
-		//scope: [
-		//	"read_stream"
-		//	, "publish_actions"
-		//]
-	}));
-
-	router.get("/auth/linkedin/callback", passport.authenticate("linkedin", passportRedirect));
 
 	let app = express()
 		, compression = require("compression")
@@ -250,9 +251,11 @@ else {
 
 		app.set("trust proxy", 1);
 		//cookie.secure = true; // session
-	} else {
+	}
+	else {
 		let serveStatic = require("serve-static");
 		serve = serveStatic(config.web.dir, {
+			index: "index.dev.html"
 			//maxAge: config.web.maxAge
 			//, setHeaders: (response, path) => {
 			//	if (serveStatic.mime.lookup(path) === "text/html") response.setHeader("Cache-Control", "public, max-age=86400");
@@ -277,8 +280,9 @@ else {
 	}
 	
 	let server = null
-		, primus = null
-		, client = null;
+		, primus = null;
+		// TODO: node-rest-client
+		// , client = null;
 	{
 		let http = require(argv.s ? "https" : "http");
 		http.globalAgent.maxSockets = config.web.maxSockets;
@@ -287,8 +291,9 @@ else {
 		let Primus = require("primus.io");
 		primus = new Primus(server, { transformer: config.primus.transformer });
 
-		let Client = require("node-rest-client").Client;
-		client = new Client();
+		// TODO: node-rest-client
+		// let Client = require("node-rest-client").Client;
+		// client = new Client();
 	}
 
 	primus.use("broadcast", require("primus-broadcast"));
@@ -321,14 +326,20 @@ else {
 				? `${data.query}`
 				: `mutation Mutation {${event}}`;
 
-			if (event === _operation.UPDATE || event === _operation.DELETE) url = `${url}/${data.id}`;
 			let _args = [
-				`${config.api.url}/${url}`
-				, {
-					data: JSON.stringify(data),//JSON.stringify(extend({}, data, useragent.parse(spark.headers["user-agent"]))),
-					headers: { "Content-Type": "application/json" }
-				}
+				url
+				, data
 			];
+
+			if (event === _operation.UPDATE || event === _operation.DELETE) url = `${url}/${data.id}`;
+			// TODO: node-rest-client
+			// let _args = [
+			// 	`${config.api.url}/${url}`
+			// 	, {
+			// 		data: JSON.stringify(data),//JSON.stringify(extend({}, data, useragent.parse(spark.headers["user-agent"]))),
+			// 		headers: { "Content-Type": "application/json" }
+			// 	}
+			// ];
 
 			let _callback = result/*, response*/ => {
 				let data = event === _operation.READ
@@ -344,7 +355,7 @@ else {
 				callback(null, data);
 			};
 
-			if (event === _operation.READ) _args.splice(1, 2);
+			if (event === _operation.READ) _args.splice(1, 1);
 
 			graphql(Schema, query, {args: _args}).then(_callback);
 
@@ -369,8 +380,9 @@ else {
 		/*
 		Temp DB
 		*/
-		let Seed = require("seed")
-			, guid = new Seed.ObjectId();
+		// TODO: node-rest-client
+		// let Seed = require("seed")
+		// 	, guid = new Seed.ObjectId();
 		/*
 		Temp DB
 		*/
@@ -380,7 +392,8 @@ else {
 		We listen on model namespace, but emit on the collection namespace.
 		*/
 		spark.on(`*:${_operation.CREATE}`, (data, url, callback) => {
-			data.id = guid.gen();
+			// TODO: node-rest-client
+			// data.id = guid.gen();
 			crud(_operation.CREATE, data, url, callback);
 		});
 

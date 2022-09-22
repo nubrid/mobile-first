@@ -9,7 +9,7 @@ define(
 	"use strict";
 	return {
 		show: function () {
-			var page = AppManager.changePage({ id: "home", title: "Home", layout: CommonView.Layout, main: ShowView.Panel, reverse: true });
+			var page = AppManager.changePage({ id: "home", title: "Home", layout: CommonView.Layout, main: ShowView.Content, reverse: true });
 
 			page.on("home:openBrowser", function (value) {
 				AppManager.net(function () {
@@ -25,7 +25,8 @@ define(
 				var provider = $(event.target).attr("href").substring(1);
 
 				AppManager.net(function () {
-					var loginWindow = window.open(AppManager.Config.Url.Web + "/auth/" + provider, "_blank", "location=no");
+					// TODO: AppManager.popup({ popup: CommonView.IFrame, src: "http://www.nubrid.com", width: 400, height: 300 });
+                    var loginWindow = window.open(AppManager.Config.Url.Web + "/auth/" + provider, "_blank", "location=no");
 
 					loginWindow.addEventListener("loadstop", function (event) {
 						if (event.url.indexOf(AppManager.Config.Url.Web) === 0) {

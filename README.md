@@ -1,6 +1,6 @@
 # TODO Sample
 
-Hybrid Web + Mobile Framework v1.3.0 ~~using VS.Net~~ (NOV 27, 2015)
+Hybrid Web + Mobile Framework v1.4.0 ~~using VS.Net~~ (MAR 13, 2016)
 
 _For use in my company, Excent One, starting with NCC NOAH._
 
@@ -36,7 +36,8 @@ _For use in my company, Excent One, starting with NCC NOAH._
 - Recaptcha
 - RequireJS `cache buster`
 - REST API
-- BDD/TDD `chai` `karma` `mocha` `sinon` `testem`
+- SharePoint
+- TDD/BDD `chai` `karma` `mocha` `sinon` `testem`
 - UglifyJS `v2`
 - WebSockets ~~`Engine.io`~~ `Primus` ~~`Socket.io`~~
 - ~~Underscore~~

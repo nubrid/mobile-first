@@ -70,7 +70,7 @@
           mainRegion = Marionette.Region.extend({
             el: "#MainRegion"
           });
-          this.view = new View.Todos(_.extend(this.options, {
+          this.view = new View.Content(_.extend(this.options, {
             region: new mainRegion()
           }));
           this.react = React.addons.TestUtils;

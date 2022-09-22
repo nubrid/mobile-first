@@ -44,6 +44,17 @@
 		}
 	};
 
+	function _isDeviceOnline() {
+		return navigator.connection
+			&& (navigator.connection.type === Connection.WIFI
+			|| navigator.connection.type === Connection.CELL_2G
+			|| navigator.connection.type === Connection.CELL_3G
+			|| navigator.connection.type === Connection.CELL_4G
+			|| navigator.connection.type === Connection.CELL
+			|| navigator.connection.type === Connection.ETHERNET
+			|| navigator.connection.type === Connection.UNKNOWN);
+	}
+
 	var _appManager = new Marionette.Application({
 		BackboneMixin: Backbone.React.Component.mixin
 		, Config: {
@@ -181,6 +192,20 @@
 
 			if (!window.phonegap && window.isDEV && Modernizr.websockets) require([window.protocol + window.host.replace("//www", "//live") + "/livereload.js"]);
 		}
+		, popup: function (options) {
+			var Popup = options.popup;
+			var popupRegion = this.currentLayout.PopupRegion;
+			if (!(popupRegion.currentView instanceof Popup)) {
+				popupRegion.show(new Popup(_.extend(options, { region: popupRegion })));
+			}
+			else {
+				popupRegion.currentView.src = options.src;
+				popupRegion.currentView.width = options.width;
+				popupRegion.currentView.height = options.height;
+				popupRegion.currentView.render();
+			}
+			popupRegion.$el.popup("open");
+		}
 		, toggleLoading: function (action) {
 			var $this = $(this)
 				, theme = $this.jqmData("theme") || $.mobile.loader.prototype.options.theme
@@ -203,16 +228,6 @@
 		startWithParent: false
 	});
 
-	function _isDeviceOnline() {
-		return navigator.connection
-			&& (navigator.connection.type === Connection.WIFI
-			|| navigator.connection.type === Connection.CELL_2G
-			|| navigator.connection.type === Connection.CELL_3G
-			|| navigator.connection.type === Connection.CELL_4G
-			|| navigator.connection.type === Connection.CELL
-			|| navigator.connection.type === Connection.ETHERNET
-			|| navigator.connection.type === Connection.UNKNOWN);
-	}
 	if (window.isDEV) window.AppManager = _appManager;
 	return _appManager;
 });
