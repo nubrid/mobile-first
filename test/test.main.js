@@ -1,9 +1,7 @@
+/* global mocha */
 (function () {
 "use strict";
-var _karmaBase = "/base";
-var _root = window.__karma__ ? _karmaBase : "../..";
-var _jsRoot = (window.__karma__ ? _karmaBase : "..") + "/src/js";
-var _requireConfig = "/require.config" + (window.__karma__ ? ".js" : "");
+var _root = window.__karma__ ? "/base" : "../..";
 require.config({
 	paths: {
 		"chai": _root + "/node_modules/chai/chai"
@@ -40,12 +38,13 @@ require.config({
 });
 
 function _init(options) {
-	var _config = [_jsRoot + _requireConfig];
+	var _requireConfig = options.baseUrl + "/main.config" + (window.__karma__ ? ".js" : "");
+	var _config = [_requireConfig];
 	if (options.config) _config.push(options.config);
 
 	require(_config, function () {
 		require.config({
-			baseUrl: (options.baseUrl || "") + _jsRoot
+			baseUrl: options.baseUrl
 			, urlArgs: null
 		});
 
@@ -97,7 +96,7 @@ if (window.__karma__) {
 
 	_init({
 		// Karma serves files under /base, which is the basePath from your config file
-		baseUrl: document.location.protocol + "//" + document.location.host
+		baseUrl: document.location.protocol + "//" + document.location.host + _root + "/src/js"
 		, callback: function () {
 			require.config({
 				// dynamically load all test files
@@ -110,8 +109,11 @@ if (window.__karma__) {
 	});
 }
 else if (window.testem) {
+	var _baseUrl = "../src/js";
+	window.baseUrl = "../" + _baseUrl + "/";
 	_init({
-		config: "../node_modules/mocha/mocha"
+		baseUrl: _baseUrl
+		, config: "../node_modules/mocha/mocha"
 		, module: _root + "/testem"
 		, callback: function () {
 			require(window.testem.files, function () {

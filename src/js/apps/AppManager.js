@@ -82,6 +82,27 @@
 				? this.currentLayout.initialize(options)
 				: new options.layout(options);
 			$.mobile.initializePage();
+			
+			// HACK: Native slide
+			if (window.phonegap) {
+				var slideOptions = {
+					// "direction": "left" // 'left|right|up|down', default 'left' (which is like 'next')
+					// , "duration": 400 // in milliseconds (ms), default 400
+					// "slowdownfactor": 4 // overlap views (higher number is more) or no overlap (1). -1 doesn't slide at all. Default 4
+					// , "slidePixels": 0 // optional, works nice with slowdownfactor -1 to create a 'material design'-like effect. Default not set so it slides the entire page.
+					"iosdelay": 100 // ms to wait for the iOS webview to update before animation kicks in, default 60
+					, "androiddelay": 150 // same as above but for Android, default 70
+					, "winphonedelay": 250 // same as above but for Windows Phone, default 200,
+					, "fixedPixelsTop": 45 // the number of pixels of your fixed header, default 0 (iOS and Android)
+					// , "fixedPixelsBottom": 0 // the number of pixels of your fixed footer (f.i. a tab bar), default 0 (iOS and Android)
+				};
+
+				window.plugins.nativepagetransitions.slide(
+					slideOptions
+					// , function (msg) {console.log("success: " + msg);} // called when the animation has finished
+					// , function (msg) {alert("error: " + msg);} // called in case you pass in weird values
+				);
+			}
 
 			// TODO: Using React Animation
 			//this.currentLayout.MainRegion.$el.pagecontainer("change", $(this.currentLayout.MainRegion.currentView.el), { reverse: options.reverse, transition: (options.transition ? options.transition : "slide"), allowSamePageTransition: true });
@@ -206,9 +227,9 @@
 			}
 			popupRegion.$el.popup("open");
 		}
-		, toggleLoading: function (action) {
-			var $this = $(this)
-				, theme = $this.jqmData("theme") || $.mobile.loader.prototype.options.theme
+		, toggleLoading: function (action, $this) {
+			if (!$this) $this = $(this);
+			var theme = $this.jqmData("theme") || $.mobile.loader.prototype.options.theme
 				, msgText = $this.jqmData("msgtext") || $.mobile.loader.prototype.options.text
 				, textVisible = $this.jqmData("textvisible") || $.mobile.loader.prototype.options.textVisible
 				, textonly = !!$this.jqmData("textonly")

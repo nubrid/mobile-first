@@ -1,6 +1,7 @@
 #!/usr/bin/env node
-(function(){
-var app = require("../app");
+(() => {
+"use strict";
+let app = require("../app");
 
 if (!app) return;
 /**
@@ -8,7 +9,7 @@ if (!app) return;
  */
 
 function normalizePort(val) {
-	var port = parseInt(val, 10);
+	let port = parseInt(val, 10);
 
 	if (isNaN(port)) {
 		// named pipe
@@ -27,10 +28,8 @@ function normalizePort(val) {
  * Module dependencies.
  */
 
-var server = app.get("server")
-	.on("error", onError)
-	.on("listening", onListening);
-var address = server.address()
+let server = app.get("server")
+	, address = server.address()
 	, port = normalizePort(app.get("port"));
 
 /**
@@ -71,4 +70,7 @@ function onListening() {
 		: "port " + port;
 	console.log("Listening on " + bind);
 }
+
+server.on("error", onError)
+	.on("listening", onListening);
 })();

@@ -8,7 +8,7 @@
 	"src_files_ignore": [
 		"src/js/main.js",
 		"src/js/main.build.js",
-		"src/js/require.config.js",
+		"src/js/main.config.js",
 		"src/js/libs/**/*.js"
 	],
 	"port": 8200,

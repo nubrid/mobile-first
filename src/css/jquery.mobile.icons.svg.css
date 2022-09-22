@@ -1,0 +1,604 @@
+[class*="ui-icon-"]::after {
+	background: url("../img/jquery.mobile.icons.svg") no-repeat;
+}
+
+.ui-alt-icon.ui-icon-action:after,.ui-alt-icon .ui-icon-action:after {
+	background-position: 0 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-icon-action:after {
+	background-position: 1.0091743119266054% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-alt-icon.ui-icon-alert:after,.ui-alt-icon .ui-icon-alert:after {
+	background-position: 2.018348623853211% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-icon-alert:after {
+	background-position: 3.0275229357798166% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-alt-icon.ui-icon-arrow-d:after,.ui-alt-icon .ui-icon-arrow-d:after {
+	background-position: 4.036697247706422% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-alt-icon.ui-icon-arrow-d-l:after,.ui-alt-icon .ui-icon-arrow-d-l:after {
+	background-position: 5.045871559633028% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-icon-arrow-d-l:after {
+	background-position: 6.055045871559633% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-alt-icon.ui-icon-arrow-d-r:after,.ui-alt-icon .ui-icon-arrow-d-r:after {
+	background-position: 7.064220183486238% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-icon-arrow-d-r:after {
+	background-position: 8.073394495412844% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-icon-arrow-d:after {
+	background-position: 9.082568807339449% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-alt-icon.ui-icon-arrow-l:after,.ui-alt-icon .ui-icon-arrow-l:after {
+	background-position: 10.091743119266056% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-icon-arrow-l:after {
+	background-position: 11.100917431192661% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-alt-icon.ui-icon-arrow-r:after,.ui-alt-icon .ui-icon-arrow-r:after {
+	background-position: 12.110091743119266% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-icon-arrow-r:after {
+	background-position: 13.119266055045872% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-alt-icon.ui-icon-arrow-u:after,.ui-alt-icon .ui-icon-arrow-u:after {
+	background-position: 14.128440366972477% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-alt-icon.ui-icon-arrow-u-l:after,.ui-alt-icon .ui-icon-arrow-u-l:after {
+	background-position: 15.137614678899082% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-icon-arrow-u-l:after {
+	background-position: 16.146788990825687% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-alt-icon.ui-icon-arrow-u-r:after,.ui-alt-icon .ui-icon-arrow-u-r:after {
+	background-position: 17.155963302752294% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-icon-arrow-u-r:after {
+	background-position: 18.165137614678898% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-icon-arrow-u:after {
+	background-position: 19.174311926605505% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-alt-icon.ui-icon-audio:after,.ui-alt-icon .ui-icon-audio:after {
+	background-position: 20.183671409829447% 0;
+	width: 22.02px;
+	height: 22px;
+}
+
+.ui-icon-audio:after {
+	background-position: 21.238726960797806% 0;
+	width: 22.02px;
+	height: 22px;
+}
+
+.ui-alt-icon.ui-icon-back:after,.ui-alt-icon .ui-icon-back:after {
+	background-position: 22.293577981651374% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-icon-back:after {
+	background-position: 23.30275229357798% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-alt-icon.ui-icon-bars:after,.ui-alt-icon .ui-icon-bars:after {
+	background-position: 24.31192660550459% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-icon-bars:after {
+	background-position: 25.321100917431192% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-alt-icon.ui-icon-bullets:after,.ui-alt-icon .ui-icon-bullets:after {
+	background-position: 26.3302752293578% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-icon-bullets:after {
+	background-position: 27.339449541284402% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-alt-icon.ui-icon-calendar:after,.ui-alt-icon .ui-icon-calendar:after {
+	background-position: 28.34862385321101% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-icon-calendar:after {
+	background-position: 29.357798165137616% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-alt-icon.ui-icon-camera:after,.ui-alt-icon .ui-icon-camera:after {
+	background-position: 30.36697247706422% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-icon-camera:after {
+	background-position: 31.376146788990827% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-alt-icon.ui-icon-carat-d:after,.ui-alt-icon .ui-icon-carat-d:after {
+	background-position: 32.38532110091743% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-icon-carat-d:after {
+	background-position: 33.39449541284404% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-alt-icon.ui-icon-carat-l:after,.ui-alt-icon .ui-icon-carat-l:after {
+	background-position: 34.403669724770644% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-icon-carat-l:after {
+	background-position: 35.41284403669725% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-alt-icon.ui-icon-carat-r:after,.ui-alt-icon .ui-icon-carat-r:after {
+	background-position: 36.42201834862385% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-icon-carat-r:after {
+	background-position: 37.43119266055046% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-alt-icon.ui-icon-carat-u:after,.ui-alt-icon .ui-icon-carat-u:after {
+	background-position: 38.440366972477065% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-icon-carat-u:after {
+	background-position: 39.44954128440367% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-alt-icon.ui-icon-check:after,.ui-alt-icon .ui-icon-check:after {
+	background-position: 40.45871559633027% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-icon-check:after {
+	background-position: 41.46788990825688% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-alt-icon.ui-icon-clock:after,.ui-alt-icon .ui-icon-clock:after {
+	background-position: 42.477064220183486% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-icon-clock:after {
+	background-position: 43.48623853211009% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-alt-icon.ui-icon-cloud:after,.ui-alt-icon .ui-icon-cloud:after {
+	background-position: 44.4954128440367% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-icon-cloud:after {
+	background-position: 45.5045871559633% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-alt-icon.ui-icon-comment:after,.ui-alt-icon .ui-icon-comment:after {
+	background-position: 46.51376146788991% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-icon-comment:after {
+	background-position: 47.522935779816514% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-alt-icon.ui-icon-delete:after,.ui-alt-icon .ui-icon-delete:after {
+	background-position: 48.53211009174312% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-icon-delete:after {
+	background-position: 49.54128440366973% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-alt-icon.ui-icon-edit:after,.ui-alt-icon .ui-icon-edit:after {
+	background-position: 50.55045871559633% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-icon-edit:after {
+	background-position: 51.559633027522935% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-alt-icon.ui-icon-eye:after,.ui-alt-icon .ui-icon-eye:after {
+	background-position: 52.56880733944954% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-icon-eye:after {
+	background-position: 53.57798165137615% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-alt-icon.ui-icon-forbidden:after,.ui-alt-icon .ui-icon-forbidden:after {
+	background-position: 54.58715596330275% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-icon-forbidden:after {
+	background-position: 55.596330275229356% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-alt-icon.ui-icon-forward:after,.ui-alt-icon .ui-icon-forward:after {
+	background-position: 56.60550458715596% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-icon-forward:after {
+	background-position: 57.61467889908257% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-alt-icon.ui-icon-gear:after,.ui-alt-icon .ui-icon-gear:after {
+	background-position: 58.62385321100918% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-icon-gear:after {
+	background-position: 59.63302752293578% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-alt-icon.ui-icon-grid:after,.ui-alt-icon .ui-icon-grid:after {
+	background-position: 60.642201834862384% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-icon-grid:after {
+	background-position: 61.65137614678899% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-alt-icon.ui-icon-heart:after,.ui-alt-icon .ui-icon-heart:after {
+	background-position: 62.6605504587156% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-icon-heart:after {
+	background-position: 63.669724770642205% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-alt-icon.ui-icon-home:after,.ui-alt-icon .ui-icon-home:after {
+	background-position: 64.6788990825688% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-icon-home:after {
+	background-position: 65.68807339449542% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-alt-icon.ui-icon-info:after,.ui-alt-icon .ui-icon-info:after {
+	background-position: 66.69724770642202% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-icon-info:after {
+	background-position: 67.70642201834862% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-alt-icon.ui-icon-location:after,.ui-alt-icon .ui-icon-location:after {
+	background-position: 68.71559633027523% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-icon-location:after {
+	background-position: 69.72477064220183% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-alt-icon.ui-icon-lock:after,.ui-alt-icon .ui-icon-lock:after {
+	background-position: 70.73394495412845% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-icon-lock:after {
+	background-position: 71.74311926605505% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-alt-icon.ui-icon-mail:after,.ui-alt-icon .ui-icon-mail:after {
+	background-position: 72.75229357798165% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-icon-mail:after {
+	background-position: 73.76146788990826% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-alt-icon.ui-icon-minus:after,.ui-alt-icon .ui-icon-minus:after {
+	background-position: 74.77064220183486% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-icon-minus:after {
+	background-position: 75.77981651376147% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-alt-icon.ui-icon-navigation:after,.ui-alt-icon .ui-icon-navigation:after {
+	background-position: 76.78899082568807% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-icon-navigation:after {
+	background-position: 77.79816513761467% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-alt-icon.ui-icon-phone:after,.ui-alt-icon .ui-icon-phone:after {
+	background-position: 78.80733944954129% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-icon-phone:after {
+	background-position: 79.81651376146789% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-alt-icon.ui-icon-plus:after,.ui-alt-icon .ui-icon-plus:after {
+	background-position: 80.8256880733945% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-icon-plus:after {
+	background-position: 81.8348623853211% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-alt-icon.ui-icon-power:after,.ui-alt-icon .ui-icon-power:after {
+	background-position: 82.8440366972477% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-icon-power:after {
+	background-position: 83.85321100917432% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-alt-icon.ui-icon-recycle:after,.ui-alt-icon .ui-icon-recycle:after {
+	background-position: 84.86238532110092% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-icon-recycle:after {
+	background-position: 85.87155963302752% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-alt-icon.ui-icon-refresh:after,.ui-alt-icon .ui-icon-refresh:after {
+	background-position: 86.88073394495413% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-icon-refresh:after {
+	background-position: 87.88990825688073% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-alt-icon.ui-icon-search:after,.ui-alt-icon .ui-icon-search:after {
+	background-position: 88.89908256880734% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-icon-search:after {
+	background-position: 89.90825688073394% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-alt-icon.ui-icon-shop:after,.ui-alt-icon .ui-icon-shop:after {
+	background-position: 90.91743119266054% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-icon-shop:after {
+	background-position: 91.92660550458716% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-alt-icon.ui-icon-star:after,.ui-alt-icon .ui-icon-star:after {
+	background-position: 92.93577981651376% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-icon-star:after {
+	background-position: 93.94495412844037% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-alt-icon.ui-icon-tag:after,.ui-alt-icon .ui-icon-tag:after {
+	background-position: 94.95412844036697% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-icon-tag:after {
+	background-position: 95.96330275229357% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-alt-icon.ui-icon-user:after,.ui-alt-icon .ui-icon-user:after {
+	background-position: 96.97247706422019% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-icon-user:after {
+	background-position: 97.98165137614679% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-alt-icon.ui-icon-video:after,.ui-alt-icon .ui-icon-video:after {
+	background-position: 98.9908256880734% 0;
+	width: 22px;
+	height: 22px;
+}
+
+.ui-icon-video:after {
+	background-position: 100% 0;
+	width: 22px;
+	height: 22px;
+}
+

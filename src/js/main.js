@@ -1,4 +1,4 @@
-require(["js/require.config.js"], function () {
+require(["main.config"], function () {
 	"use strict";
 	require(["jquery"], function () {
 		$(document).on("mobileinit", function () {

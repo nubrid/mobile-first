@@ -6,7 +6,6 @@
 {{#css_files}}
 <link rel="stylesheet" href="{{src}}">
 {{/css_files}}
-<script data-main="test.main" src="../src/js/libs/require/require.js"></script>
 </head>
 <body>
 <div id="mocha"></div>
@@ -15,5 +14,6 @@
 	{{#serve_files}}if ("{{{src}}}".indexOf("test/") !== -1) files.push("../{{{src}}}");{{/serve_files}}
 	window.testem = { files: files };
 </script>
+<script data-main="test.main" src="../src/js/libs/require/require.min.js"></script>
 </body>
 </html>

@@ -1,0 +1,1 @@
+define([],function(){"use strict";return{"underscore":"1.8.3","backbone":"1.3.2","backbone.marionette":"2.4.5","backbone-react-component":"0.10.0","jquery":"2.2.2","jquery-mobile":"1.4.1","react":"0.14.7","react-dom":"0.14.7"};});

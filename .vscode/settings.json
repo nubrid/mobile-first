@@ -2,6 +2,24 @@
 {
 	"editor.insertSpaces": "auto",
 	"editor.wrappingColumn": 0,
-	"javascript.validate.enable": false,
-	"jshint.enable": true
+	"jshint.enable": true,
+	"search.exclude": {
+		"**/node_modules": true,
+		"**/bower_components": true,
+		"**/babel-src": true,
+		"**/cecho/node_modules": true,
+		"**/Config/nginx/contrib": true,
+		"**/Config/nginx/docs": true,
+		"**/Config/nginx/html": true,
+		"**/Config/nginx/logs": true,
+		"**/Config/nginx/temp": true,
+		"**/Config/openssl": true,
+		"**/dist": true,
+		"**/logs": true,
+		"**/platforms": true,
+		"**/plugins": true,
+		"**/src/js/libs": true,
+		"**/typings": true,
+		"**/www": true
+	}
 }

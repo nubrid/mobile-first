@@ -1,6 +1,7 @@
 /* https://github.com/jrburke/r.js/blob/master/build/example.build.js */
+/* jshint -W030 */
 ({
-	mainConfigFile: "require.config.js"
+	mainConfigFile: "main.config.js"
 	, appDir: "../"
 	, dir: "../../www"
 	, modules: [
@@ -34,23 +35,28 @@
 			]
 		}
 		, {
-			name: "apps/poc/App"
+			name: "apps/form/App"
 			, include: [
-				"apps/poc/list/Controller"
+				"apps/form/show/Controller"
 			]
 			, exclude: [
 				"main"
 			]
 		}
 	]
-	, optimize: "uglify2"
+	, optimize: "uglify"
+	// , uglify: {
+	// 	compress: true
+	// 	, mangle: true
+	// 	, prefix: "relative"
+	// }
+	, skipDirOptimize: true
 	, generateSourceMaps: true
-	, preserveLicenseComments: false
 	, useSourceUrl: false
-	, fileExclusionRegExp: /^main.build.js$|libs/
-	//, keepBuildDir: true
-	, useStrict: true
-	//, findNestedDependencies: true
-	, removeCombined: true
 	, optimizeCss: "standard.keepLines"
+	, useStrict: true
+	, removeCombined: true
+	, preserveLicenseComments: false
+	, writeBuildTxt: false
+	, fileExclusionRegExp: /^(main.build.js|libs|img)$/
 });

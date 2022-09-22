@@ -1,6 +1,18 @@
 {
 	"compilerOptions": {
-		"target": "ES6"
-		, "module": "commonjs"
+		"module": "commonjs"
 	}
+	, "exclude": [
+		"babel-src"
+		, "cecho"
+		, "Config"
+		, "dist"
+		, "hooks"
+		, "logs"
+		, "node_modules"
+		, "platforms"
+		, "plugins"
+		, "typings"
+		, "www"
+	]
 }

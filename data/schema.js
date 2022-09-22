@@ -1,10 +1,11 @@
+"use strict";
 import {
 	GraphQLBoolean,
-	GraphQLFloat,
-	GraphQLID,
+	// GraphQLFloat,
+	// GraphQLID,
 	GraphQLInt,
 	GraphQLList,
-	GraphQLNonNull,
+	// GraphQLNonNull,
 	GraphQLObjectType,
 	GraphQLSchema,
 	GraphQLString
@@ -27,13 +28,6 @@ const Todo = new GraphQLObjectType({
 		}
 	})
 });
-
-const Operation = {
-	CREATE: "create"
-	, READ: "read"
-	, UPDATE: "update"
-	, DELETE: "delete"
-};
 
 let _resolve = ({args}, fieldArgs, ast) => {
 	return new Promise((resolve, reject) => {

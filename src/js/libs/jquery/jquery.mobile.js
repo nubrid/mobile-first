@@ -1,9 +1,9 @@
 /*!
 * jQuery Mobile 1.4.5
-* Git HEAD hash: 3d7eaceff3292058833a110283695ed8cd9f8464 <> Date: Mon Mar 2 2015 16:24:00 UTC
+* Date: Fri Mar 25 2016 19:24:55 UTC
 * http://jquerymobile.com
 *
-* Copyright 2010, 2015 jQuery Foundation, Inc. and othercontributors
+* Copyright 2010, 2016 jQuery Foundation, Inc. and othercontributors
 * Released under the MIT license.
 * http://jquery.org/license
 *

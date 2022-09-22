@@ -1,7 +1,7 @@
 ﻿/* jshint maxcomplexity: false, maxstatements: false */
 (() => {
 "use strict";
-var argv = require("yargs")
+let argv = require("yargs")
 	.usage("Usage: $0 [options]")
 	.example("$0")
 	.example("$0 -s")
@@ -36,7 +36,7 @@ var argv = require("yargs")
 	.epilog("copyright 2015")
 	.argv;
 
-var config = require("./app.config")
+let config = require("./app.config")
 	, cluster = require("cluster")
 	, port = process.env.PORT
 		|| argv.p
