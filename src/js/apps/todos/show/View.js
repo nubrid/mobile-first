@@ -68,22 +68,18 @@ define(
 	var _todosForm = React.createClass({
 		displayName: "TodosForm"
 		, componentDidMount: function () {
-			$(this.refs.btnSubmit).on("click", this.props.handleSubmitClick);
+			$(this.btnSubmit).on("click", this.props.handleSubmitClick);
 		}
 		, componentDidUpdate: function () {
-			$(this.refs.btnSubmit).button("refresh");
-			if (this.refs.btnCancel)
-				$(this.refs.btnCancel)
-					.button().button("refresh")
-					.on("click", this.props.handleCancelClick);
+			if (this.btnCancel) $(this.btnCancel).on("click", this.props.handleCancelClick);
 		}
 		, render: function () {
 			return React.createElement("div", null
 				, React.createElement("label", null, this.props.id ? "Edit Todo" : "Create a new Todo")
 				, React.createElement("input", { type: "hidden", value: this.props.id })
-				, React.createElement("input", { type: "text", valueLink: this.props.linkState("title") })
-				, React.createElement("input", { type: "button", ref: "btnSubmit", value: this.props.id ? "Update" : "Add" })
-				, this.props.id ? React.createElement("input", { type: "button", ref: "btnCancel", value: "Cancel" }) : null
+				, CommonView.UI.input({ valueLink: this.props.linkState("title") })
+				, CommonView.UI.button({ ref: CommonView.UI.ref("btnSubmit", this) }, this.props.id ? "Update" : "Add")
+				, this.props.id ? CommonView.UI.button({ ref: CommonView.UI.ref("btnCancel", this) }, "Cancel") : null
 			);
 		}
 	});
@@ -113,43 +109,23 @@ define(
 		, componentDidMount: function () {
 			this.$el.on("change", this.handleChange);
 			this.$el.on("click", this.handleClick);
-
-			this.$el.enhanceWithin();
 		}
 		, componentDidUpdate: function (prevProps, prevState) {
-			if ((this.wrapper.nextState && this.wrapper.nextState.collection.length > prevState.collection.length) || !prevState.collection) {
-				this.$el.enhanceWithin();
-			}
-			else {
+			if (this.wrapper.nextState && prevState.collection && this.wrapper.nextState.collection.length === prevState.collection.length) {
 				var checkbox = null;
 				_.each(this.wrapper.collection.models, function (model) {
 					if (typeof model.changed.completed === "undefined") return;
-					checkbox = $(this.refs["chk_" + model.id]);
+					checkbox = $(this["chk_" + model.id]);
 					checkbox[0].checked = model.changed.completed;
 					checkbox.checkboxradio("refresh");
 				}, this);
 			}
-			// TODO: No longer works at backbone-react-component v0.10.0
-			//else if (!prevState.isRequesting && this.wrapper.nextState) {
-			//	var nextCollection = this.wrapper.nextState.collection;
-			//	var checkbox = null;
-			//	_.each(_.filter(nextCollection, function (model) {
-			//		return !_.isEqual(model.completed, _.findWhere(prevState.collection, { id: model.id }).completed);
-			//		// TODO: If you need to compare all attributes.
-			//		//return !_.isEqual(model, _.findWhere(prevState.collection, { id: model.id }));
-			//	}), $.proxy(function (model) {
-			//		checkbox = $(this.refs["chk_" + model.id]);
-			//		checkbox[0].checked = model.completed;
-			//		checkbox.checkboxradio("refresh");
-			//	}, this));
-			//}
 		}
 		, createItem: function (item) {
-			return React.createElement("div", { key: item.id, "data-role": "controlgroup", "data-type": "horizontal" }
-				, React.createElement("h3", null, item.title)
-				, React.createElement("label", null, React.createElement("input", { type: "checkbox", ref: "chk_" + item.id, defaultChecked: item.completed, "data-id": item.id }), "Complete")
-				, React.createElement("input", { type: "button", id: "btnEditTodo", value: "Edit", "data-id": item.id })
-				, React.createElement("input", { type: "button", id: "btnDeleteTodo", value: "Delete", "data-id": item.id })
+			return CommonView.UI.group({ key: item.id, type: "horizontal", title: item.title },
+				CommonView.UI.checkbox({ id: "chk_" + item.id, ref: CommonView.UI.ref("chk_" + item.id, this), defaultChecked: item.completed, "data-id": item.id }, "Complete" )
+				, CommonView.UI.button({ id: "btnEditTodo", "data-id": item.id }, "Edit")
+				, CommonView.UI.button({ id: "btnDeleteTodo", "data-id": item.id }, "Delete")
 			);
 		}
 		, render: function () {

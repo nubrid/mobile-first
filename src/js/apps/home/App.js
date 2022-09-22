@@ -5,5 +5,5 @@ define(
 ["apps/common/App"]
 , function (CommonApp) {
 	"use strict";
-	return _.extend(CommonApp, { moduleName: "home" });
+	return _.extend(CommonApp);
 });

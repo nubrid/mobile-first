@@ -1,6 +1,6 @@
 // Place your settings in this file to overwrite default and user settings.
 {
-	"editor.insertSpaces": "auto",
+	"editor.insertSpaces": false,
 	"editor.wrappingColumn": 0,
 	"jshint.enable": true,
 	"search.exclude": {

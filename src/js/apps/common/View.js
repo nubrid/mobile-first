@@ -2,8 +2,10 @@
 Common View
 */
 define(
-["apps/AppManager"]
-, function (AppManager) {
+["apps/AppManager"
+// TODO: Specify another UI for Phonegap
+, "apps/common/" + (window.phonegap ? "UI" : "UI")]
+, function (AppManager, UI) {
 	"use strict";
 	var View = {};
 
@@ -54,8 +56,8 @@ define(
 			return React.createElement("div", { "data-role": "header", "data-position": "fixed", "data-theme": "a" }
 				, React.createElement("h1", null, this.props.title)
 				, React.createElement("div", null
-					, React.createElement("a", { href: "#PanelRegion", "data-icon": "bars", "data-iconpos": "notext", className: "ui-btn-left", "data-role": "button" }, "Panel")
-					, React.createElement("a", { href: "#home", "data-icon": "home", "data-iconpos": "notext", className: "ui-btn-right", "data-role": "button" }, "Home")
+					, UI.a({ href: "#PanelRegion", icon: "bars", notext: true, align: "left" }, "Panel")
+					, UI.a({ href: "#home", icon: "home", notext: true, align: "right" }, "Home")
 				)
 			);
 		}
@@ -99,6 +101,8 @@ define(
 			this.setElement(this.el);
 		}
 	});
+	
+	View.UI = UI;
 
 	return View;
 });

@@ -7,5 +7,5 @@ define(
 , "apps/todos/show/View"]
 , function (CommonController, CommonView, ShowView) {
 	"use strict";
-	return _.extend(CommonController, { id: "todos", title: "Todos List", layout: CommonView.Layout, main: ShowView.Content });
+	return CommonController.extend({ title: "Todos List", layout: CommonView.Layout, main: ShowView.Content });
 });

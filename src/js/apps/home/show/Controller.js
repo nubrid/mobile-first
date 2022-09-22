@@ -7,9 +7,12 @@ define(
 , "apps/home/show/View"]
 , function (AppManager, CommonView, ShowView) {
 	"use strict";
-	return {
-		show: function () {
-			var page = AppManager.changePage({ id: "home", title: "Home", layout: CommonView.Layout, main: ShowView.Content, reverse: true });
+	return Marionette.Object.extend({
+		initialize: function (options) {
+			this.id = options.id;
+		}
+		, show: function () {
+			var page = AppManager.changePage({id: this.id,  title: "Home", layout: CommonView.Layout, main: ShowView.Content, reverse: true });
 
 			page.on("home:openBrowser", function (value) {
 				AppManager.net(function () {
@@ -48,5 +51,5 @@ define(
 
 			AppManager.navigate("home", { replace: true });
 		}
-	};
+	});
 });

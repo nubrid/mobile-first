@@ -10,6 +10,8 @@ require(["main.config"], function () {
 			$.mobile.linkBindingEnabled = false;
 			$.mobile.hashListeningEnabled = false;
 			$.mobile.pushStateEnabled = false;
+			
+			$.mobile.keepNative = "a,button,input";
 		});
 
 		require(["backbone.iobind", "jquery.mobile", "modernizr"], function () {

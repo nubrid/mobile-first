@@ -189,8 +189,9 @@
 						}
 						, controller: {
 							initRoute: function (name) {
-								require(["apps/" + (name || "home") + "/App"], function (App) {
-									App.start();
+								var appName = name || "home";
+								require(["apps/" + appName + "/App"], function (App) {
+									App.start(appName);
 								});
 							}
 						}

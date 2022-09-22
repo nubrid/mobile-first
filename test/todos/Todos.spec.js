@@ -31,21 +31,20 @@
           return Controller.should.exist;
         });
         return it("list todos when started", function() {
-          Controller.show();
+          (new Controller(this.options)).show();
           this.changePage.should.have.been.calledOnce;
           return this.changePage.should.have.been.calledWithMatch(this.options);
         });
       });
       describe("Common View", function() {
         before(function() {
-          var _options;
           $("#fixture").append("<div id='PanelRegion' /><div id='HeaderRegion' /><div id='MainRegion' /><div id='FooterRegion' />").appendTo("body");
-          _options = _.extend(this.options, {
+          _.extend(this.options, {
             main: Marionette.ItemView.extend({
               render: function() {}
             })
           });
-          return new CommonView.Layout(_options);
+          return new CommonView.Layout(this.options);
         });
         after(function() {
           return $("#fixture").empty();
@@ -101,13 +100,13 @@
           }, this));
           return this.submitForm = function(form, inputValue, actionType) {
             var input, submit;
-            input = $(ReactDOM.findDOMNode(form)).find("input[type='text']");
+            input = $(ReactDOM.findDOMNode(form)).find(".ui-input-text input");
             this.react.Simulate.change(input[0], {
               target: {
                 value: inputValue
               }
             });
-            submit = ReactDOM.findDOMNode(form.refs.btnSubmit);
+            submit = ReactDOM.findDOMNode(form.btnSubmit);
             $(submit).click();
             this.trigger.should.have.been.calledOnce;
             return this.trigger.should.have.been.calledWithMatch(actionType, {
@@ -166,7 +165,7 @@
               todo.find("#btnEditTodo").click();
               this.form = this.react.findRenderedComponentWithType(this.view.page, View.React.TodosForm);
               form = ReactDOM.findDOMNode(this.form);
-              input = $(form).find("input[type='text']");
+              input = $(form).find(".ui-input-text input");
               input.should.have.value("Todo 1");
               this.submitForm(this.form, "Todo 3", this.actionType.UPDATE);
               return done();

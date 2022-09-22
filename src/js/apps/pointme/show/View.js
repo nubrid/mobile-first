@@ -1,5 +1,5 @@
 ﻿/*
-Todos Show View
+PointMe Show View
 */
 define(
 ["apps/AppManager"
@@ -9,8 +9,8 @@ define(
 	"use strict";
 	var List = {};
 
-	var _todos = React.createClass({
-		displayName: "Todos"
+	var _pointme = React.createClass({
+		displayName: "PointMe"
 		, mixins: [React.addons.LinkedStateMixin]
 		, getInitialState: function () {
 			return {
@@ -39,8 +39,8 @@ define(
 			this.props.view.dispatcher = entity.dispatcher; // Need to set this so that the Controller can properly dispatch.
 			this.actionType = entity.actionType;
 
-			$.when(entity.fetch).done($.proxy(function (todos) {
-				this.setState({ collection: todos });
+			$.when(entity.fetch).done($.proxy(function (pointme) {
+				this.setState({ collection: pointme });
 			}, this));
 		}
 		, componentWillUnmount: function () {
@@ -49,13 +49,13 @@ define(
 		, render: function () {
 			return React.createElement(React.addons.CSSTransitionGroup, AppManager.getTransition({ "data-role": "page", id: this.props.id, component: "div", className: "bounceInRight" })
 				, React.createElement("div", { role: "main", className: "ui-content" }
-					, React.createElement(List.React.TodosForm, {
+					, React.createElement(List.React.PointMeForm, {
 						id: this.state.id
 						, linkState: this.linkState
 						, handleSubmitClick: this.handleSubmitClick
 						, handleCancelClick: this.handleCancelClick
 					})
-					, React.createElement(List.React.TodosList, {
+					, React.createElement(List.React.PointMeList, {
 						collection: this.state.collection
 						, view: this.props.view
 						, handleEditClick: this.handleEditClick
@@ -65,31 +65,27 @@ define(
 		}
 	});
 
-	var _todosForm = React.createClass({
-		displayName: "TodosForm"
+	var _pointmeForm = React.createClass({
+		displayName: "PointMeForm"
 		, componentDidMount: function () {
-			$(this.refs.btnSubmit).on("click", this.props.handleSubmitClick);
+			$(this.btnSubmit).on("click", this.props.handleSubmitClick);
 		}
 		, componentDidUpdate: function () {
-			$(this.refs.btnSubmit).button("refresh");
-			if (this.refs.btnCancel)
-				$(this.refs.btnCancel)
-					.button().button("refresh")
-					.on("click", this.props.handleCancelClick);
+			if (this.btnCancel) $(this.btnCancel).on("click", this.props.handleCancelClick);
 		}
 		, render: function () {
 			return React.createElement("div", null
 				, React.createElement("label", null, this.props.id ? "Edit Todo" : "Create a new Todo")
 				, React.createElement("input", { type: "hidden", value: this.props.id })
 				, React.createElement("input", { type: "text", valueLink: this.props.linkState("title") })
-				, React.createElement("input", { type: "button", ref: "btnSubmit", value: this.props.id ? "Update" : "Add" })
-				, this.props.id ? React.createElement("input", { type: "button", ref: "btnCancel", value: "Cancel" }) : null
+				, CommonView.UI.button({ ref: CommonView.UI.ref("btnSubmit", this), value: this.props.id ? "Update" : "Add" })
+				, this.props.id ? CommonView.UI.button({ ref: CommonView.UI.ref("btnCancel", this), value: "Cancel" }) : null
 			);
 		}
 	});
 
-	var _todosList = React.createClass({
-		displayName: "TodosList"
+	var _pointmeList = React.createClass({
+		displayName: "PointMeList"
 		, mixins: [AppManager.BackboneMixin]
 		, handleChange: function (event) {
 			var el = $(event.target);
@@ -159,13 +155,13 @@ define(
 	});
 
 	List.React = {
-		Todos: _todos
-		, TodosForm: _todosForm
-		, TodosList: _todosList
+		PointMe: _pointme
+		, PointMeForm: _pointmeForm
+		, PointMeList: _pointmeList
 	};
 
 	List.Content = CommonView.Content.extend({
-		ReactClass: List.React.Todos
+		ReactClass: List.React.PointMe
 	});
 
 	return List;

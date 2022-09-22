@@ -7,5 +7,5 @@ define(
 , "apps/form/show/View"]
 , function (CommonController, CommonView, ShowView) {
 	"use strict";
-	return _.extend(CommonController, { id: "form", title: "Form List", layout: CommonView.Layout, main: ShowView.Content });
+	return CommonController.extend({ title: "Form List", layout: CommonView.Layout, main: ShowView.Content });
 });

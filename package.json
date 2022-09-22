@@ -1,6 +1,6 @@
 {
   "name": "nubrid",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "private": true,
   "description": "Nubrid",
   "main": "./bin/app",
@@ -148,8 +148,8 @@
     "serve:pm2": "SET NODE_ENV=development&& pm2 start pm2.json && pm2 logs",
     "serve:json": "json-server --port 8400 --watch json.server.db.json",
     "livereload": "livereload src/ --port 8100",
-    "start": "parallelshell \"npm run -s livereload\" \"npm run -s serve:json\" \"npm run -s serve:dev\" \"call Config/startup.nginx.bat\"",
-    "stop": "npm run -s pm2:stop && npm run -s nginx:stop"
+    "start": "parallelshell \"npm run -s livereload\" \"npm run -s nginx\" \"npm run -s serve:pm2\"",
+    "stop": "npm run pm2:stop && npm run nginx:stop"
   },
   "jshintConfig": {
     "bitwise": true,

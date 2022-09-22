@@ -14,14 +14,16 @@ define([], function () {
 
 	return {
 		views: ["show"]
-		, start: function () {
-			require(_getControllerPaths(this.views, this.moduleName), $.proxy(function () {
-				_.each(arguments, $.proxy(function (controller, index) {
+		, start: function (moduleName) {
+			require(_getControllerPaths(this.views, moduleName), $.proxy(function () {
+				_.each(arguments, $.proxy(function (Controller, index) {
 					var viewName = this.views[index];
 					var appRoutes = {};
 
-					if (this.moduleName === "home") appRoutes = _.extend(appRoutes, { "": this.views[0] });
-					appRoutes[this.moduleName] = viewName;
+					if (moduleName === "home") _.extend(appRoutes, { "": this.views[0] });
+					appRoutes[moduleName] = viewName;
+					
+					var controller = new Controller({ id: moduleName });
 
 					/* jshint nonew: false */
 					new Marionette.AppRouter({

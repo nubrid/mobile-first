@@ -17,6 +17,15 @@
 			]
 		}
 		, {
+			name: "apps/form/App"
+			, include: [
+				"apps/form/show/Controller"
+			]
+			, exclude: [
+				"main"
+			]
+		}
+		, {
 			name: "apps/home/App"
 			, include: [
 				"apps/home/show/Controller"
@@ -26,18 +35,18 @@
 			]
 		}
 		, {
-			name: "apps/todos/App"
+			name: "apps/pointme/App"
 			, include: [
-				"apps/todos/show/Controller"
+				"apps/pointme/show/Controller"
 			]
 			, exclude: [
 				"main"
 			]
 		}
 		, {
-			name: "apps/form/App"
+			name: "apps/todos/App"
 			, include: [
-				"apps/form/show/Controller"
+				"apps/todos/show/Controller"
 			]
 			, exclude: [
 				"main"

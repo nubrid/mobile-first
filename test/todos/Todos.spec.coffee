@@ -19,15 +19,15 @@ define ["apps/AppManager", "apps/todos/App", "apps/todos/show/Controller", "apps
 			it "creates a controller", ->
 				Controller.should.exist
 			it "list todos when started", ->
-				Controller.show()
+				(new Controller(@options)).show()
 
 				@changePage.should.have.been.calledOnce
 				@changePage.should.have.been.calledWithMatch @options
 		describe "Common View", ->
 			before ->
 				$("#fixture").append("<div id='PanelRegion' /><div id='HeaderRegion' /><div id='MainRegion' /><div id='FooterRegion' />").appendTo("body");
-				_options = _.extend @options, { main: Marionette.ItemView.extend { render: -> } }
-				new CommonView.Layout _options
+				_.extend @options, { main: Marionette.ItemView.extend { render: -> } }
+				new CommonView.Layout @options
 			after ->
 				$("#fixture").empty()
 			it "displays the header", ->
@@ -61,11 +61,11 @@ define ["apps/AppManager", "apps/todos/App", "apps/todos/show/Controller", "apps
 					return fetch: defer.promise(), actionType: @actionType, dispatcher: new Dispatcher()
 				, @)
 				@submitForm = (form, inputValue, actionType) ->
-					input = $(ReactDOM.findDOMNode form).find "input[type='text']"
+					input = $(ReactDOM.findDOMNode form).find ".ui-input-text input"
 
 					@react.Simulate.change input[0], target: value: inputValue
 
-					submit = ReactDOM.findDOMNode form.refs.btnSubmit
+					submit = ReactDOM.findDOMNode form.btnSubmit
 					$(submit).click()
 
 					@trigger.should.have.been.calledOnce
@@ -112,7 +112,7 @@ define ["apps/AppManager", "apps/todos/App", "apps/todos/show/Controller", "apps
 						
 						@form = @react.findRenderedComponentWithType @view.page, View.React.TodosForm
 						form = ReactDOM.findDOMNode @form
-						input = $(form).find "input[type='text']"
+						input = $(form).find ".ui-input-text input"
 						input.should.have.value "Todo 1"
 
 						@submitForm @form, "Todo 3", @actionType.UPDATE
