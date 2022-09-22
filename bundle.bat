@@ -1,9 +1,10 @@
 call npm update
 call npm update -g phonegap
 call npm update -g cordova
-call cordova platform update android
-call cordova plugin remove cordova-plugin-crosswalk-webview
-call cordova plugin add cordova-plugin-crosswalk-webview
+call cordova platform remove android
+call cordova platform add android
+REM call cordova plugin remove cordova-plugin-crosswalk-webview
+REM call cordova plugin add cordova-plugin-crosswalk-webview
 call cordova plugin remove cordova-plugin-dialogs
 call cordova plugin add cordova-plugin-dialogs
 call cordova plugin remove cordova-plugin-inappbrowser

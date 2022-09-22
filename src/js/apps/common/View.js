@@ -101,7 +101,7 @@ define(
 			this.setElement(this.el);
 		}
 	});
-	
+
 	View.UI = UI;
 
 	return View;

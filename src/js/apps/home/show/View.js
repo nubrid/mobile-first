@@ -22,17 +22,15 @@ define(
 			$(this.refs.divLogin).on("click", this.handleLoginClick);
 		}
 		, render: function () {
-			return React.createElement(React.addons.CSSTransitionGroup, AppManager.getTransition({ "data-role": "page", id: this.props.id, component: "div", className: "bounceInLeft" })
-				, React.createElement("div", { role: "main", className: "ui-content" }
-					, CommonView.UI.input({ ref: CommonView.UI.ref("txtInput", this) })
-					, CommonView.UI.button({ ref: "btnOpenBrowser" }, "Open Browser")
-					, CommonView.UI.a({ href: "#todos" }, "Todos")
-					, CommonView.UI.a({ href: "#form" }, "Form")
-					, React.createElement("div", { ref: "divLogin", className: "social-media" }
-						, React.createElement("a", { href: "#facebook", title: "facebook", className: "facebook" }, "Facebook")
-						, React.createElement("a", { href: "#twitter", title: "twitter", className: "twitter" }, "Twitter")
-						, React.createElement("a", { href: "#linkedin", title: "linkedin", className: "linkedin" }, "LinkedIn")
-					)
+			return CommonView.UI.page({ id: this.props.id }
+				, CommonView.UI.input({ ref: CommonView.UI.ref("txtInput", this) })
+				, CommonView.UI.button({ ref: "btnOpenBrowser" }, "Open Browser")
+				, CommonView.UI.a({ href: "#todos" }, "Todos")
+				, CommonView.UI.a({ href: "#form" }, "Form")
+				, React.createElement("div", { ref: "divLogin", className: "social-media" }
+					, React.createElement("a", { href: "#facebook", title: "facebook", className: "facebook" }, "Facebook")
+					, React.createElement("a", { href: "#twitter", title: "twitter", className: "twitter" }, "Twitter")
+					, React.createElement("a", { href: "#linkedin", title: "linkedin", className: "linkedin" }, "LinkedIn")
 				)
 			);
 		}

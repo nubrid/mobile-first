@@ -11,7 +11,6 @@
 	</head>
 	<body data-host="excentone.dlinkddns.com">
 		<div id="PanelRegion" data-role="panel" data-position="left" data-theme="a"></div>
-		<div id="PopupRegion" data-role="popup" data-overlay-theme="b" data-theme="a" data-tolerance="15,15" class="ui-content"></div>
 		<div id="HeaderRegion"></div>
 		<div id="MainRegion"></div>
 		<div data-role="footer" data-position="fixed" data-theme="a">
@@ -19,5 +18,8 @@
 			<div id="FooterRegion"></div>
 		</div>
 		<script data-main="js/main" src="js/libs/require/require.min.js" async="async"></script>
+		<div class="ui-popup-screen ui-overlay-b ui-screen-hidden"></div>
+		<div class="ui-popup-container ui-popup-hidden ui-popup-truncate" id="PopupRegion-popup">
+  			<div class="ui-popup ui-body-inherit ui-overlay-shadow ui-corner-all" id="PopupRegion" data-role="popup" data-enhanced="true" data-overlay-theme="b"></div></div>
 	</body>
 </html>

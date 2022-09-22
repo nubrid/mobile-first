@@ -16,11 +16,12 @@ define(
 
 			page.on("home:openBrowser", function (value) {
 				AppManager.net(function () {
-					var ref = window.open(value, "_blank", "location=no");
+					AppManager.popup({ popup: CommonView.IFrame, src: value, width: 400, height: 300 });
+					// TODO: var ref = window.open(value, "_blank", "location=no");
 
-					setTimeout(function () {
-						ref.close();
-					}, 5000);
+					// setTimeout(function () {
+					// 	ref.close();
+					// }, 5000);
 				});
 			});
 
@@ -28,7 +29,6 @@ define(
 				var provider = $(event.target).attr("href").substring(1);
 
 				AppManager.net(function () {
-					// TODO: AppManager.popup({ popup: CommonView.IFrame, src: "http://www.nubrid.com", width: 400, height: 300 });
                     var loginWindow = window.open(AppManager.Config.Url.Web + "/auth/" + provider, "_blank", "location=no");
 
 					loginWindow.addEventListener("loadstop", function (event) {

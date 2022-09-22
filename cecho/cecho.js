@@ -51,7 +51,7 @@
 				color = clc.redBright;
 				break;
 		}
-		
+
 		console.log(color(argv._[0]));
 	};
 })();

@@ -1,5 +1,5 @@
 /*!
- * jQuery JavaScript Library v2.2.2 -ajax,-ajax/jsonp,-ajax/load,-ajax/parseJSON,-ajax/parseXML,-ajax/script,-ajax/var/location,-ajax/var/nonce,-ajax/var/rquery,-ajax/xhr,-manipulation/_evalUrl,-event/ajax,-css/showHide,-effects,-effects/animatedSelector,-effects/Tween,-event/focusin,-core/ready
+ * jQuery JavaScript Library v2.2.3 -ajax,-ajax/jsonp,-ajax/load,-ajax/parseJSON,-ajax/parseXML,-ajax/script,-ajax/var/location,-ajax/var/nonce,-ajax/var/rquery,-ajax/xhr,-manipulation/_evalUrl,-event/ajax,-css/showHide,-effects,-effects/animatedSelector,-effects/Tween,-event/focusin,-core/ready
  * http://jquery.com/
  *
  * Includes Sizzle.js
@@ -9,7 +9,7 @@
  * Released under the MIT license
  * http://jquery.org/license
  *
- * Date: 2016-03-25T19:24Z
+ * Date: 2016-04-10T16:15Z
  */
 
 (function( global, factory ) {
@@ -65,7 +65,7 @@ var support = {};
 
 
 var
-	version = "2.2.2 -ajax,-ajax/jsonp,-ajax/load,-ajax/parseJSON,-ajax/parseXML,-ajax/script,-ajax/var/location,-ajax/var/nonce,-ajax/var/rquery,-ajax/xhr,-manipulation/_evalUrl,-event/ajax,-css/showHide,-effects,-effects/animatedSelector,-effects/Tween,-event/focusin,-core/ready",
+	version = "2.2.3 -ajax,-ajax/jsonp,-ajax/load,-ajax/parseJSON,-ajax/parseXML,-ajax/script,-ajax/var/location,-ajax/var/nonce,-ajax/var/rquery,-ajax/xhr,-manipulation/_evalUrl,-event/ajax,-css/showHide,-effects,-effects/animatedSelector,-effects/Tween,-event/focusin,-core/ready",
 
 	// Define a local copy of jQuery
 	jQuery = function( selector, context ) {

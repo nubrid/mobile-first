@@ -34,7 +34,7 @@ let _resolve = ({args}, fieldArgs, ast) => {
 		// TODO: node-rest-client
 		// args.push(data => resolve(ast.operation.operation === "mutation" ? data : JSON.parse(data)));
 		args.push((data, error) => error ? reject(error) : resolve(data));
-		
+
 		db[ast.operation.operation === "mutation" ? ast.fieldName : "read"]
 			.apply(this, args);
 	});

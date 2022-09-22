@@ -238,6 +238,6 @@
 			})
 			, options);
 	});
-	
+
 	return Common;
 });

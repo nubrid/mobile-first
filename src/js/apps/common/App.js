@@ -22,7 +22,7 @@ define([], function () {
 
 					if (moduleName === "home") _.extend(appRoutes, { "": this.views[0] });
 					appRoutes[moduleName] = viewName;
-					
+
 					var controller = new Controller({ id: moduleName });
 
 					/* jshint nonew: false */

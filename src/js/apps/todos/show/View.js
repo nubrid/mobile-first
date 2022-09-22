@@ -47,20 +47,18 @@ define(
 			this.state.collection.close();
 		}
 		, render: function () {
-			return React.createElement(React.addons.CSSTransitionGroup, AppManager.getTransition({ "data-role": "page", id: this.props.id, component: "div", className: "bounceInRight" })
-				, React.createElement("div", { role: "main", className: "ui-content" }
-					, React.createElement(List.React.TodosForm, {
-						id: this.state.id
-						, linkState: this.linkState
-						, handleSubmitClick: this.handleSubmitClick
-						, handleCancelClick: this.handleCancelClick
-					})
-					, React.createElement(List.React.TodosList, {
-						collection: this.state.collection
-						, view: this.props.view
-						, handleEditClick: this.handleEditClick
-					})
-				)
+			return CommonView.UI.page({ id: this.props.id, direction: "right" }
+				, React.createElement(List.React.TodosForm, {
+					id: this.state.id
+					, linkState: this.linkState
+					, handleSubmitClick: this.handleSubmitClick
+					, handleCancelClick: this.handleCancelClick
+				})
+				, React.createElement(List.React.TodosList, {
+					collection: this.state.collection
+					, view: this.props.view
+					, handleEditClick: this.handleEditClick
+				})
 			);
 		}
 	});

@@ -3,7 +3,7 @@
 	"use strict";
 	window.isDEV = window.isDEV || !!window.__karma__ || !!window.testem;
 	window.phonegap = document.location.protocol === "file:";
-	
+
 	function getjQueryVersion (version) {
 		if (!("querySelector" in document
 			&& "localStorage" in window

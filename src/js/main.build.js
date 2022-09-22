@@ -12,6 +12,7 @@
 				, "apps/common/App"
 				, "apps/common/Controller"
 				, "apps/common/Dispatcher"
+				, "apps/common/UI"
 				, "apps/common/View"
 				, "entities/Common"
 			]

@@ -109,7 +109,7 @@ define ["apps/AppManager", "apps/todos/App", "apps/todos/show/Controller", "apps
 					setTimeout $.proxy( ->
 						todo = @list.$el.children().first()
 						todo.find("#btnEditTodo").click()
-						
+
 						@form = @react.findRenderedComponentWithType @view.page, View.React.TodosForm
 						form = ReactDOM.findDOMNode @form
 						input = $(form).find ".ui-input-text input"

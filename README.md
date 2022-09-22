@@ -1,6 +1,6 @@
 # TODO Sample
 
-Hybrid Web + Mobile Framework v1.6.0 ~~using VS.Net~~ (APR 4, 2016)
+Hybrid Web + Mobile Framework v1.7.0 ~~using VS.Net~~ (APR 18, 2016)
 
 _For use in my company, Excent One, starting with NCC NOAH._
 
@@ -10,7 +10,7 @@ _For use in my company, Excent One, starting with NCC NOAH._
 - Babel
 - Backbone `iobind` `iosync` ~~`modelbinder`~~ `picky` `syphon`
 - CoffeeScript
-- Cordova `Crosswalk` `PhoneGap` `Telerik`
+- Cordova ~~`Crosswalk`~~ `PhoneGap` `Telerik`
 - CSP
 - ES6+
 - Express
@@ -57,32 +57,3 @@ _For use in my company, Excent One, starting with NCC NOAH._
 - 8300 - karma
 - 8400 - json-server
 - 8500 - node-inspector
-
-## Custom jQuery Mobile Removed:
-
-- "require",
-- "./widgets/loader",
-- "./events/navigate",
-- "./navigation/path",
-- "./navigation/history",
-- "./navigation/navigator",
-- "./navigation/method",
-- "./transitions/handlers",
-- "./transitions/visuals",
-- "./jquery.mobile.animationComplete",
-- "./jquery.mobile.navigation",
-- "./jquery.mobile.degradeInputs",
-- "./widgets/page.dialog",
-- "./widgets/dialog",
-
-- "./jquery.mobile.fieldContain",
-- "./jquery.mobile.grid",
-
-- "./widgets/table",
-- "./widgets/table.columntoggle",
-- "./widgets/table.reflow",
-- "./widgets/filterable",
-- "./widgets/filterable.backcompat",
-
-- "./jquery.mobile.zoom",
-- "./jquery.mobile.zoom.iosorientationfix"

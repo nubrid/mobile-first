@@ -2,20 +2,74 @@ git clone git://github.com/jquery/jquery.git dist/jquery
 cd dist/jquery
 git stash save
 git stash drop
-git checkout 2.2-stable
-git pull
-git checkout 2.2.2
+REM git checkout 2.2-stable
+git fetch --tags
+git checkout 2.2.3
 call npm install
 call grunt custom:-ajax,-ajax/xhr,-ajax/script,-ajax/jsonp,-css/showHide,-effects,-event/focusin,-core/ready
 cd ..\..
 git clone git://github.com/jquery/jquery-mobile.git dist/jquery.mobile
 cd dist/jquery.mobile
-git stash
-git checkout 1.4-stable
-git pull
+git stash save
+git stash drop
+REM git checkout 1.4-stable
+git fetch --tags
 git checkout 1.4.5
-git stash apply
+REM git stash apply
 call npm install
+cd ..\..
+set arg=npm run -s replace -- "\t\""require\"",\r\n" "" dist/jquery.mobile/js/jquery.mobile.js && call run arg
+set arg=npm run -s replace -- "\t\""\.\/widgets\/loader\"",\r\n" "" dist/jquery.mobile/js/jquery.mobile.js && call run arg
+set arg=npm run -s replace -- "\t\""\.\/events\/navigate\"",\r\n" "" dist/jquery.mobile/js/jquery.mobile.js && call run arg
+set arg=npm run -s replace -- "\t\""\.\/navigation\/path\"",\r\n" "" dist/jquery.mobile/js/jquery.mobile.js && call run arg
+set arg=npm run -s replace -- "\t\""\.\/navigation\/history\"",\r\n" "" dist/jquery.mobile/js/jquery.mobile.js && call run arg
+set arg=npm run -s replace -- "\t\""\.\/navigation\/navigator\"",\r\n" "" dist/jquery.mobile/js/jquery.mobile.js && call run arg
+set arg=npm run -s replace -- "\t\""\.\/navigation\/method\"",\r\n" "" dist/jquery.mobile/js/jquery.mobile.js && call run arg
+set arg=npm run -s replace -- "\t\""\.\/transitions\/handlers\"",\r\n" "" dist/jquery.mobile/js/jquery.mobile.js && call run arg
+set arg=npm run -s replace -- "\t\""\.\/transitions\/visuals\"",\r\n" "" dist/jquery.mobile/js/jquery.mobile.js && call run arg
+set arg=npm run -s replace -- "\t\""\.\/jquery\.mobile\.animationComplete\"",\r\n" "" dist/jquery.mobile/js/jquery.mobile.js && call run arg
+set arg=npm run -s replace -- "\t\""\.\/jquery\.mobile\.navigation\"",\r\n" "" dist/jquery.mobile/js/jquery.mobile.js && call run arg
+set arg=npm run -s replace -- "\t\""\.\/jquery\.mobile\.degradeInputs\"",\r\n" "" dist/jquery.mobile/js/jquery.mobile.js && call run arg
+set arg=npm run -s replace -- "\t\""\.\/widgets\/page\.dialog\"",\r\n" "" dist/jquery.mobile/js/jquery.mobile.js && call run arg
+set arg=npm run -s replace -- "\t\""\.\/widgets\/dialog\"",\r\n" "" dist/jquery.mobile/js/jquery.mobile.js && call run arg
+set arg=npm run -s replace -- "\t\""\.\/widgets\/collapsible\"",\r\n" "" dist/jquery.mobile/js/jquery.mobile.js && call run arg
+set arg=npm run -s replace -- "\t\""\.\/widgets\/collapsibleSet\"",\r\n" "" dist/jquery.mobile/js/jquery.mobile.js && call run arg
+set arg=npm run -s replace -- "\t\""\.\/jquery\.mobile\.fieldContain\"",\r\n" "" dist/jquery.mobile/js/jquery.mobile.js && call run arg
+set arg=npm run -s replace -- "\t\""\.\/jquery\.mobile\.grid\"",\r\n" "" dist/jquery.mobile/js/jquery.mobile.js && call run arg
+set arg=npm run -s replace -- "\t\""\.\/widgets\/navbar\"",\r\n" "" dist/jquery.mobile/js/jquery.mobile.js && call run arg
+set arg=npm run -s replace -- "\t\""\.\/widgets\/listview\"",\r\n" "" dist/jquery.mobile/js/jquery.mobile.js && call run arg
+set arg=npm run -s replace -- "\t\""\.\/widgets\/listview\.autodividers\"",\r\n" "" dist/jquery.mobile/js/jquery.mobile.js && call run arg
+REM set arg=npm run -s replace -- "\t\""\.\/jquery\.mobile\.nojs\"",\r\n" "" dist/jquery.mobile/js/jquery.mobile.js && call run arg
+set arg=npm run -s replace -- "\t\""\.\/widgets\/listview\.hidedividers\"",\r\n" "" dist/jquery.mobile/js/jquery.mobile.js && call run arg
+REM set arg=npm run -s replace -- "\t\""\.\/widgets\/forms\/checkboxradio\"",\r\n" "" dist/jquery.mobile/js/jquery.mobile.js && call run arg
+set arg=npm run -s replace -- "\t\""\.\/widgets\/forms\/button\"",\r\n" "" dist/jquery.mobile/js/jquery.mobile.js && call run arg
+set arg=npm run -s replace -- "\t\""\.\/widgets\/forms\/slider\"",\r\n" "" dist/jquery.mobile/js/jquery.mobile.js && call run arg
+set arg=npm run -s replace -- "\t\""\.\/widgets\/forms\/slider\.tooltip\"",\r\n" "" dist/jquery.mobile/js/jquery.mobile.js && call run arg
+set arg=npm run -s replace -- "\t\""\.\/widgets\/forms\/flipswitch\"",\r\n" "" dist/jquery.mobile/js/jquery.mobile.js && call run arg
+set arg=npm run -s replace -- "\t\""\.\/widgets\/forms\/rangeslider\"",\r\n" "" dist/jquery.mobile/js/jquery.mobile.js && call run arg
+REM set arg=npm run -s replace -- "\t\""\.\/widgets\/forms\/textinput\"",\r\n" "" dist/jquery.mobile/js/jquery.mobile.js && call run arg
+REM set arg=npm run -s replace -- "\t\""\.\/widgets\/forms\/clearButton\"",\r\n" "" dist/jquery.mobile/js/jquery.mobile.js && call run arg
+set arg=npm run -s replace -- "\t\""\.\/widgets\/forms\/autogrow\"",\r\n" "" dist/jquery.mobile/js/jquery.mobile.js && call run arg
+set arg=npm run -s replace -- "\t\""\.\/widgets\/forms\/select\.custom\"",\r\n" "" dist/jquery.mobile/js/jquery.mobile.js && call run arg
+set arg=npm run -s replace -- "\t\""\.\/widgets\/forms\/select\"",\r\n" "" dist/jquery.mobile/js/jquery.mobile.js && call run arg
+set arg=npm run -s replace -- "\t\""\.\/jquery\.mobile\.buttonMarkup\"",\r\n" "" dist/jquery.mobile/js/jquery.mobile.js && call run arg
+REM set arg=npm run -s replace -- "\t\""\.\/widgets\/controlgroup\"",\r\n" "" dist/jquery.mobile/js/jquery.mobile.js && call run arg
+set arg=npm run -s replace -- "\t\""\.\/jquery\.mobile\.links\"",\r\n" "" dist/jquery.mobile/js/jquery.mobile.js && call run arg
+REM set arg=npm run -s replace -- "\t\""\.\/widgets\/toolbar\"",\r\n" "" dist/jquery.mobile/js/jquery.mobile.js && call run arg
+REM set arg=npm run -s replace -- "\t\""\.\/widgets\/fixedToolbar\"",\r\n" "" dist/jquery.mobile/js/jquery.mobile.js && call run arg
+REM set arg=npm run -s replace -- "\t\""\.\/widgets\/fixedToolbar\.workarounds\"",\r\n" "" dist/jquery.mobile/js/jquery.mobile.js && call run arg
+REM set arg=npm run -s replace -- "\t\""\.\/widgets\/popup\"",\r\n" "" dist/jquery.mobile/js/jquery.mobile.js && call run arg
+set arg=npm run -s replace -- "\t\""\.\/widgets\/popup\.arrow\"",\r\n" "" dist/jquery.mobile/js/jquery.mobile.js && call run arg
+REM set arg=npm run -s replace -- "\t\""\.\/widgets\/panel\"",\r\n" "" dist/jquery.mobile/js/jquery.mobile.js && call run arg
+set arg=npm run -s replace -- "\t\""\.\/widgets\/table\"",\r\n" "" dist/jquery.mobile/js/jquery.mobile.js && call run arg
+set arg=npm run -s replace -- "\t\""\.\/widgets\/table\.columntoggle\"",\r\n" "" dist/jquery.mobile/js/jquery.mobile.js && call run arg
+set arg=npm run -s replace -- "\t\""\.\/widgets\/table\.reflow\"",\r\n" "" dist/jquery.mobile/js/jquery.mobile.js && call run arg
+set arg=npm run -s replace -- "\t\""\.\/widgets\/filterable\"",\r\n" "" dist/jquery.mobile/js/jquery.mobile.js && call run arg
+set arg=npm run -s replace -- "\t\""\.\/widgets\/filterable\.backcompat\"",\r\n" "" dist/jquery.mobile/js/jquery.mobile.js && call run arg
+set arg=npm run -s replace -- "\t\""\.\/widgets\/tabs\"",\r\n" "" dist/jquery.mobile/js/jquery.mobile.js && call run arg
+set arg=npm run -s replace -- "\t\""\.\/jquery\.mobile\.zoom\"",\r\n" "" dist/jquery.mobile/js/jquery.mobile.js && call run arg
+set arg=npm run -s replace -- "\t\""\.\/jquery\.mobile\.zoom\.iosorientationfix\""\r\n" "" dist/jquery.mobile/js/jquery.mobile.js && call run arg
+cd dist/jquery.mobile
 call grunt js
 call grunt css
 cd ..\..
