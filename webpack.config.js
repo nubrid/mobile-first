@@ -27,28 +27,30 @@ const webpack = require("webpack"),
     },
     toString() {
       if (_isDev) {
-        this.directives.scriptSrc.push("'unsafe-eval'");
+        this.directives.scriptSrc.push("'unsafe-eval'") // eslint-disable-line immutable/no-this
+        // eslint-disable-next-line immutable/no-this
         this.directives.connectSrc.push(
           `http://*.${_host}:*`,
           `https://*.${_host}:*`,
-        );
+        )
       }
 
       if (process.env.URL)
+        // eslint-disable-next-line immutable/no-this
         this.directives.connectSrc.push(
           `ws://${process.env.URL.trim()}:*`,
           `wss://${process.env.URL.trim()}:*`,
-        );
+        )
 
-      return cspBuilder({ directives: this.directives });
+      return cspBuilder({ directives: this.directives }) // eslint-disable-line immutable/no-this
     },
-  };
+  }
 
 const _primus = new (require("primus.io"))(
   new (require("events")).EventEmitter(),
   { transformer: _appConfig.primus.transformer },
-);
-_primus.save(path.resolve("dist/primus.io.js"));
+)
+_primus.save(path.resolve("dist/primus.io.js"))
 
 // TODO: output.filename with [name] works
 // environment.setAll({
@@ -92,6 +94,7 @@ module.exports = new Config().extend(`webpack.config.${_env}.js`).merge({
       // TODO: , "pouchdb$": "libs/pouchdb"
       // , "pouchdb-socket$": "socket-pouch/lib/client"
       "primus.io$": "primus.io.js",
+      "react-dom": "@hot-loader/react-dom", // TODO: until react-hot-loader or react-dom has been patched.
     },
   },
   module: {
@@ -207,7 +210,7 @@ module.exports = new Config().extend(`webpack.config.${_env}.js`).merge({
       {
         from: "script/css/noscript.css",
         to: "css/noscript.css",
-      }
+      },
     ]),
     new WebAppManifestPlugin({
       // TODO: PWA
@@ -267,4 +270,4 @@ module.exports = new Config().extend(`webpack.config.${_env}.js`).merge({
       swDest: "serviceWorker.js",
     }),
   ],
-});
+})

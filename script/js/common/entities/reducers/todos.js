@@ -9,9 +9,9 @@ const reducer = (state = [], { type, payload }) => {
     case ADD_ITEM:
       return [...state, payload]
     case EDIT_ITEM:
-      // eslint-disable-next-line
-      return state.map(
-        item => (item.id === payload.id ? { ...item, ...payload } : item),
+      // eslint-disable-next-line lodash/prefer-lodash-method
+      return state.map(item =>
+        item.id === payload.id ? { ...item, ...payload } : item,
       )
     case DELETE_ITEM:
       return state.filter(({ id }) => id !== payload.id)

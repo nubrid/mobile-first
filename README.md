@@ -1,4 +1,4 @@
-# Hybrid Web + Mobile Framework v6.1.0 (MAR 25, 2019)
+# Hybrid Web + Mobile Framework v6.2.0 (MAR 26, 2019)
 
 By this time, we're now able to perform CRUD operations `OFFLINE` and sync the changes once `ONLINE` using `PouchDB`, `PWA` and `WebSockets`. We're using `LevelDB`, `GraphQL` and `PostgreSQL` saving data in `JSON` format. Form is also dynamic and configurable using schemas.
 

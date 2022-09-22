@@ -8,15 +8,16 @@
 //   event.waitUntil(self.registration.showNotification(title, options));
 // });
 
-workbox.skipWaiting()
-workbox.clientsClaim()
+workbox.core.skipWaiting()
+workbox.core.clientsClaim()
 
-workbox.precaching.suppressWarnings()
+// TODO: pre-workbox v4
+// workbox.precaching.suppressWarnings()
 workbox.precaching.precacheAndRoute(self.__precacheManifest || [], {})
 
 workbox.routing.registerRoute(
   /^https:\/\/fonts\.(?:googleapis|gstatic)\.com/,
-  workbox.strategies.cacheFirst({
+  new workbox.strategies.CacheFirst({
     cacheName: "google-fonts",
     plugins: [
       new workbox.cacheableResponse.Plugin({ statuses: [0, 200] }),
