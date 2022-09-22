@@ -1,8 +1,12 @@
+import CustomButton from "@material-ui/core/Button"
+
 const Button = ({ children, ...props }) => (
-  <button {...props}>{children}</button>
-);
+  <CustomButton {...props} variant="contained" color="primary">
+    {children}
+  </CustomButton>
+)
 Button.propTypes = {
   children: PropTypes.node.isRequired,
-};
+}
 
-export default Button;
+export default Button

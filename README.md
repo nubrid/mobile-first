@@ -1,4 +1,4 @@
-# Hybrid Web + Mobile Framework v6.0.0 (SEP 17, 2018)
+# Hybrid Web + Mobile Framework v6.1.0 (MAR 25, 2019)
 
 By this time, we're now able to perform CRUD operations `OFFLINE` and sync the changes once `ONLINE` using `PouchDB`, `PWA` and `WebSockets`. We're using `LevelDB`, `GraphQL` and `PostgreSQL` saving data in `JSON` format. Form is also dynamic and configurable using schemas.
 
@@ -41,7 +41,7 @@ By this time, we're now able to perform CRUD operations `OFFLINE` and sync the c
 - PostgreSQL
 - ~~PouchDB `replication`~~
 - Prettier
-- PWA `cache-manifest`
+- PWA `cache-manifest` `ServiceWorker` `workbox`
 - ReactJS `react-dom` `redux` ~~`class/`~~`functional components` `JSX` ~~`mixins` `prop-types` `subschema` `transformer` `transitions`~~
 - Recaptcha
 - ~~RequireJS `cache buster`~~
@@ -51,6 +51,7 @@ By this time, we're now able to perform CRUD operations `OFFLINE` and sync the c
 - Svg-sprite
 - TDD/BDD `chai` `karma` `mocha` ~~`rewire`~~ `sinon` ~~`testem`~~
 - UglifyJS `v2`
+- Webpack
 - WebSockets ~~`Engine.io`~~ `Primus` ~~`Socket.io`~~
 - ~~Underscore~~
 - Yargs

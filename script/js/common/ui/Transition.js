@@ -15,7 +15,7 @@ const Transition = ({
           transitionAppearTimeout: 1000,
           ...props,
         }
-      : props;
+      : props
   // TODO: Check in common view.
   if (__MOBILE__) {
     class NativeTransition extends React.Component {
@@ -30,19 +30,19 @@ const Transition = ({
           winphonedelay: 250, // same as above but for Windows Phone, default 200,
           fixedPixelsTop: 45, // the number of pixels of your fixed header, default 0 (iOS and Android)
           // "fixedPixelsBottom": 0, // the number of pixels of your fixed footer (f.i. a tab bar), default 0 (iOS and Android)
-        };
+        }
 
         switch (transition) {
           case "slide":
-            options.direction = direction;
-            break;
+            options.direction = direction
+            break
         }
 
-        window.plugins.nativepagetransitions[transition](options);
+        window.plugins.nativepagetransitions[transition](options)
       }
 
       render() {
-        return <span />;
+        return <span />
       }
     }
 
@@ -52,7 +52,7 @@ const Transition = ({
         {children}
         <NativeTransition />
       </ReactTransitionGroup>
-    );
+    )
   } else {
     return (
       <ReactCSSTransitionGroup
@@ -61,16 +61,16 @@ const Transition = ({
       >
         {children}
       </ReactCSSTransitionGroup>
-    );
+    )
   }
-};
+}
 Transition.propTypes = {
   children: PropTypes.node.isRequired,
   "data-role": PropTypes.string,
   direction: PropTypes.oneOf(["left", "right", "up", "down"]),
-};
+}
 Transition.defaultProps = {
   direction: "left",
-};
+}
 
-export default Transition;
+export default Transition

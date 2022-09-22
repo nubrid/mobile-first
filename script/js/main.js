@@ -1,23 +1,30 @@
-import Apps from "apps";
-import { AppContainer } from "react-hot-loader";
-import { store } from "common/entities";
+import { AppContainer } from "react-hot-loader"
+import CssBaseline from "@material-ui/core/CssBaseline"
+import { registerServiceWorkers } from "workbox"
 
-const { Provider } = ReactRedux;
+import Apps from "apps"
+import { createStore } from "common/entities"
+
+const { Provider } = ReactRedux
 
 const render = Component => {
   ReactDOM.render(
-    <AppContainer>
-      <Provider store={store}>
-        <Component />
-      </Provider>
-    </AppContainer>,
+    <>
+      <CssBaseline />
+      <AppContainer>
+        <Provider store={createStore()}>
+          <Component />
+        </Provider>
+      </AppContainer>
+    </>,
     document.getElementById("main"),
-  );
-};
+  )
+}
 
-render(Apps);
+render(Apps)
+registerServiceWorkers()
 
 if (module.hot)
   module.hot.accept("apps", () => {
-    render(Apps);
-  });
+    render(Apps)
+  })

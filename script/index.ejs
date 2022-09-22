@@ -1,18 +1,29 @@
 <!DOCTYPE html>
 <html<% if(!htmlWebpackPlugin.options.isDev) { %> manifest=".appcache"<% } %>>
 	<head>
+		<title><%= htmlWebpackPlugin.options.title %></title>
 		<meta charset="utf-8" />
 		<% if(htmlWebpackPlugin.options.isMobile) { %>
 		<meta name="format-detection" content="telephone=no" />
 		<meta name="msapplication-tap-highlight" content="no" />
-		<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
+		<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, shrink-to-fit=no" />
 		<% } %>
-		<meta http-equiv="Content-Security-Policy" content="<%= htmlWebpackPlugin.options.csp.toString() %>">
-		<title><%= htmlWebpackPlugin.options.title %></title>
-		<% for (var css in htmlWebpackPlugin.files.css) { %><link href="<%= htmlWebpackPlugin.files.css[css] %>" rel="stylesheet"><% } %>
-		<link rel="stylesheet" href="css/styles.css" />
+		<meta http-equiv="Content-Security-Policy" content="<%= htmlWebpackPlugin.options.csp.toString() %>" />
+		<link crossorigin="anonymous" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" />
+		<link crossorigin="anonymous" rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+		<% for (var css in htmlWebpackPlugin.files.css) { %><link href="<%= htmlWebpackPlugin.files.css[css] %>" rel="stylesheet" /><% } %>
 	</head>
 	<body>
+		<noscript>
+			<div class="overlay">
+				<div class="modal">
+					<h2>Javascript Required</h2>
+					<div class="content">
+						<p>We're sorry, but Nubrid doesn't work properly without JavaScript enabled.<br />To enable, <a href="http://activatejavascript.org" target="_blank">follow this guide.</a></p></div>
+				</div>
+			</div>
+			<link rel="stylesheet" href="css/noscript.css" />
+		</noscript>
 		<!--<div id="PanelRegion" data-role="panel" data-position="left" data-theme="a"></div>
 		<div id="HeaderRegion"></div>
 		<div id="MainRegion"></div>

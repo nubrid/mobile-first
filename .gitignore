@@ -1,3 +1,4 @@
+.ssh/
 Config/nginx/
 !Config/nginx/conf/nginx.conf
 Config/nubrid.*

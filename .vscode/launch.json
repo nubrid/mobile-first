@@ -1,57 +1,58 @@
 {
-	"version": "0.1.0",
-	// List of configurations. Add new configurations or edit existing ones.
-	"configurations": [
-		{
-			"type": "chrome",
-			"request": "launch",
-			"name": "Launch Chrome",
-			"runtimeArgs": [
-				"--incognito"
-			],
-			"url": "http://www.nubrid.com",
-			"webRoot": "${workspaceRoot}",
-			"sourceMaps": true,
-			"skipFiles": [
-				"node_modules"
-			]
-		},
-		{
-			// Name of configuration; appears in the launch configuration drop down menu.
-			"name": "Launch ./bin/app",
-			// Type of configuration.
-			"type": "node",
-			// Workspace relative or absolute path to the program.
-			"program": "${workspaceRoot}/./bin/app",
-			// Automatically stop program after launch.
-			"stopOnEntry": false,
-			// Command line arguments passed to the program.
-			"args": ["-s", "false"],
-			// Workspace relative or absolute path to the working directory of the program being debugged. Default is the current workspace.
-			"cwd": "${workspaceRoot}/.",
-			// Workspace relative or absolute path to the runtime executable to be used. Default is the runtime executable on the PATH.
-			"runtimeExecutable": null,
-			// Optional arguments passed to the runtime executable.
-			"runtimeArgs": ["--nolazy"],
-			// Environment variables passed to the program.
-			"env": {
-				"NODE_ENV": "development"
-			},
-			// Use JavaScript source maps (if they exist).
-			"sourceMaps": false,
-			// If JavaScript source maps are enabled, the generated code is expected in this directory.
-			"outFiles": [],
-			"request": "launch"
-		},
-		{
-			"name": "Attach",
-			"type": "node",
-			// Port to attach to.
-			"port": 8501, // 5858
-			"sourceMaps": false,
-			"request": "attach",
-			"processId": "${command:PickProcess}",
-			"restart": true
-		}
-	]
+  "version": "0.1.0",
+  // List of configurations. Add new configurations or edit existing ones.
+  "configurations": [
+    {
+      "type": "chrome",
+      "request": "launch",
+      "name": "Launch Chrome",
+      "runtimeArgs": [
+        "--incognito"
+        // HACK: For ServiceWorker to work on http://www.nubrid.com. Not required for https://
+        // "--unsafely-treat-insecure-origin-as-secure=http://www.nubrid.com"
+      ],
+      // "url": "http://www.nubrid.com",
+      "url": "http://localhost:8000",
+      "webRoot": "${workspaceRoot}",
+      "sourceMaps": true,
+      "skipFiles": ["node_modules"]
+    },
+    {
+      // Name of configuration; appears in the launch configuration drop down menu.
+      "name": "Launch ./bin/app",
+      // Type of configuration.
+      "type": "node",
+      // Workspace relative or absolute path to the program.
+      "program": "${workspaceRoot}/./bin/app",
+      // Automatically stop program after launch.
+      "stopOnEntry": false,
+      // Command line arguments passed to the program.
+      "args": ["-s", "false"],
+      // Workspace relative or absolute path to the working directory of the program being debugged. Default is the current workspace.
+      "cwd": "${workspaceRoot}/.",
+      // Workspace relative or absolute path to the runtime executable to be used. Default is the runtime executable on the PATH.
+      "runtimeExecutable": null,
+      // Optional arguments passed to the runtime executable.
+      "runtimeArgs": ["--nolazy"],
+      // Environment variables passed to the program.
+      "env": {
+        "NODE_ENV": "development"
+      },
+      // Use JavaScript source maps (if they exist).
+      "sourceMaps": false,
+      // If JavaScript source maps are enabled, the generated code is expected in this directory.
+      "outFiles": [],
+      "request": "launch"
+    },
+    {
+      "name": "Attach",
+      "type": "node",
+      // Port to attach to.
+      "port": 8501, // 5858
+      "sourceMaps": false,
+      "request": "attach",
+      "processId": "${command:PickProcess}",
+      "restart": true
+    }
+  ]
 }

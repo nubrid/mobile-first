@@ -1,5 +1,7 @@
-const Input = React.forwardRef((props, ref) => (
-  <input {...props} ref={ref} type="text" />
-));
+import CustomInput from "@material-ui/core/Input"
 
-export default Input;
+const Input = React.forwardRef((props, ref) => (
+  <CustomInput {...props} ref={ref} />
+))
+
+export default Input

@@ -1,5 +1,5 @@
-﻿import App from "./todos";
+﻿import App from "./chat"
 
-const Apps = () => <App />;
+const Apps = () => <App />
 
-export default Apps;
+export default Apps

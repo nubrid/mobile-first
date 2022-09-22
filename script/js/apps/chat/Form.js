@@ -1,4 +1,4 @@
-import * as actions from "common/entities/actions/todos"
+import * as actions from "common/entities/actions/chat"
 
 import Button from "common/ui/Button"
 import TextField from "common/ui/TextField"
@@ -37,7 +37,7 @@ class ConnectedForm extends React.Component {
     return (
       <div>
         <TextField
-          label="Create a new Todo"
+          label="Create a new Chat"
           value={title}
           onChange={this.handleChange}
         />

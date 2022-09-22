@@ -1,11 +1,11 @@
 ﻿import Form from "./Form"
 import List from "./List"
 
-const TodosView = () => (
+const ChatView = () => (
   <>
     <Form />
     <List />
   </>
 )
 
-export default TodosView
+export default ChatView

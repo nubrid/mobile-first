@@ -1,7 +1,7 @@
 const webpack = require("webpack"),
   { Config } = require("webpack-config"),
   fs = require("fs"),
-  LodashWebpackPlugin = require("lodash-webpack-plugin"),
+  LodashPlugin = require("lodash-webpack-plugin"),
   path = require("path"),
   _getDirectories = (sourcePath, filterRegex) =>
     fs
@@ -123,7 +123,7 @@ const _config = {
       chai: "chai",
       sinon: "sinon/pkg/sinon",
     }),
-    new LodashWebpackPlugin({
+    new LodashPlugin({
       caching: false,
       chaining: false,
       cloning: true,

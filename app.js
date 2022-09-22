@@ -216,8 +216,8 @@ const app = express(),
   cookieParser = require("cookie-parser"),
   bodyParser = require("body-parser"),
   cookieSession = require("cookie-session"),
-  helmet = require("helmet"),
-  appCache = require("connect-cache-manifest");
+  helmet = require("helmet");
+// TODO: DEPRECATED: appCache = require("connect-cache-manifest");
 //, cookie = { secure: false }; // session
 
 app.use(compression());
@@ -274,50 +274,54 @@ app.use(helmet.xssFilter());
 
 app.use("/", router);
 
-let serve = null;
+// TODO: Use ServiceWorker caching
+// let serve = null;
 
 if (process.env.NODE_ENV === "production") {
-  serve = require("st")({
-    path: _config.web.dir,
-    index: "index.html",
-    cache: { content: { maxAge: _config.web.maxAge.content } },
-    gzip: true,
-    passthrough: true,
-  });
+  // TODO: Use ServiceWorker caching
+  // serve = require("st")({
+  //   path: _config.web.dir,
+  //   index: "index.html",
+  //   cache: { content: { maxAge: _config.web.maxAge.content } },
+  //   gzip: true,
+  //   passthrough: true,
+  // });
 
   app.set("trust proxy", 1);
   //cookie.secure = true; // session
 
-  app.use(
-    appCache({
-      manifestPath: "/.appcache",
-      cdn: [], // TODO: All CDN files specified in main.config.js
-      files: [
-        {
-          dir: "src",
-          prefix: "/",
-          ignore: x => /(\.dev\.html|\.home\.html)$/.test(x),
-        },
-      ],
-      networks: ["*"],
-      fallbacks: [],
-    }),
-  );
+  // TODO: DEPRECATED: app.use(
+  //   appCache({
+  //     manifestPath: "/.appcache",
+  //     cdn: [], // TODO: All CDN files specified in main.config.js
+  //     files: [
+  //       {
+  //         dir: "src",
+  //         prefix: "/",
+  //         ignore: x => /(\.dev\.html|\.home\.html)$/.test(x),
+  //       },
+  //     ],
+  //     networks: ["*"],
+  //     fallbacks: [],
+  //   }),
+  // );
 } else {
-  const serveStatic = require("serve-static");
-  serve = serveStatic(_config.web.dir, {
-    index: "index.dev.html",
-    //maxAge: _config.web.maxAge.content
-    //, setHeaders: ( response, path ) => {
-    //	if ( serveStatic.mime.lookup( path ) === "text/html" ) response.setHeader( "Cache-Control", "public, max-age=86400" );
-    //}
-  });
+  // TODO: Use ServiceWorker caching
+  // const serveStatic = require("serve-static");
+  // serve = serveStatic(_config.web.dir, {
+  //   index: "index.dev.html",
+  //   maxAge: _config.web.maxAge.content,
+  //   setHeaders: (response, path) => {
+  //     if (serveStatic.mime.lookup(path) === "text/html")
+  //       response.setHeader("Cache-Control", "public, max-age=86400");
+  //   },
+  // });
 
   const webpack = require("webpack"),
-    webpackConfig = require("./webpack.config"),
-    webpackCompiler = webpack({
+    webpackConfig = require("./webpack.config");
+  const webpackCompiler = webpack({
       ...webpackConfig,
-      ...{ output: { path: "/" } },
+      ...{ output: { ...webpackConfig.output, ...{ path: "/" } } },
     }),
     webpackMiddleware = require("webpack-dev-middleware"),
     webpackHotMiddleware = require("webpack-hot-middleware");
@@ -345,29 +349,30 @@ if (process.env.NODE_ENV === "production") {
   );
 }
 
-app.use(serve);
-
-let options = null;
-
-if (_argv.s) {
-  const fs = require("fs");
-
-  options = {
-    ca: [fs.readFileSync(_config.web.sslCa)],
-    key: fs.readFileSync(_config.web.sslKey),
-    cert: fs.readFileSync(_config.web.sslCrt),
-    // Default since v0.10.33, secureOptions: constants.SSL_OP_NO_SSLv3 | constants.SSL_OP_NO_SSLv2
-  };
-}
+// TODO: Use ServiceWorker caching
+// app.use(serve);
 
 let server = null,
   primus = null;
 (() => {
   const http = require(_argv.s ? "https" : "http");
   http.globalAgent.maxSockets = _config.web.maxSockets;
-  server = _argv.s ? http.createServer(options, app) : http.createServer(app);
 
-  let Primus = require("primus.io");
+  if (_argv.s) {
+    const fs = require("fs");
+
+    server = http.createServer(
+      {
+        ca: [fs.readFileSync(_config.web.sslCa)],
+        key: fs.readFileSync(_config.web.sslKey),
+        cert: fs.readFileSync(_config.web.sslCrt),
+        // Default since v0.10.33, secureOptions: constants.SSL_OP_NO_SSLv3 | constants.SSL_OP_NO_SSLv2
+      },
+      app,
+    );
+  } else server = http.createServer(app);
+
+  const Primus = require("primus.io");
   primus = new Primus(server, { transformer: _config.primus.transformer });
 })();
 

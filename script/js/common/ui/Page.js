@@ -6,10 +6,10 @@ const Page = ({ id, children }) => (
       {children}
     </div>
   </div> // TODO: <Transition { ...props } data-role="page" component="div"><div role="main" className="ui-content">{ props.children }</div></Transition>
-);
+)
 Page.propTypes = {
   id: PropTypes.string.isRequired,
   children: PropTypes.node.isRequired,
-};
+}
 
-export default Page;
+export default Page

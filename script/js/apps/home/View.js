@@ -1,40 +1,38 @@
-﻿import A from "common/ui/A";
-import Button from "common/ui/Button";
-import Input from "common/ui/Input";
-import popupTools from "popup-tools";
+﻿import popupTools from "popup-tools"
+
+import A from "common/ui/A"
+import Button from "common/ui/Button"
+import Input from "common/ui/Input"
 
 const HomeView = () => {
-  const txtInput = React.createRef();
+  let url = "" // HACK:
+  const handleOnChange = ({ target }) => (url = target.value)
 
   const handleOpenBrowserClick = () => {
-    const referrer = window.open(
-      txtInput.current.value,
-      "_blank",
-      "location=no",
-    );
+    const referrer = window.open(url, "_blank", "location=no")
 
     setTimeout(function() {
-      referrer.close();
-    }, 5000);
-  };
+      referrer.close()
+    }, 5000)
+  }
 
   const handleLoginClick = event => {
-    const provider = event.target.hash.substring(1);
+    const provider = event.target.hash.substring(1)
 
     popupTools.popup(
       `${AppManager.url}/auth/${provider}`,
       `${provider} connect`,
       {},
       (error, user) => console.log(user), // eslint-disable-line no-console
-    );
+    )
 
-    event.preventDefault();
-    return false;
-  };
+    event.preventDefault()
+    return false
+  }
 
   return (
     <>
-      <Input ref={txtInput} />
+      <Input placeholder="http://www.nubrid.com" onChange={handleOnChange} />
       <Button onClick={handleOpenBrowserClick}>Open Browser</Button>
       <div>
         <A href="#todos">Todos</A>
@@ -51,7 +49,7 @@ const HomeView = () => {
         </A>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default HomeView;
+export default HomeView

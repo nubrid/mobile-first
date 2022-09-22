@@ -1,9 +1,9 @@
 ﻿import CommonApp from "common/App"
 import View from "./View"
 
-const TodosApp = () => {
+const ChatApp = () => {
   const children = (/*CommonApp this.state*/) => <View />
-  return <CommonApp name="todos">{children}</CommonApp>
+  return <CommonApp name="chat">{children}</CommonApp>
 }
 
-export default TodosApp
+export default ChatApp

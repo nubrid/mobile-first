@@ -1,7 +1,7 @@
 import Button from "common/ui/Button"
 import Checkbox from "common/ui/Checkbox"
 
-const TodosListItem = ({ item: { id, title, completed }, onClick }) => (
+const ChatListItem = ({ item: { id, title, completed }, onClick }) => (
   <div style={completed ? { textDecoration: "line-through" } : null}>
     <Checkbox
       id={`chk_${id}`}
@@ -13,9 +13,9 @@ const TodosListItem = ({ item: { id, title, completed }, onClick }) => (
     <Button onClick={onClick("delete", id)}>Delete</Button>
   </div>
 )
-TodosListItem.propTypes = {
+ChatListItem.propTypes = {
   item: PropTypes.object.isRequired,
   onClick: PropTypes.func.isRequired,
 }
 
-export default TodosListItem
+export default ChatListItem

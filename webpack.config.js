@@ -1,27 +1,17 @@
 const webpack = require("webpack"),
-  { Config, environment } = require("webpack-config"),
+  // TODO: Build & Debug scripts
+  // { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer"),
+  // CleanPlugin = require("clean-webpack-plugin"),
+  { Config /*, environment*/ } = require("webpack-config"),
+  CopyPlugin = require("copy-webpack-plugin"),
   cspBuilder = require("content-security-policy-builder"),
-  fs = require("fs"),
-  HtmlWebpackPlugin = require("html-webpack-plugin"),
-  LodashWebpackPlugin = require("lodash-webpack-plugin"),
+  HtmlPlugin = require("html-webpack-plugin"),
+  LodashPlugin = require("lodash-webpack-plugin"),
   path = require("path"),
+  WebAppManifestPlugin = require("webpack-pwa-manifest"),
+  WorkboxPlugin = require("workbox-webpack-plugin"),
   _appConfig = require("./app.config"),
   _env = process.env.WEBPACK_ENV || process.env.NODE_ENV || "development",
-  _getDirectories = (sourcePath, filterRegex) =>
-    fs
-      .readdirSync(sourcePath)
-      .filter(
-        file =>
-          filterRegex.test(file) &&
-          fs.statSync(path.join(sourcePath, file)).isDirectory(),
-      )
-      .reduce(
-        (accumulator, currentValue) => ({
-          ...accumulator,
-          [currentValue]: `./${sourcePath}/${currentValue}`,
-        }),
-        {},
-      ),
   _host = _appConfig.web.host,
   _isDev = _env === "development",
   _csp = {
@@ -31,7 +21,8 @@ const webpack = require("webpack"),
       imgSrc: ["'self'", "data:"],
       scriptSrc: ["'self'", `*.${_host}:*`, `http://*.${_host}:*`], // TODO: , "*.cloudflare.com:*", "*.googleapis.com:*", "fb.me:*", "*.fbcdn.net:*", "'sha256-b+bPlHI3Xupxz+xXVTazjfiOEv9to4g5ULdU6ZR+MKw='" ]
       connectSrc: [`ws://*.${_host}:*`, `wss://*.${_host}:*`], // TODO: for SharePoint -- , "*.microsoftonline.com:*" ]
-      styleSrc: ["'self'", "'unsafe-inline'"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com:*"],
+      fontSrc: ["https://fonts.gstatic.com:*"],
       childSrc: "*",
     },
     toString() {
@@ -59,23 +50,28 @@ const _primus = new (require("primus.io"))(
 );
 _primus.save(path.resolve("dist/primus.io.js"));
 
-environment.setAll({
-  // HACK: webpack-config@6.1.x replaces [name] with process.env.name value. Revert to "[name]" again.
-  name: () => "[name]", // eslint-disable-line lodash/prefer-constant
-});
+// TODO: output.filename with [name] works
+// environment.setAll({
+//   // HACK: webpack-config@6.1.x replaces [name] with process.env.name value. Revert to "[name]" again.
+//   name: () => "[name]", // eslint-disable-line lodash/prefer-constant
+// });
 
 module.exports = new Config().extend(`webpack.config.${_env}.js`).merge({
   mode: _env,
   entry: {
-    ..._getDirectories("script/js/apps", /^(?!common).*$/),
     main: "main",
-    // TODO: , vendor: [ // NOTE: Must follow dependency sequence
-    // 	"./modernizr-config.json"
-    // 	, "react"
-    // 	, "react-dom"
-    // 	// TODO: , "react-addons-transition-group"
-    // 	// , "react-addons-css-transition-group"
-    // ]
+  },
+  optimization: {
+    splitChunks: {
+      cacheGroups: {
+        vendors: {
+          name: "vendors",
+          test: /[\\/]node_modules[\\/]/,
+          chunks: "all",
+          priority: 1,
+        },
+      },
+    },
   },
   output: {
     path: "/src",
@@ -83,7 +79,13 @@ module.exports = new Config().extend(`webpack.config.${_env}.js`).merge({
     filename: "js/[name].js",
   },
   resolve: {
-    modules: [path.resolve("script/js"), "node_modules", "dist"],
+    modules: [
+      path.resolve("script/js"),
+      path.resolve("script/css"),
+      path.resolve("script/img"),
+      "node_modules",
+      "dist",
+    ],
     // TODO: , extensions: [ ".js", ".json", ".coffee" ]
     alias: {
       cordova: "../cordova",
@@ -150,14 +152,6 @@ module.exports = new Config().extend(`webpack.config.${_env}.js`).merge({
     noParse: [/primus\.io/, /sinon\/pkg\/sinon/],
   },
   plugins: [
-    // TODO: new webpack.ContextReplacementPlugin(
-    //   /apps$/,
-    //   new RegExp(
-    //     `^./(${_getDirectories("script/js/apps", /^(?!common).*$/).join(
-    //       "|",
-    //     )})/index.js$`,
-    //   ),
-    // ),
     new webpack.DefinePlugin({
       __MOBILE__: JSON.stringify(JSON.parse(process.env.MOBILE || "false")),
       __URL__: JSON.stringify(`${process.env.URL || ""}`.trim()),
@@ -177,7 +171,7 @@ module.exports = new Config().extend(`webpack.config.${_env}.js`).merge({
       chai: "chai",
       sinon: "sinon/pkg/sinon",
     }),
-    new LodashWebpackPlugin({
+    new LodashPlugin({
       caching: false,
       chaining: false,
       cloning: true,
@@ -195,16 +189,82 @@ module.exports = new Config().extend(`webpack.config.${_env}.js`).merge({
       shorthands: false,
       unicode: false,
     }),
-    new HtmlWebpackPlugin({
+    new HtmlPlugin({
       title: "Nubrid",
       template: "script/index.ejs",
       inject: false,
-      hash: true,
       xhtml: true,
 
       csp: _csp,
       isDev: _isDev,
       isMobile: process.env.MOBILE,
+    }),
+    new CopyPlugin([
+      {
+        from: "script/favicon.ico",
+        to: "favicon.ico",
+      },
+      {
+        from: "script/css/noscript.css",
+        to: "css/noscript.css",
+      }
+    ]),
+    new WebAppManifestPlugin({
+      // TODO: PWA
+      name: "Nubrid",
+      short_name: "Nubrid",
+      description: "Nubrid",
+      background_color: "#ffffff",
+      theme_color: "#ffffff",
+      display: "fullscreen",
+      ios: {
+        // TODO: Conditional build
+        "apple-mobile-web-app-title": "Nubrid",
+        "apple-mobile-web-app-capable": "yes",
+        "apple-mobile-web-app-status-bar-style": "black-translucent",
+      },
+      // TODO: PWA: icons: [
+      //   {
+      //     src: path.resolve("script/img/icons/ios.png"),
+      //     sizes: [120, 152, 167, 180],
+      //     ios: true,
+      //   },
+      //   {
+      //     src: path.resolve("script/img/icons/ios.png"),
+      //     sizes: [1024],
+      //     ios: "startup",
+      //   },
+      //   {
+      //     src: path.resolve("script/img/icons/android.png"),
+      //     sizes: [36, 48, 72, 96, 144, 192, 512],
+      //   },
+      // ],
+    }),
+
+    // TODO: Build & Debug scripts
+    // new CleanPlugin(["www"]),
+    // new BundleAnalyzerPlugin({ analyzerPort: 8100, openAnalyzer: false }),
+
+    // NOTE: Basic Workbox ServiceWorker
+    // new WorkboxPlugin.GenerateSW({
+    //   swDest: "serviceWorker.js",
+    //   clientsClaim: true,
+    //   skipWaiting: true,
+    //   runtimeCaching: [
+    //     {
+    //       urlPattern: /^https:\/\/fonts\.googleapis\.com/,
+    //       handler: "staleWhileRevalidate",
+    //     },
+    //     {
+    //       urlPattern: /^https:\/\/fonts\.gstatic\.com/,
+    //       handler: "cacheFirst",
+    //     },
+    //   ],
+    // }),
+    // TODO: Using Local Workbox Files Instead of CDN
+    new WorkboxPlugin.InjectManifest({
+      swSrc: "script/js/serviceWorker.js",
+      swDest: "serviceWorker.js",
     }),
   ],
 });
