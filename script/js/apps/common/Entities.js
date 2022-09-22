@@ -1,8 +1,12 @@
 ﻿/*
 Common Entities
 */
-const _common = {};
-BackboneImmutable.infect( Backbone );
+import _ from "lodash";
+import BackbonePouch from "backbone-pouch";
+import PouchDB from "pouchdb";
+import Primus from "primus.io";
+
+// TODO: const _common = {};
 
 // HACK: Force websocket if available.
 if ( Modernizr.websockets ) {
@@ -10,11 +14,17 @@ if ( Modernizr.websockets ) {
 	Primus.prototype.merge = function() {
 		const target = merge.apply( this, arguments );
 
-		return _.extend( target, {
+		// TODO: return _.extend( target, {
+		// 	transports: [
+		// 		"websocket"
+		// 	]
+		// } );
+		return {
+			...target,
 			transports: [
-				"websocket"
-			]
-		} );
+				"websocket",
+			],
+		};
 	};
 }
 
@@ -23,15 +33,15 @@ if ( Modernizr.websockets ) {
 // Primus.prototype.emit = function() {
 // 	const message = arguments[ 0 ]
 // 		, delimiterIndex = message.lastIndexOf( ":" )
-// 		, method = "*" + message.substring( delimiterIndex )
+// 		, method = `*${message.substring( delimiterIndex )}`
 // 		, sendMethods = [
-// 			"*:create"
-// 			, "*:delete"
-// 			, "*:read"
-// 			, "*:update"
+// 			"*:create",
+// 			"*:delete",
+// 			"*:read",
+// 			"*:update",
 // 		];
 // 	if ( arguments.length === 3 && _.indexOf( sendMethods, method ) !== -1 ) {
-// 		const args = _.extend( [], arguments );
+// 		const args = { ...arguments }; // TODO: _.extend( [], arguments );
 // 		args.splice( 0, 1, method );
 // 		args.splice( 2, 0, message.substring( 0, delimiterIndex ) );
 // 		Primus.prototype.send.apply( this, args );
@@ -41,13 +51,51 @@ if ( Modernizr.websockets ) {
 // 	}
 // };
 
+if ( __DEV__ ) PouchDB.debug.enable( "*" );
+
+// TODO: Backbone.Model.prototype.idAttribute = "_id";
+const db = new PouchDB( "local" );
+BackboneImmutable.infect( Backbone );
+Backbone.sync = BackbonePouch.sync( {
+	db,
+	listen: true,
+	fetch: "query",
+	options: {
+		query: {
+			include_docs: true,
+			limit: 10, // TODO: Get from config.
+			fun: {
+				map( doc, emit ) {
+					emit( doc._id, null );
+				},
+			},
+		},
+		changes: {
+			include_docs: true,
+			filter( doc ) {
+				return doc._deleted || true; // HACK: return doc._deleted || doc.type === "todos";
+			},
+		},
+	},
+} );
+// TODO: _.extend( Backbone.Model.prototype, BackbonePouch.attachments( {
+// 	db
+// } ) );
+Backbone.Model.prototype = {
+	...Backbone.Model.prototype,
+	idAttribute: "_id",
+	...BackbonePouch.attachments( {
+		db,
+	} ),
+};
+
 function _getSocket( options ) {
 	if ( !options ) options = {};
 	return options.socket || new Primus(
-		window.url
-		, options.closeOnOpen
+		AppManager.url,
+		options.closeOnOpen
 			? { manual: true, strategy: false }
-			: { manual: true }
+			: { manual: true },
 	);
 }
 
@@ -58,7 +106,7 @@ function _connect( options ) {
 
 	const primus = _getSocket( options );
 
-	function primus_onOpen() {
+	const primus_onOpen = () => {
 		if ( options.callback ) {
 			options.callback();
 			options.callback = undefined;
@@ -66,7 +114,7 @@ function _connect( options ) {
 		if ( options.closeOnOpen ) {
 			primus.end();
 		}
-	}
+	};
 
 	if ( primus.readyState === Primus.OPEN ) {
 		primus_onOpen();
@@ -75,18 +123,18 @@ function _connect( options ) {
 	}
 
 	primus.on( "open", function() {
-		console.log( "connection established" );
+		if ( __DEV__ ) console.log( "connection established" ); // eslint-disable-line no-console
 		primus_onOpen();
 	} );
 
 	primus.on( "end", function() {
-		console.log( "connection closed" );
+		if ( __DEV__ ) console.log( "connection closed" ); // eslint-disable-line no-console
 
 		if ( options.callback && options.retry ) setTimeout( () => _connect( options ), options.retry );
 	} );
 
 	primus.on( "error", function( error ) {
-		console.log( error );
+		if ( __DEV__ ) console.log( error ); // eslint-disable-line no-console
 	} );
 
 	if ( primus.readyState !== Primus.OPENING ) primus.open();
@@ -94,81 +142,51 @@ function _connect( options ) {
 	return primus;
 }
 
-if ( __DEV__ ) PouchDB.debug.enable( "*" );
-
-Backbone.Model.prototype.idAttribute = "_id";
-const _localPouch = new PouchDB( "local" );
-Backbone.sync = BackbonePouch.sync( {
-	db: _localPouch
-	, listen: true
-	, fetch: "query"
-	, options: {
-		query: {
-			include_docs: true
-			, limit: 10
-			, fun: {
-				map( doc, emit ) {
-					emit( doc._id, null );
-				}
-			}
-		}
-		, changes: {
-			include_docs: true
-			, filter( doc ) {
-				return doc._deleted || true; // TODO: return doc._deleted || doc.type === "todos";
-			}
-		}
-	}
-} );
-_.extend( Backbone.Model.prototype, BackbonePouch.attachments( {
-  db: _localPouch
-} ) );
-
-if ( !window.PouchDB ) {
-	window.PouchDB = PouchDB;
-
-	const sync = function() {
+let _syncStarted = false;
+export const start = () => {
+	const sync = () => { // HACK: Revert if error - function() {
 		const socket = _getSocket( { closeOnOpen: true } );
 		// HACK: Override engine.io with primus
 		socket.on( "data", function( message ) {
 			const sparkMessage = this.emits( "message" );
 			sparkMessage( message.data[ 0 ] );
 		} );
-		function Socket() {
+		const Socket = () => { // TODO: function Socket() {
 			socket.close = socket.destroy;
 			return socket;
-		}
-		const remotePouch = new PouchDB( "nubrid", {
-			adapter: "socket"
-			, url: window.url
-			, socketOptions: { Socket }
+		};
+		const remotePouch = new PouchDB( "nubrid", { // TODO: Get from config.
+			adapter: "socket",
+			originalName: "nubrid", // HACK: PouchDB v6
+			url: AppManager.url,
+			socketOptions: { Socket },
 		} );
 
 		let localPouchSync = null;
 
 		socket
 		.on( "open", function() {
-			localPouchSync = _localPouch.sync( remotePouch, {
-				live: true
-				, retry: true
+			localPouchSync = db.sync( remotePouch, {
+				live: true,
+				retry: true,
 			} )
 			.on( "change", function( info ) {
-				console.log( "change: ", info );
+				if ( __DEV__ ) console.log( "change: ", info ); // eslint-disable-line no-console
 			} )
 			.on( "paused", function( error ) {
-				console.log( "paused: ", error );
+				if ( __DEV__ ) console.log( "paused: ", error ); // eslint-disable-line no-console
 			} )
 			.on( "active", function() {
-				console.log( "active" );
+				if ( __DEV__ ) console.log( "active" ); // eslint-disable-line no-console
 			} )
 			.on( "denied", function( error ) {
-				console.log( "denied: ", error );
+				if ( __DEV__ ) console.log( "denied: ", error ); // eslint-disable-line no-console
 			} )
 			.on( "complete", function( info ) {
-				console.log( "complete: ", info );
+				if ( __DEV__ ) console.log( "complete: ", info ); // eslint-disable-line no-console
 			} )
 			.on( "error", function( error ) {
-				console.log( "error: ", error );
+				if ( __DEV__ ) console.log( "error: ", error ); // eslint-disable-line no-console
 			} );
 		} )
 		.on( "end", function() {
@@ -176,54 +194,60 @@ if ( !window.PouchDB ) {
 				localPouchSync.cancel();
 				remotePouch.close();
 
-				_connect( { callback: sync, closeOnOpen: true, retry: 5000 } );
+				_connect( { callback: sync, closeOnOpen: true, retry: 5000 } ); // TODO: Get from config.
 			}
 		} );
 
 		_connect( { socket } );
 	};
 
-	const pouchDBSocket = require( "proxy!pouchdb.socket" );
-	pouchDBSocket( { "engine.io-client": ( url, options ) => options.Socket() } ); // HACK: Override engine.io with primus
-	sync();
-}
+	// HACK: Required by socket-pouch
+	window.PouchDB = PouchDB;
+	const pouchDBSocket = require( "proxy!pouchdb-socket" );
+	// HACK: Override engine.io with primus
+	pouchDBSocket( { "engine.io-client": ( url, options ) => options.Socket() } ); // eslint-disable-line new-cap
+	delete window.PouchDB;
+	
+	if ( !_syncStarted ) sync();
+	_syncStarted = true;
+};
 
-_common.ActionType = name => {
+export const actionType = name => { // TODO: _common.actionType = name => {
 	if ( !name ) name = "";
 
 	return {
-		CREATE: `${name}:create`
-		, UPDATE: `${name}:update`
-		, DELETE: `${name}:delete`
+		CREATE: `${name}:create`,
+		UPDATE: `${name}:update`,
+		DELETE: `${name}:delete`,
 	};
 };
 
-_common.Model = Backbone.Model.extend( {
-	urlRoot: "*"
-	// , noIoBind: false
-	// , initialize() {
+export const Model = Backbone.Model.extend( { // TODO: _common.Model = Backbone.Model.extend( {
+	urlRoot: "*",
+	// noIoBind: false,
+	// initialize() {
 	// 	this.socket = _connect( {
-	// 		socket: this.socket
-	// 		, callback: () => {
+	// 		socket: this.socket,
+	// 		callback: () => {
 	// 			// Only bind new models from the server because the server assigns the id.
 	// 			if ( !this.noIoBind ) {
-	// 				_.bindAll( this, "serverChange", "serverDelete", "modelCleanup" );
+	// 				_.bindAll( this, [ "serverChange", "serverDelete", "modelCleanup" ] );
 	// 				this.ioBind( "update", this.serverChange, this );
 	// 				this.ioBind( "delete", this.serverDelete, this );
 	// 			}
-	// 		}
+	// 		},
 		// } );
 
 	// 	this.on( "after:save", function() {
 	// 		if ( this.noIoBind ) this.socket.end();
 	// 	} );
-	// }
-	// , destroy() {
+	// },
+	// destroy() {
 	// 	if ( !this.socket ) this.socket = this.collection.socket;
 
 	// 	return Backbone.Model.prototype.destroy.apply( this, arguments );
-	// }
-	// , save( attrs, options ) {
+	// },
+	// save( attrs, options ) {
 	// 	if ( !this.socket ) this.socket = this.collection.socket;
 
 	// 	if ( !options ) options = {};
@@ -246,13 +270,13 @@ _common.Model = Backbone.Model.extend( {
 	// 	// Call super with attrs moved to options
 	// 	Backbone.Model.prototype.save.call( this, attrs, options );
 	// 	return this;
-	// }
-	// , serverChange( data ) {
+	// },
+	// serverChange( data ) {
 	// 	if ( !this.socket ) this.socket = this.collection.socket;
 
 	// 	if ( this.changedAttributes( data ) ) this.set( data );
-	// }
-	// , serverDelete() {
+	// },
+	// serverDelete() {
 	// 	if ( !this.socket ) this.socket = this.collection.socket;
 
 	// 	this.modelCleanup();
@@ -262,32 +286,32 @@ _common.Model = Backbone.Model.extend( {
 	// 	} else {
 	// 		this.trigger( "remove", this );
 	// 	}
-	// }
-	// , modelCleanup() {
+	// },
+	// modelCleanup() {
 	// 	this.ioUnbindAll();
 	// 	return this;
-	// }
-});
+	// },
+} );
 
-_common.Collection = Backbone.Collection.extend( {
-	url: "*"
-	// , noIoBind: false
-	, model: _common.Model
-	, initialize() {
-		this.actionType = _common.ActionType( this.url );
+export const Collection = Backbone.Collection.extend( { // TODO: _common.Collection = Backbone.Collection.extend( {
+	url: "*",
+	// noIoBind: false,
+	model: Model, // TODO: _common.Model,
+	initialize() {
+		this.actionType = actionType( this.url ); // TODO: _common.actionType( this.url );
 
 		this.listenTo( this.dispatcher, "dispatch", payload => {
 			switch ( payload.actionType ) {
 				case this.actionType.CREATE:
-					this.create( _.omit( payload.action.attrs, [ "id", "_id", "_rev" ] ), { wait: true } );
+					this.create( _.omit( payload.attrs, [ "id", "_id", "_rev", "actionType" ] ), { wait: true } ); // TODO: this.create( _.omit( payload.action.attrs, [ "id", "_id", "_rev" ] ), { wait: true } );
 
 					break;
 				case this.actionType.UPDATE:
-					this.get( payload.action.id ).save( _.omit( payload.action.attrs, "id" ), { wait: true } );
+					this.get( payload.id ).save( _.omit( payload.attrs, [ "id", "actionType" ] ), { wait: true } ); // TODO: this.get( payload.action.id ).save( _.omit( payload.action.attrs, [ "id" ] ), { wait: true } );
 
 					break;
 				case this.actionType.DELETE:
-					this.get( payload.action.id ).destroy();
+					this.get( payload.id ).destroy(); // TODO: this.get( payload.action.id ).destroy();
 
 					break;
 			}
@@ -295,22 +319,22 @@ _common.Collection = Backbone.Collection.extend( {
 
 		// this.on( "before:fetch", function() {
 		// 	this.socket = _connect( {
-		// 		socket: this.socket
-		// 		, callback: () => {
+		// 		socket: this.socket,
+		// 		callback() {
 		// 			if ( !this.noIoBind ) {
-		// 				_.bindAll( this, "serverCreate", "collectionCleanup" );
+		// 				_.bindAll( this, [ "serverCreate", "collectionCleanup" ] );
 		// 				this.ioBind( "create", this.serverCreate, this );
 		// 			}
 
 		// 			this.model = this.model.extend( { socket: this.socket } );
-		// 		}
+		// 		},
 		// 	} );
 		// } );
 		// this.on( "after:fetch", function() {
 		// 	if ( this.noIoBind ) this.socket.end();
 		// } );
-	}
-	// , fetch() {
+	},
+	// fetch() {
 	// 	let args = arguments;
 	// 	if ( !args || args.length === 0 ) args = [{}];
 
@@ -330,11 +354,11 @@ _common.Collection = Backbone.Collection.extend( {
 
 	// 	this.trigger( "before:fetch" );
 	// 	return Backbone.Collection.prototype.fetch.apply( this, args );
-	// }
-	, parse( response ) {
-		return _.pluck( response.rows, "doc" );
-	}
-	// , serverCreate( data ) {
+	// },
+	parse( response ) {
+		return Array.from( response.rows, row => row.doc ); // TODO: Pluck deprecated - _.pluck( response.rows, "doc" );
+	},
+	// serverCreate( data ) {
 	// 	const oldData = this.get( data._id );
 	// 	// Check for duplicates in the collection.
 	// 	if ( !oldData ) {
@@ -342,73 +366,89 @@ _common.Collection = Backbone.Collection.extend( {
 	// 	} else {
 	// 		if ( oldData.changedAttributes( data ) ) oldData.set( data );
 	// 	}
-	// }
-	// , collectionCleanup() {
+	// },
+	// collectionCleanup() {
 	// 	this.ioUnbindAll();
 	// 	this.each( model => model.modelCleanup() );
 
 	// 	return this;
-	// }
-	, close() {
+	// },
+	close() {
 		this.stopListening( this.dispatcher );
 		// if ( this.socket ) this.socket.end();
-	}
+	},
 } );
 
-_common.API = {
-	getModel( Model, attrs ) {
-		const model = new Model( attrs )
-			, defer = $.Deferred();
-		// model.socket = _connect( {
-		// 	socket: model.socket
-		// 	, callback() {
-		model.fetch( {
-			success( data ) {
-				defer.resolve( data );
-			}
-		} );
-		// 	}
-		// } );
+export const getEntity = ( options ) => { // TODO: _common.getEntity = ( options ) => { // TODO: Collection, options ) => {
+	start();
 
-		return defer.promise();
-	}
-	, getEntity( Collection, options ) {
-		const collection = new Collection( null, options )
-			, defer = $.Deferred();
-		// collection.socket = _connect( {
-		// 	socket: collection.socket
-		// 	, callback() {
-		collection.fetch( {
-			data: {
-				query: options.query // TODO: dynamic query for PouchDB
-			}
-			, success( data ) {
-				defer.resolve( data );
-			}
-		} );
-		// 	}
-		// } );
-
-		return {
-			fetch: defer.promise()
-			, actionType: collection.actionType
-		};
-	}
-};
-
-AppManager.reqres.setHandler( "connect", _connect );
-
-AppManager.reqres.setHandler( "entity", options =>
-	_common.API.getEntity(
-		_common.Collection.extend( {
-			model: _common.Model.extend( {
-				urlRoot: options.url
-			} )
-			, url: options.url
-			, dispatcher: options.dispatcher
+	const { dispatcher, query, url, url: urlRoot } = options
+		, _Collection = Collection.extend( { // TODO: _common.Collection.extend( {
+			model: Model.extend( { // TODO: _common.Model.extend( {
+				urlRoot,
+			} ),
+			url,
+			dispatcher,
 		} )
-		, options
-	)
-);
+		, collection = new _Collection( null, options );
+		// TODO: , defer = $.Deferred();
+	// collection.socket = _connect( {
+	// 	socket: collection.socket,
+	// 	callback() {
+	return new Promise( ( resolve/*, reject*/ ) => collection.fetch( {
+		data: {
+			query, // TODO: dynamic query for PouchDB
+		},
+		success( data ) {
+			// TODO: defer.resolve( data );
+			resolve( {
+				data,
+				actionType: collection.actionType,
+			} );
+		},
+	} ) );
+	// 	},
+	// } );
 
-export default _common;
+	// TODO: return {
+	// 	fetch: defer.promise(),
+	// 	actionType: collection.actionType,
+	// };
+};// TODO: ,
+// TODO: };
+
+// TODO: _common.API = {
+export const getModel = ( { _Model, attrs, callback } ) => { // TODO: _common.getModel = ( Model, attrs ) => {
+	const model = new _Model( attrs );
+		// TODO: , defer = $.Deferred();
+	// model.socket = _connect( {
+	// 	socket: model.socket,
+	// 	callback() {
+	model.fetch( {
+		success( data ) {
+			// TODO: defer.resolve( data );
+			if ( callback ) callback( data );
+		},
+	} );
+	// 	},
+	// } );
+
+	// TODO: return defer.promise();
+};// TODO: ,
+
+// TODO: AppManager.reqres.setHandler( "connect", _connect );
+
+// AppManager.reqres.setHandler( "entity", options =>
+// 	_common.API.getEntity(
+// 		_common.Collection.extend( {
+// 			model: _common.Model.extend( {
+// 				urlRoot: options.url,
+// 			} ),
+// 			url: options.url,
+// 			dispatcher: options.dispatcher,
+// 		} ),
+// 		options,
+// 	)
+// );
+
+// TODO: export default _common;

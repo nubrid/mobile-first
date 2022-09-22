@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-(() => {
 "use strict";
 const app = require( "../app" );
 
@@ -8,18 +7,14 @@ if ( !app ) return;
 /**
  * Normalize a port into a number, string, or false.
  */
-function _normalizePort( val ) {
-	const port = parseInt( val, 10 );
+function _normalizePort( value ) {
+	const _port = parseInt( value, 10 );
 
-	if ( isNaN( port ) ) {
-		// named pipe
-		return val;
-	}
+	// named pipe
+	if ( isNaN( _port ) ) return value;
 
-	if ( port >= 0 ) {
-		// port number
-		return port;
-	}
+	// port number
+	if ( _port >= 0 ) return _port;
 
 	return false;
 }
@@ -27,32 +22,52 @@ function _normalizePort( val ) {
 /**
  * Module dependencies.
  */
-const _server = app.get( "server" )
-	, _address = _server.address()
-	, _port = _normalizePort( app.get( "port" ) );
+const { primus: socket, server } = app;
+const address = server.address()
+	, port = _normalizePort( app.port );
 
 /**
  * Event listener for HTTP server "error" event.
  */
 function _onError( error ) {
-	if ( error.syscall !== "listen" ) {
-		throw error;
-	}
+	if ( error.syscall !== "listen" ) throw error;
 
-	const bind = ( typeof _port === "string"
-		? `Pipe ${_port}`
-		: `Port ${_port}`
+	const bind = ( typeof port === "string" // eslint-disable-line lodash/prefer-lodash-typecheck
+		? `Pipe ${port}`
+		: `Port ${port}`
 	);
 
 	// handle specific listen errors with friendly messages
 	switch ( error.code ) {
 		case "EACCES":
-			console.error( `${bind} requires elevated privileges` );
+			console.error( `${bind} requires elevated privileges` ); // eslint-disable-line no-console
 			process.exit( 1 );
 			break;
 		case "EADDRINUSE":
-			console.error( `${bind} is already in use` );
-			process.exit( 1 );
+			console.error( `${bind} is already in use` ); // eslint-disable-line no-console
+
+			if ( process.env.NODE_ENV === "development" ) {
+				const netstat = require( "node-netstat" );
+				netstat( {
+					filter: {
+						protocol: "tcp"
+						, local: {
+							port
+							, address: null
+						}
+					}
+					, limit: 5
+				}
+				, data => {
+					const terminate = require( "terminate" );
+					terminate( data.pid, ( _error, done ) => {
+						if ( _error ) console.log( `Cannot terminate port ${data.local.port} pid ${data.pid}: ${_error}` ); // eslint-disable-line no-console
+						if ( done ) console.log( `Port ${data.local.port} terminated` ); // eslint-disable-line no-console
+						process.exit( 0 );
+					} );
+					return false;
+				} );
+			}
 			break;
 		default:
 			throw error;
@@ -63,14 +78,20 @@ function _onError( error ) {
  * Event listener for HTTP server "listening" event.
  */
 function _onListening() {
-	const bind = ( typeof _address === "string"
-		? `pipe ${_address}`
-		: `port ${_port}`
+	const bind = ( typeof address === "string" // eslint-disable-line lodash/prefer-lodash-typecheck
+		? `pipe ${address}`
+		: `port ${port}`
 	);
-	console.log( `Listening on ${bind}` );
+	console.log( `Listening on ${bind}` ); // eslint-disable-line no-console
 }
 
-_server
+server
 	.on( "error", _onError )
 	.on( "listening", _onListening );
-} )();
+
+process
+	.on( "uncaughtException", error => console.log( error ) ) // eslint-disable-line no-console
+	.on( "SIGINT", () => {
+		server.close( () => process.exit() );
+		if ( socket ) socket.destroy();
+	} );

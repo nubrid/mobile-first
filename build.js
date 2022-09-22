@@ -1,5 +1,4 @@
 /* https://github.com/jrburke/r.js/blob/master/build/example.build.js */
-/* jshint -W030 */
 ({
 	mainConfigFile: "src/js/main.config.js" //"main.config.js"
 	, appDir: "src" //"../"

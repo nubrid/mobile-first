@@ -13,19 +13,19 @@
 		<link rel="stylesheet" href="css/styles.css" />
 	</head>
 	<body>
-		<div id="PanelRegion" data-role="panel" data-position="left" data-theme="a"></div>
+		<!--<div id="PanelRegion" data-role="panel" data-position="left" data-theme="a"></div>
 		<div id="HeaderRegion"></div>
 		<div id="MainRegion"></div>
 		<div data-role="footer" data-position="fixed" data-theme="a">
 			<h1 id="FooterTitle"></h1>
 			<div id="FooterRegion"></div>
 		</div>
-		<!-- TODO: script data-main="js/main" src="js/libs/require/require.min.js" async="async"></script -->
+		<div class="ui-popup-screen ui-overlay-b ui-screen-hidden"></div>
+		<div class="ui-popup-container ui-popup-hidden ui-popup-truncate" id="PopupRegion-popup">
+  			<div class="ui-popup ui-body-inherit ui-overlay-shadow ui-corner-all" id="PopupRegion" data-role="popup" data-enhanced="true" data-overlay-theme="b"></div></div>-->
+		<div id="main" />
 		<% for (var chunk in htmlWebpackPlugin.files.chunks) { %>
 		<script src="<%= htmlWebpackPlugin.files.chunks[chunk].entry %>"></script><% } %>
 		<% if(webpackConfig.env.isDev) { %><script src="http://live.nubrid.com/livereload.js"></script><% } %>
-		<div class="ui-popup-screen ui-overlay-b ui-screen-hidden"></div>
-		<div class="ui-popup-container ui-popup-hidden ui-popup-truncate" id="PopupRegion-popup">
-  			<div class="ui-popup ui-body-inherit ui-overlay-shadow ui-corner-all" id="PopupRegion" data-role="popup" data-enhanced="true" data-overlay-theme="b"></div></div>
 	</body>
 </html>

@@ -1,0 +1,1 @@
+export default ( ref, proxy ) => refObj => proxy[ ref ] = refObj;

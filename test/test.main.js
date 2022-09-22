@@ -1,7 +1,7 @@
 /* global mocha */
-(function() {
-const _root = window.__karma__ ? "/base" : "../..";
-// TODO: require.config( {
+// TODO: (function() {
+// const _root = window.__karma__ ? "/base" : "../..";
+// require.config( {
 // 	paths: {
 // 		"chai": _root + "/node_modules/chai/chai"
 // 		, "chai.as.promised": _root + "/node_modules/chai-as-promised/lib/chai-as-promised"
@@ -36,7 +36,7 @@ const _root = window.__karma__ ? "/base" : "../..";
 // 	}
 // } );
 
-function _init( options ) {
+function _init( /*options*/ ) {
 	// TODO: var _requireConfig = options.baseUrl + "/main.config" + ( window.__karma__ ? ".js" : "" );
 	// var _config = [ _requireConfig ];
 	// if ( options.config ) _config.push( options.config );
@@ -47,7 +47,7 @@ function _init( options ) {
 	// 		, urlArgs: null
 	// 	} );
 
-		mocha.setup( "bdd" );
+	mocha.setup( "bdd" );
 
 		// TODO: var _modules = [ "jquery", "sinon.chai", "chai.jquery", "chai.as.promised" ];
 		// if ( options.module ) _modules.push( options.module );
@@ -65,20 +65,20 @@ function _init( options ) {
 			// 	$.mobile.pushStateEnabled = false;
 			// } );
 
-			chai.use( require( "chai-as-promised" ) )
-				.use( require( "chai-jquery" ) );
-			require( "sinon-chai" );
-			window.expect = chai.expect;
-			window.should = chai.should();
+	chai.use( require( "chai-as-promised" ) )
+		.use( require( "chai-jquery" ) );
+	require( "sinon-chai" );
+	window.expect = chai.expect;
+	window.should = chai.should();
 
 			// TODO: window.rewire = require( "rewire" );
 
 			// TODO: require( [ "backbone.iobind", "jquery.mobile", "modernizr" ], function() {
 
-				let context = require.context( "../test", true, /^(.*-spec\.(coffee$))[^.]*$/igm );
-				context.keys().forEach( context );
-				context = require.context( "../script", true, /^(.*-spec\.(coffee$))[^.]*$/igm );
-				context.keys().forEach( context );
+	let context = require.context( "../test", true, /^(.*-spec\.(coffee$))[^.]*$/igm );
+	context.keys().forEach( context ); // eslint-disable-line lodash/prefer-lodash-method
+	context = require.context( "../script", true, /^(.*-spec\.(coffee$))[^.]*$/igm );
+	context.keys().forEach( context ); // eslint-disable-line lodash/prefer-lodash-method
 
 				// TODO: options.callback();
 			// } );
@@ -129,4 +129,4 @@ if ( window.__karma__ ) {
 // 		}
 // 	} );
 // }
-})();
+// TODO: })();

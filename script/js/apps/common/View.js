@@ -1,23 +1,26 @@
 ﻿/*
 Common View
 */
-import UI from "./UI";
-// TODO: Specify another UI for Phonegap
-const _view = {};
+import _ from "lodash";
 
-_view.Layout = Marionette.LayoutView.extend( {
-	el: "body"
-	, regions: {
-		PanelRegion: "#PanelRegion"
-		, PopupRegion: "#PopupRegion"
-		, HeaderRegion: "#HeaderRegion"
-		, MainRegion: "#MainRegion"
-		, FooterRegion: "#FooterRegion"
-	}
-	, initialize( options ) {
-		const Header = options.Header || _view.Header;
-		if ( !( this.HeaderRegion.currentView instanceof Header ) ) {
-			this.HeaderRegion.show( new Header( { region: this.HeaderRegion, title: options.title } ) );
+// TODO: import UI from "./UI";
+import A from "apps/common/ui/A";
+// TODO: Specify another UI for Phonegap
+// TODO: const _view = {};
+
+export class Layout { // TODO: _view.Layout = Marionette.LayoutView.extend( {
+	// TODO: el: "body",
+	// regions: {
+	// 	PanelRegion: "#PanelRegion",
+	// 	PopupRegion: "#PopupRegion",
+	// 	HeaderRegion: "#HeaderRegion",
+	// 	MainRegion: "#MainRegion",
+	// 	FooterRegion: "#FooterRegion",
+	// },
+	constructor( options ) { // TODO: initialize( options ) {
+		const _Header = options.Header; // TODO: || _view.Header;
+		if ( !( this.HeaderRegion.currentView instanceof _Header ) ) {
+			this.HeaderRegion.show( new _Header( { region: this.HeaderRegion, title: options.title } ) );
 		}
 		else {
 			this.HeaderRegion.currentView.title = options.title;
@@ -32,77 +35,89 @@ _view.Layout = Marionette.LayoutView.extend( {
 		}
 
 		const Main = options.Main;
-		if ( !( this.MainRegion.currentView instanceof Main ) ) this.MainRegion.show( new Main( _.defaults( _.pick( options, "id", "title", "dispatcher" ), { region: this.MainRegion } ) ) );
+		if ( !( this.MainRegion.currentView instanceof Main ) ) this.MainRegion.show( new Main( _.defaults( _.pick( options, [ "id", "title", "dispatcher" ] ), { region: this.MainRegion } ) ) );
 
 		this.PanelRegion.$el.panel();
 		this.PopupRegion.$el.popup();
-		$.mobile.resetActivePageHeight();
+		// TODO: $.mobile.resetActivePageHeight();
 
 		return this;
-	}
-} );
+	}// TODO: ,
+}// TODO: );
 
-const Header = React.createClass( { // jshint ignore:line
-	displayName: "Header"
-	, mixins: [ ReactPureRenderMixin ]
-	, componentDidMount() {
-		$( ReactDOM.findDOMNode( this ) ).toolbar();
+export class Header extends React.Component { // TODO: const Header = React.createClass( {
+	// TODO: displayName: "Header",
+	// mixins: [ ReactPureRenderMixin ],
+	// constructor( props ) {
+	// 	super( props );
+	// 	this.shouldComponentUpdate = ReactPureRenderMixin.shouldComponentUpdate.bind( this );
+	// }
+	// shouldComponentUpdate = ReactPureRenderMixin.shouldComponentUpdate;
+	static propTypes = {
+		title: React.PropTypes.string,
 	}
-	, render() {
-		/* jshint ignore:start */
+
+	componentDidMount() {
+		// TODO: $( ReactDOM.findDOMNode( this ) ).toolbar();
+	}// TODO: ,
+
+	render() {
 		return (
 			<div data-role="header" data-position="fixed" data-theme="a">
 				<h1>{ this.props.title }</h1>
 				<div>
-					<UI.a href="#PanelRegion" icon="bars" notext={ true } align="left">Panel</UI.a>
-					<UI.a href="#home" icon="home" notext={ true } align="right">Home</UI.a></div></div>
+					<A href="#PanelRegion" icon="bars" notext={ true } align="left">Panel</A>
+					<A href="#home" icon="home" notext={ true } align="right">Home</A></div></div>
 		);
-		/* jshint ignore:end */
-	}
-} );
+	}// TODO: ,
+}// TODO: );
 
-_view.Header = Marionette.ItemView.extend( {
-	initialize( options ) {
-		this.parentEl = options.region ? options.region.$el[ 0 ] : this.el;
-		this.title = options.title;
-	}
-	, render() {
-		/* jshint ignore:start */
-		this.view = ReactDOM.render( <Header title={ this.title } />, this.parentEl );
-		/* jshint ignore:end */
-		this.el = this.view.el;
-		this.setElement( this.el );
-	}
-} );
+// TODO: _view.Header = Marionette.ItemView.extend( {
+// 	initialize( options ) {
+// 		this.parentEl = options.region ? options.region.$el[ 0 ] : this.el;
+// 		this.title = options.title;
+// 	},
+// 	render() {
+// 		this.view = ReactDOM.render( <Header title={ this.title } />, this.parentEl );
+// 		this.el = this.view.el;
+// 		this.setElement( this.el );
+// 	},
+// } );
 
-_view.Content = Marionette.ItemView.extend( {
-	render() {
-		/* jshint ignore:start */
-		this.page = ReactDOM.render( <this.ReactClass id={ this.id } view={ this } />, this.options.region ? this.options.region.$el[ 0 ] : this.el );
-		/* jshint ignore:end */
-		this.el = ReactDOM.findDOMNode( this.page ); // HACK: Avoid conflict between Marionette region show and react render.
+// _view.Content = Marionette.ItemView.extend( {
+// 	render() {
+// 		this.page = ReactDOM.render( <this.ReactClass id={ this.id } view={ this } />, this.options.region ? this.options.region.$el[ 0 ] : this.el );
+// 		this.el = ReactDOM.findDOMNode( this.page ); // HACK: Avoid conflict between Marionette region show and react render.
 
-		return this;
+// 		return this;
+// 	}
+// } );
+
+export class IFrame extends React.Component { // TODO: _view.IFrame = Marionette.ItemView.extend( {
+	static propTypes = {
+		height: React.PropTypes.number,
+		region: React.PropTypes.object,
+		src: React.PropTypes.string,
+		width: React.PropTypes.number,
 	}
-} );
 
-_view.IFrame = Marionette.ItemView.extend( {
-	initialize( options ) {
-		this.parentEl = options.region ? options.region.$el[ 0 ] : this.el;
-		this.src = options.src;
-		this.width = options.width;
-		this.height = options.height;
+	constructor( props ) { // TODO: initialize( options ) {
+		super( props );
+		this.parentEl = props.region ? props.region.$el[ 0 ] : this.el;
+		this.src = props.src;
+		this.width = props.width;
+		this.height = props.height;
 		this.seamless = "";
-	}
-	, render() {
-		/* jshint ignore:start */
+	}// TODO: ,
+	render() {
 		this.view = ReactDOM.render( <iframe { ...this } />, this.parentEl );
-		/* jshint ignore:end */
 		this.el = this.view.el;
 		this.setElement( this.el );
-	}
-} );
 
-_view.UI = UI;
+		return null;
+	}// TODO: ,
+}// TODO: );
 
-export default _view;
+// TODO: _view.UI = UI;
+
+// export default _view;

@@ -56,7 +56,6 @@ $.event.keyHooks = {
 $.event.mouseHooks = {
 	props: ( "button buttons clientX clientY offsetX offsetY pageX pageY " +
 		"screenX screenY toElement" ).split( " " ),
-	/* jshint maxcomplexity: false */
 	filter: function( event, original ) {
 		var eventDoc, doc, body,
 			button = original.button;
@@ -78,7 +77,7 @@ $.event.mouseHooks = {
 		// Add which for click: 1 === left; 2 === middle; 3 === right
 		// Note: button is not normalized, so don't use it
 		if ( !event.which && button !== undefined ) {
-			event.which = ( button & 1 ? 1 : ( button & 2 ? 3 : ( button & 4 ? 2 : 0 ) ) ); // jshint ignore:line
+			event.which = ( button & 1 ? 1 : ( button & 2 ? 3 : ( button & 4 ? 2 : 0 ) ) );
 		}
 
 		return event;

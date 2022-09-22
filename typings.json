@@ -6,12 +6,10 @@
     "backbone-global": "github:DefinitelyTyped/DefinitelyTyped/backbone/backbone-global.d.ts#aed176536a202b9a2475ce1989ea6d2d0226a185",
     "ejs": "registry:dt/ejs#0.0.0+20160317120654",
     "express": "github:DefinitelyTyped/DefinitelyTyped/express/express.d.ts#aed176536a202b9a2475ce1989ea6d2d0226a185",
-    "jquery": "github:DefinitelyTyped/DefinitelyTyped/jquery/jquery.d.ts#aed176536a202b9a2475ce1989ea6d2d0226a185",
-    "marionette": "github:DefinitelyTyped/DefinitelyTyped/marionette/marionette.d.ts#aed176536a202b9a2475ce1989ea6d2d0226a185",
+    "lodash": "registry:dt/lodash#4.14.0+20161110215204",
     "mime": "github:DefinitelyTyped/DefinitelyTyped/mime/mime.d.ts#aed176536a202b9a2475ce1989ea6d2d0226a185",
     "node": "github:DefinitelyTyped/DefinitelyTyped/node/node.d.ts#aed176536a202b9a2475ce1989ea6d2d0226a185",
     "react-global": "registry:dt/react-global#0.14.0+20151105120114",
-    "serve-static": "github:DefinitelyTyped/DefinitelyTyped/serve-static/serve-static.d.ts#aed176536a202b9a2475ce1989ea6d2d0226a185",
-    "underscore": "github:DefinitelyTyped/DefinitelyTyped/underscore/underscore.d.ts#aed176536a202b9a2475ce1989ea6d2d0226a185"
+    "serve-static": "github:DefinitelyTyped/DefinitelyTyped/serve-static/serve-static.d.ts#aed176536a202b9a2475ce1989ea6d2d0226a185"
   }
 }

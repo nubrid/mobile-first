@@ -1,6 +1,6 @@
 # TODO Sample
 
-Hybrid Web + Mobile Framework v4.1.0 ~~using VS.Net~~ (SEP 5, 2016)
+Hybrid Web + Mobile Framework v5.0.0 ~~using VS.Net~~ (NOV 17, 2016)
 
 _For use in my company, Excent One_
 
@@ -16,22 +16,24 @@ By this time, we're now able to perform CRUD operations `OFFLINE` and sync the c
 - CSP
 - EJS
 - ES6+ ~~`amd`~~ `esm`
+- Eslint
 - Express
 - Faker
 - Famous
 - FLUX
 - GraphQL
 - Grunt
-- Helmet `CSRF protection`
+- Helmet `CSRF/XSS protection`
 - Imagemin
-- jQuery, jQuery UI & jQuery Mobile
-- JSHint
+- IndexedDB/WebSQL
+- ~~jQuery, jQuery UI & jQuery Mobile~~
+- ~~JSHint~~
 - JSON Server
 - LevelDB
 - LiveReload
 - LocalStorage
 - Lodash
-- MarionetteJS `v2`
+- ~~MarionetteJS `v2`~~
 - ModernizrJS
 - ~~MVC~~
 - Nginx
@@ -42,7 +44,7 @@ By this time, we're now able to perform CRUD operations `OFFLINE` and sync the c
 - PostgreSQL
 - PouchDB `replication`
 - PWA `cache-manifest`
-- ReactJS `react-dom` `JSX` `mixins` `subschema` `transformer` `transitions`
+- ReactJS `react-dom` `redux` `class/functional components` `JSX` ~~`mixins` `subschema` `transformer`~~ `transitions`
 - Recaptcha
 - ~~RequireJS `cache buster`~~
 - REST API

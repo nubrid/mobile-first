@@ -6,7 +6,7 @@ describe "AppManager", ->
 			expect( window.AppManager ).to.exist
 	describe "Transition", ->
 		it "should exist", ->
-			AppManager.Transition.ListItem.should.exist
+			AppManager.transition.listItem.should.exist
 	describe "changePage", ->
 		before ->
 			@mobile = $.mobile

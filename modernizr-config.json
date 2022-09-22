@@ -4,6 +4,7 @@
     "setClasses"
   ],
   "feature-detects": [
-    "test/websockets"
+    "test/history"
+    , "test/websockets"
   ]
 }

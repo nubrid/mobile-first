@@ -1,4 +1,3 @@
-/* jshint maxcomplexity: false */
 /* TODO: (function() {
 	const getjQueryVersion = function ( version ) {
 		if ( !( "querySelector" in document
