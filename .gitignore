@@ -1,3 +1,4 @@
+.vscode/chrome
 Config/openssl
 Config/nginx/conf/*
 !Config/nginx/conf/nginx.conf

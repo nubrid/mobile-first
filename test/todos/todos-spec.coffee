@@ -1,6 +1,4 @@
-# define ["apps/AppManager", "apps/todos/App", "apps/todos/show/Controller", "apps/common/View", "apps/todos/show/View", "apps/common/Dispatcher"], (AppManager, App, Controller, CommonView, View, Dispatcher) ->
-require "main.init"
-AppManager = require "apps"
+AppManager = require "apps/common"
 describe "Todos", ->
 	it "sample", ->
 		AppManager.should.exist

@@ -7,30 +7,20 @@ module.exports = function ( config ) {
 
 		// frameworks to use
 		// available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-		frameworks: [ "mocha" ], // TODO: , "requirejs" ],
+		frameworks: [ "mocha" ],
 
 		// list of files / patterns to load in the browser
 		files: [
-			// TODO: { pattern: "src/js/**/*.js", included: false },
-			// { pattern: "src/js/**/*.map", included: false },
-			// { pattern: "test/**/*.spec.js", included: false, watched: false },
-			// { pattern: "node_modules/chai/chai.js", included: false },
-			// { pattern: "node_modules/chai-as-promised/lib/chai-as-promised.js", included: false },
-			// { pattern: "node_modules/chai-jquery/chai-jquery.js", included: false },
-			// { pattern: "node_modules/sinon/pkg/sinon.js", included: false },
-			// { pattern: "node_modules/sinon-chai/lib/sinon-chai.js", included: false },
 			{ pattern: "test/test.main.js", included: true, watched: false }
 		],
 
 		// list of files to exclude
-		exclude: [
-			// TODO: "src/js/main.js"
-		],
+		// exclude: [],
 
 		// preprocess matching files before serving them to the browser
 		// available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
 		preprocessors: {
-			"test/test.main.js": [ "webpack" ]// TODO: , "sourcemap" ]
+			"test/test.main.js": [ "webpack" ]
 			//"**/*.coffee": ["coffee"]
 		},
 

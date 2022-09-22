@@ -27,7 +27,7 @@ const _argv = require( "yargs" )
 			, describe: "Use secure HTTPS protocol (default)"
 			, nargs: 0
 		}
-	} )
+	})
 	.boolean( [ "s" ] )
 	.help( "h" )
 	.alias( "h", "help" )
@@ -39,8 +39,8 @@ const _config = require( "./app.config" )
 	, port = process.env.PORT
 		|| _argv.p
 		|| ( _argv.s
-				? _config.web.sslPort
-				: _config.web.port );
+			? _config.web.sslPort
+			: _config.web.port );
 
 if ( _cluster.isMaster && ( _argv.c || _config.web.useCluster ) ) {
 	// Fork workers.
@@ -48,7 +48,7 @@ if ( _cluster.isMaster && ( _argv.c || _config.web.useCluster ) ) {
 		, numCPUs = require( "os" ).cpus().length
 		, multiplier = port < 100 ? 100 : ( port < 1000 ? 10 : 1 );
 		i < numCPUs; i++ ) { // eslint-disable-line no-plusplus
-		_cluster.fork( { PORT: i === 0 ? port : ( port * multiplier ) + i } );
+		_cluster.fork( { PORT: i === 0 ? port : ( port * multiplier ) + i });
 	}
 
 	_cluster.on( "exit", ( worker/*, code, signal*/ ) => console.log( `worker ${worker.process.pid} died` ) ); // eslint-disable-line no-console
@@ -60,7 +60,7 @@ if ( _cluster.isMaster && ( _argv.c || _config.web.useCluster ) ) {
 const express = require( "express" )
 	, router = express.Router(); // eslint-disable-line new-cap
 
-router.use( ( request, response, next ) => {
+router.use(( request, response, next ) => {
 	const protocol = request.header( "x-forwarded-proto" ) || request.protocol
 		, host = request.header( "host" );
 
@@ -73,14 +73,14 @@ router.use( ( request, response, next ) => {
 
 	request.sessionOptions.maxAge = request.session.maxAge || request.sessionOptions.maxAge; // cookie-session
 	if ( _argv.r && _argv.r !== protocol ) {
-		response.writeHead( 301, { "Location": `${_argv.r}:\/\/${host}${request.url}` } );
+		response.writeHead( 301, { "Location": `${_argv.r}:\/\/${host}${request.url}` });
 		response.end();
 
 		return;
 	}
 
 	next();
-} );
+});
 
 //router.get( "/*", ( request, response, next ) => {
 //	serve( request, response, next );
@@ -98,7 +98,7 @@ router.get( "/auth/facebook", passport.authenticate( "facebook", {
 	//	"read_stream"
 	//	, "publish_actions"
 	//]
-} ) );
+}) );
 
 router.get( "/auth/facebook/callback", passport.authenticate( "facebook", passportRedirect ) );
 
@@ -107,7 +107,7 @@ router.get( "/auth/twitter", passport.authenticate( "twitter", {
 	//	"read_stream"
 	//	, "publish_actions"
 	//]
-} ) );
+}) );
 
 router.get( "/auth/twitter/callback", passport.authenticate( "twitter", passportRedirect ) );
 
@@ -116,7 +116,7 @@ router.get( "/auth/linkedin", passport.authenticate( "linkedin", {
 	//	"read_stream"
 	//	, "publish_actions"
 	//]
-} ) );
+}) );
 
 router.get( "/auth/linkedin/callback", passport.authenticate( "linkedin", passportRedirect ) );
 
@@ -124,13 +124,13 @@ const FacebookStrategy = require( "passport-facebook" ).Strategy
 	, TwitterStrategy = require( "passport-twitter" ).Strategy
 	, LinkedInStrategy = require( "passport-linkedin" ).Strategy;
 
-passport.serializeUser( ( user, done ) => {
+passport.serializeUser(( user, done ) => {
 	done( null, user );
-} );
+});
 
-passport.deserializeUser( ( obj, done ) => {
+passport.deserializeUser(( obj, done ) => {
 	done( null, obj );
-} );
+});
 
 passport.use(
 	new FacebookStrategy( {
@@ -140,14 +140,14 @@ passport.use(
 	}
 	, ( accessToken, refreshToken, profile, done ) => {
 		if ( process.env.NODE_ENV === "development" ) console.log( profile ); // eslint-disable-line no-console
-		process.nextTick( () => done( null, profile ) );// {
-			//return done( null, profile );
-			//User.findOrCreate( null, ( err, user ) => {
-			//	if ( err ) { return done( err ); }
-			//	done( null, user );
-			//} );
+		process.nextTick(() => done( null, profile ) );// {
+		//return done( null, profile );
+		//User.findOrCreate( null, ( err, user ) => {
+		//	if ( err ) { return done( err ); }
+		//	done( null, user );
 		//} );
-	} )
+		//} );
+	})
 );
 
 passport.use(
@@ -160,12 +160,12 @@ passport.use(
 		if ( process.env.NODE_ENV === "development" ) console.log( profile ); // eslint-disable-line no-console
 		return done( null, profile );
 		//process.nextTick( () => {
-			//User.findOrCreate( null, ( err, user ) => {
-			//	if ( err ) { return done( err ); }
-			//	done( null, user );
-			//} );
+		//User.findOrCreate( null, ( err, user ) => {
+		//	if ( err ) { return done( err ); }
+		//	done( null, user );
 		//} );
-	} )
+		//} );
+	})
 );
 
 passport.use(
@@ -176,13 +176,13 @@ passport.use(
 	}
 	, ( token, tokenSecret, profile, done ) => {
 		if ( process.env.NODE_ENV === "development" ) console.log( profile ); // eslint-disable-line no-console
-		process.nextTick( () => done( null, profile ) );//{
-			//return done( null, profile );
-			//User.findOrCreate( { linkedinId: profile.id }, ( err, user ) => {
-			//	return done( err, user );
-			//} );
+		process.nextTick(() => done( null, profile ) );//{
+		//return done( null, profile );
+		//User.findOrCreate( { linkedinId: profile.id }, ( err, user ) => {
+		//	return done( err, user );
 		//} );
-	} )
+		//} );
+	})
 );
 
 const app = express()
@@ -192,13 +192,13 @@ const app = express()
 	, cookieSession = require( "cookie-session" )
 	, helmet = require( "helmet" )
 	, appCache = require( "connect-cache-manifest" );
-	//, cookie = { secure: false }; // session
+//, cookie = { secure: false }; // session
 
 app.use( compression() );
 app.use( cookieParser() );
-app.use( bodyParser.urlencoded( { extended: false } ) );
+app.use( bodyParser.urlencoded( { extended: false }) );
 app.use( bodyParser.json() );
-app.use( cookieSession( { secret: "8AC782B6-0219-499B-A8EF-ABAE4325C513" } ) );
+app.use( cookieSession( { secret: "8AC782B6-0219-499B-A8EF-ABAE4325C513" }) );
 //app.use( session( { secret: "8AC782B6-0219-499B-A8EF-ABAE4325C513", resave: false, saveUninitialized: true, cookie: cookie } ) );
 
 app.use( passport.initialize() );
@@ -215,36 +215,36 @@ app.use( helmet.hidePoweredBy() );
 // 	, setIf: ( request/*, response*/ ) => request.secure
 // 	, reportUri: "/report-violation"
 // 	, reportOnly: true // deployment mode
-// } ) );
+// }) );
 
 app.use( helmet.hsts( { maxAge: _config.web.maxAge.hsts, preload: true }) ); // TODO: Submit to Google (https://hstspreload.appspot.com)
 app.use( helmet.ieNoOpen() );
 app.use( helmet.noSniff() );
-app.use( helmet.referrerPolicy( { policy: "no-referrer-when-downgrade" } ) ); // TODO: In order of priority: strict-origin-when-cross-origin, strict-origin, no-referrer-when-downgrade, same-origin, no-referrer
+app.use( helmet.referrerPolicy( { policy: "no-referrer-when-downgrade" }) ); // TODO: In order of priority: strict-origin-when-cross-origin, strict-origin, no-referrer-when-downgrade, same-origin, no-referrer
 app.use( helmet.xssFilter() );
 
-//app.use( helmet.contentSecurityPolicy( {
-//	defaultSrc: [ "'self'", "gap:", "https://ssl.gstatic.com" ],
-//	scriptSrc: [ "'self'", "*.nubrid.com:*", "http://*.nubrid.com:*", "*.cloudflare.com:*", "*.googleapis.com:*", "fb.me:*", "*.akamaihd.net:*" ],
-//	imgSrc: [ "'self'", "data:" ],
-//	connectSrc: [ "ws://*.nubrid.com:*", "ws://nubrid.dlinkddns.com:*", "wss://*.nubrid.com:*", "wss://nubrid.dlinkddns.com:*" ],
-//	mediaSrc: [ "*" ],
-//	reportUri: "/report-violation",
-//	reportOnly: false, // set to true if you only want to report errors
-//	setAllHeaders: false, // set to true if you want to set all headers
-//	disableAndroid: false, // set to true if you want to disable Android (browsers can vary and be buggy)
-//	safari5: false // set to true if you want to force buggy CSP in Safari 5
-//} ) );
+// app.use( helmet.contentSecurityPolicy( {
+// 	defaultSrc: [ "'self'", "gap:", "https://ssl.gstatic.com" ],
+// 	scriptSrc: [ "'self'", "*.nubrid.com:*", "http://*.nubrid.com:*", "*.cloudflare.com:*", "*.googleapis.com:*", "fb.me:*", "*.akamaihd.net:*" ],
+// 	imgSrc: [ "'self'", "data:" ],
+// 	connectSrc: [ "ws://*.nubrid.com:*", "ws://nubrid.dlinkddns.com:*", "wss://*.nubrid.com:*", "wss://nubrid.dlinkddns.com:*" ],
+// 	mediaSrc: [ "*" ],
+// 	reportUri: "/report-violation",
+// 	reportOnly: false, // set to true if you only want to report errors
+// 	setAllHeaders: false, // set to true if you want to set all headers
+// 	disableAndroid: false, // set to true if you want to disable Android (browsers can vary and be buggy)
+// 	safari5: false // set to true if you want to force buggy CSP in Safari 5
+// }) );
 // For helmet.contentSecurityPolicy()
-//router.post( "/report-violation", ( request, response ) => {
-//	if ( request.body ) {
-//		console.log( `CSP Violation: ${request.body}` );
-//	} else {
-//		console.log( "CSP Violation: No data received!" );
-//	}
+// router.post( "/report-violation", ( request, response ) => {
+// 	if ( request.body ) {
+// 		console.log( `CSP Violation: ${request.body}` );
+// 	} else {
+// 		console.log( "CSP Violation: No data received!" );
+// 	}
 
-//	response.status( 204 ).end();
-//} );
+// 	response.status( 204 ).end();
+// });
 
 app.use( "/", router );
 
@@ -257,18 +257,18 @@ if ( process.env.NODE_ENV === "production" ) {
 		, cache: { content: { maxAge: _config.web.maxAge.content } }
 		, gzip: true
 		, passthrough: true
-	} );
+	});
 
 	app.set( "trust proxy", 1 );
 	//cookie.secure = true; // session
 
 	app.use( appCache( {
 		manifestPath: "/.appcache"
-		, cdn: [] // TODO: All CDN files specified in main.config.js
-		, files: [ { dir: "src", prefix: "/", ignore: x => /(\.dev\.html|\.home\.html)$/.test(x) } ]
+		, cdn: [] // TODO: All CDN files
+		, files: [ { dir: "src", prefix: "/", ignore: x => /(\.dev\.html|\.home\.html)$/.test( x ) }]
 		, networks: [ "*" ]
 		, fallbacks: []
-	} ) );
+	}) );
 }
 else {
 	const serveStatic = require( "serve-static" );
@@ -278,7 +278,7 @@ else {
 		//, setHeaders: ( response, path ) => {
 		//	if ( serveStatic.mime.lookup( path ) === "text/html" ) response.setHeader( "Cache-Control", "public, max-age=86400" );
 		//}
-	} );
+	});
 
 	const webpack = require( "webpack" )
 		, webpackConfig = require( "./webpack.config" )
@@ -296,7 +296,7 @@ else {
 			, timings: false
 			, version: false
 		}
-	} ) );
+	}) );
 }
 
 app.use( serve );
@@ -305,7 +305,7 @@ let options = null;
 
 if ( _argv.s ) {
 	const fs = require( "fs" );
-		//, constants = require( "constants" );
+	//, constants = require( "constants" );
 
 	options = {
 		ca: [ fs.readFileSync( _config.web.sslCa ) ]
@@ -317,13 +317,13 @@ if ( _argv.s ) {
 
 let server = null
 	, primus = null;
-(() => {
+( () => {
 	const http = require( _argv.s ? "https" : "http" );
 	http.globalAgent.maxSockets = _config.web.maxSockets;
 	server = _argv.s ? http.createServer( options, app ) : http.createServer( app );
 
 	let Primus = require( "primus.io" );
-	primus = new Primus( server, { transformer: _config.primus.transformer } );
+	primus = new Primus( server, { transformer: _config.primus.transformer });
 })();
 
 const PouchDB = require( "pouchdb-core" )
@@ -333,10 +333,10 @@ const PouchDB = require( "pouchdb-core" )
 	, proxyquire = require( "proxyquire" )
 
 	, engineStub = {}
-	, pouchServer = proxyquire( "socket-pouch/lib/server", { "engine.io": engineStub } )
+	, pouchServer = proxyquire( "socket-pouch/lib/server", { "engine.io": engineStub })
 
 	, encodingStub = {}
-	, sqldown = proxyquire( "sqldown", { "./encoding": encodingStub } );
+	, sqldown = proxyquire( "sqldown", { "./encoding": encodingStub });
 
 // HACK: Override engine.io with primus
 engineStub.listen = () => primus;
@@ -344,21 +344,21 @@ primus.on( "connection", spark => {
 	spark.on( "data", message => {
 		const sparkMessage = spark.emits( "message" );
 		sparkMessage( message.data[ 0 ] );
-	} );
-} );
+	});
+});
 
 // HACK: Disable SQLDown encoding
 encodingStub.encode = ( value, isValue ) => isValue ? JSON.stringify( value ) : value;
 encodingStub.decode = ( value, isValue ) => isValue ? JSON.parse( value ) : value;
 
-const db = function SQLdown () {
+const db = function SQLdown() {
 	return sqldown( `postgres://${_config.db.user}:${_config.db.password}@${_config.db.host}/${_config.db.database}` );
 };
 db.destroy = sqldown.destroy;
 
-pouchServer.listen( 8000, { // HACK: Port is ignored
+pouchServer.listen( port, { // HACK: Port is ignored
 	pouchCreator( name ) {
-		// return new PouchDB( {
+		// Pre-v6 PouchDB - return new PouchDB( {
 		// 	name
 		// 	, db
 		// 	, table: "sqldown"
@@ -368,14 +368,12 @@ pouchServer.listen( 8000, { // HACK: Port is ignored
 			name
 			, db
 			, table: "sqldown"
-		} );
+		});
 
 		// Return a promise with { pouch: <PouchDB Instance> }
-		return pouchDB.info().then( ( /*response*/ ) => Object.assign( pouchDB, { pouch: pouchDB } ) ); // eslint-disable-line lodash/prefer-lodash-method
+		return pouchDB.info().then(( /*response*/ ) => Object.assign( pouchDB, { pouch: pouchDB }) ); // eslint-disable-line lodash/prefer-lodash-method
 	}
-} );
-
-// primus.use( "broadcast", require( "primus-broadcast" ) );
+});
 
 // require( "babel-core/register" )( {
 // 	"plugins": [
@@ -385,6 +383,8 @@ pouchServer.listen( 8000, { // HACK: Port is ignored
 // const graphql = require( "./data/graphql" )
 // 	, Schema = require( "./data/schema" );
 
+// primus.use( "broadcast", require( "primus-broadcast" ) );
+
 // primus.on( "connection", spark => {
 // 	const operation = {
 // 		CREATE: "create"
@@ -392,16 +392,6 @@ pouchServer.listen( 8000, { // HACK: Port is ignored
 // 		, UPDATE: "update"
 // 		, DELETE: "delete"
 // 	};
-
-// 	//const extend = target => {
-// 	//	const sources = [].slice.call( arguments, 1 );
-// 	//	sources.forEach( source => {
-// 	//		for ( let prop in source ) {
-// 	//			if ( source[ prop ] ) target[ prop ] = source[ prop ];
-// 	//		}
-// 	//	} );
-// 	//	return target;
-// 	//}
 
 // 	const crud = ( event, data, url, callback ) => {
 // 		const query = event === operation.READ

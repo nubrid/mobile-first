@@ -5,7 +5,7 @@ const webpack = require( "webpack" )
 	, path = require( "path" );
 
 environment.setAll( {
-	// HACK: webpack-config@6.1.x replaces [name] with process.env.name value. Revert to "[name]" again.
+	// HACK: webpack-config@6.1.x replaces [name] with process.env.name value. Revert to "[name]" again
 	name: () => "[name]" // eslint-disable-line lodash/prefer-constant
 } );
 

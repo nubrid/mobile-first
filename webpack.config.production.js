@@ -2,7 +2,11 @@ const webpack = require( "webpack" )
 	, { Config } = require( "webpack-config" );
 
 module.exports = new Config().extend( "webpack.config.base.js" ).merge( {
-	plugins: [
+	output: {
+		publicPath: "/"
+		// publicPath: "https://external.cdn.com/" // TODO: If static resources are hosted externally, e.g. CDN
+	}
+	, plugins: [
 		new webpack.DefinePlugin( {
 			"process.env": {
 				NODE_ENV: JSON.stringify( "production" )

@@ -1,11 +1,10 @@
 {
 	"compilerOptions": {
-		"target": "ES6"
+		"target": "es6"
 		, "module": "commonjs"
 	}
 	, "exclude": [
-		"src"
-		, "cecho"
+		"cecho"
 		, "Config"
 		, "dist"
 		, "hooks"
@@ -13,7 +12,7 @@
 		, "node_modules"
 		, "platforms"
 		, "plugins"
-		, "typings"
+		, "src"
 		, "www"
 	]
 }

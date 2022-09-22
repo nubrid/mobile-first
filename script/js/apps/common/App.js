@@ -1,13 +1,4 @@
-﻿/*
-Common App
-*/
-// TODO: export default {
-export default class CommonApp extends React.Component { // TODO: export function start( moduleName, view ) {
-	// TODO: const routes = {}; // TODO: const appRoutes = {};
-	// view = view || "show";
-
-	// if ( moduleName === "home" ) routes = { ...routes, "": view }; // TODO: _.extend( appRoutes, { "": view } );
-	// routes[ moduleName ] = view; // TODO: appRoutes[ moduleName ] = view;
+﻿export default class CommonApp extends React.Component {
 	state = {}
 
 	static propTypes = {
@@ -17,37 +8,24 @@ export default class CommonApp extends React.Component { // TODO: export functio
 		View: React.PropTypes.any.isRequired,
 	}
 
-	componentDidMount() { // TODO: this.Controller( moduleName, controller => {
+	componentDidMount() {
 		const route = this.props.name === "home" ? "" : this.props.name
-			, properties = { // TODO: _.extend(
+			, properties = {
 				routes: this.props.routes || {
 					[ route ]: "show",
 				},
 				show: () => {
 					const View = this.props.View;
 
-					this.setState( { View } );
+					this.setState( { View });
 				},
 				...this.props.controller,
-			}// TODO: )
-			, Router = Backbone.Router.extend( properties ); // TODO: { new Backbone.Router.extend( { // TODO: new Marionette.AppRouter( {
-				// TODO: routes: this.props.routes || {
-				// 	[ route ]: "show",
-				// }, // TODO: appRoutes
-				// controller: this.props.controller || {
-				// 	show() {
-				// 		const View = this.props.View;
-
-				// 		this.setState( { View } );
-				// 	},
-				// },
-			// } );
+			}
+			, Router = Backbone.Router.extend( properties );
 		new Router(); // eslint-disable-line no-new
-		// TODO: router.navigate( route, { trigger: true, replace: this.props.name === "home" } );
-		properties.show();
 
-		// TODO: controller[ view ]();
-	}// TODO: );
+		properties.show();
+	}
 
 	render() {
 		const View = this.state.View;
@@ -55,4 +33,3 @@ export default class CommonApp extends React.Component { // TODO: export functio
 		return View ? <View { ...this.props } /> : null;
 	}
 }
-// TODO: };

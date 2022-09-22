@@ -1,6 +1,6 @@
 # TODO Sample
 
-Hybrid Web + Mobile Framework v5.0.0 ~~using VS.Net~~ (NOV 17, 2016)
+Hybrid Web + Mobile Framework v5.0.0 ~~using VS.Net~~ (JAN 16, 2017)
 
 _For use in my company, Excent One_
 
@@ -51,7 +51,7 @@ By this time, we're now able to perform CRUD operations `OFFLINE` and sync the c
 - ~~SharePoint~~
 - Sprity
 - Svg-sprite
-- TDD/BDD `chai` `karma` `mocha` `rewire` `sinon` `testem`
+- TDD/BDD `chai` `karma` `mocha` `rewire` `sinon` ~~`testem`~~
 - UglifyJS `v2`
 - WebSockets ~~`Engine.io`~~ `Primus` ~~`Socket.io`~~
 - ~~Underscore~~
@@ -61,7 +61,9 @@ By this time, we're now able to perform CRUD operations `OFFLINE` and sync the c
 
 - 8000 - web and websocket
 - 8100 - livereload
-- 8200 - testem
+- 8200 - <vacant for testing>
 - 8300 - karma
 - 8400 - json-server
 - 8500 - node-inspector
+- 8501 - node-debug & bode-debug
+- 8600 - chrome debugger

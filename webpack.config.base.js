@@ -19,13 +19,9 @@ const _config = {
 		main: "main"
 		, vendor: [ // HACK: Must follow dependency sequence
 			"./modernizr-config.json"
-			// TODO: , "jquery/src/core/init", "jquery/src/selector", "jquery/src/traversing", "jquery/src/callbacks", "jquery/src/deferred", "jquery/src/deferred/exceptionHook", "jquery/src/data", "jquery/src/queue", "jquery/src/queue/delay", "jquery/src/attributes", "jquery/src/event", "jquery/src/event/alias", "jquery/src/manipulation", "jquery/src/wrap", "jquery/src/css", "jquery/src/css/hiddenVisibleSelectors", "jquery/src/serialize", "jquery/src/ajax/load", "jquery/src/effects/animatedSelector", "jquery/src/offset", "jquery/src/dimensions", "jquery/src/deprecated", "jquery/src/exports/amd"
-			// , "underscore"
 			, "backbone"
-			// TODO: , "backbone.marionette"
 			, "react"
 			, "react-dom"
-			// TODO: , "react-addons-pure-render-mixin"
 			, "react-addons-transition-group"
 			, "react-addons-css-transition-group"
 			, "backbone.react"
@@ -33,8 +29,8 @@ const _config = {
 	}
 	, output: {
 		path: "src"
-		, publicPath: "/"
 		, filename: "js/[name].js"
+		, chunkFilename: "js/[id].js"
 	}
 	, plugins: [
 		new webpack.ContextReplacementPlugin( /apps$/, new RegExp( `^\.\/(${_getDirectories( "script/js/apps", /^(?!common).*$/ ).join( "|" )})\/index.js$` ) )
@@ -45,25 +41,16 @@ const _config = {
 		, new webpack.IgnorePlugin( /^cordova|jquery$/ ) // HACK: For backbone to work, ignore jquery
 		, new webpack.ProvidePlugin( {
 			AppManager: "apps/common"
-			// TODO: , _: "underscore"
-			// , $: "jquery"
-			// , jQuery: "jquery"
 			, Backbone: "backbone"
 			, BackboneImmutable: "immutable-backbone"
-			// TODO: , BackbonePouch: "backbone-pouch"
 			, BackboneReactMixin: "backbone.react"
-			// TODO: , Marionette: "backbone.marionette"
 			, Modernizr: path.resolve( "modernizr-config.json" )
-			// TODO: , PouchDB: "pouchdb"
-			// , Primus: "primus.io.js"
 			, React: "react"
 			, ReactDOM: "react-dom"
 			, ReactCSSTransitionGroup: "react-addons-css-transition-group"
-			// TODO: , ReactPureRenderMixin: "react-addons-pure-render-mixin"
 			, ReactRedux: "react-redux"
 			, ReactTransitionGroup: "react-addons-transition-group"
 			, Redux: "redux"
-			// , requirejs: "requirejs"
 
 			, chai: "chai"
 			, sinon: "sinon/pkg/sinon"
@@ -94,13 +81,10 @@ const _config = {
 		, alias: {
 			// TODO: Remove - "backbone.iosync": "backbone.iobind/lib/sync"
 			"backbone.react$": "backbone-react-component/lib/component"
-			, "cordova": "../cordova" // TODO: requirejs
-			// TODO: , "jquery$": "jquery/src/core"
-			// , "jquery.mobile$": "jquery.mobile/dist/jquery.mobile"
+			, "cordova": "../cordova"
 			, "pouchdb$": "libs/pouchdb"
 			, "pouchdb-socket$": "socket-pouch/lib/client"
 			, "primus.io$": "primus.io.js"
-			// TODO: , "requirejs$": "exports?requirejs!requirejs/require"
 			, "underscore": "libs/lodash"
 		}
 	}
@@ -110,8 +94,8 @@ const _config = {
 				, exclude: /(dist|node_modules|bower_components)/
 				, query: {
 					plugins: [
-						// TODO: "add-module-exports"
 						"lodash"
+						// TODO: , "rewire"
 						, "transform-class-properties"
 						, "transform-es2015-modules-simple-commonjs" // HACK: Until webpack v2 is released
 						, "transform-object-rest-spread"
@@ -131,8 +115,7 @@ const _config = {
 			, { test: /sinon.*\.js$/, loader: "imports?define=>false,require=>false" }
 		]
 		, noParse: [
-			// TODO: /jquery\.mobile/
-			/*, *//primus\.io/
+			/primus\.io/
 
 			, /sinon\/pkg\/sinon/
 		]
