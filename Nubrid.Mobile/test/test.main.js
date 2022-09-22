@@ -74,7 +74,7 @@ function _init(options) {
 			window.expect = chai.expect;
 			chai.should();
 
-			require(["backbone.iobind", "jquery.mobile"], function () {
+			require(["backbone.iobind", "jquery.mobile", "modernizr"], function () {
 				options.callback();
 			});
 		});

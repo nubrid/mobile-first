@@ -1,4 +1,17 @@
 call npm update
+call npm update -g phonegap
+call npm update -g cordova
+call cordova platform update android
+call cordova plugin remove cordova-plugin-dialogs
+call cordova plugin add cordova-plugin-dialogs
+call cordova plugin remove cordova-plugin-inappbrowser
+call cordova plugin add cordova-plugin-inappbrowser
+call cordova plugin remove cordova-plugin-network-information
+call cordova plugin add cordova-plugin-network-information
+call cordova plugin remove cordova-plugin-whitelist
+call cordova plugin add cordova-plugin-whitelist
+call cordova plugin remove com.phonegap.plugins.facebookconnect
+call cordova plugin add com.phonegap.plugins.facebookconnect --save --variable APP_ID="XXXXXXXXXXXXXXX" --variable APP_NAME="nubrid"
 call npm run cecho "build libs: copy node_modules"
 copy .\node_modules\backbone\backbone*.* .\src\js\libs\backbone\
 copy .\node_modules\backbone.marionette\lib\backbone.marionette.* .\src\js\libs\backbone\

@@ -12,7 +12,7 @@
 				, "apps/common/Controller"
 				, "apps/common/Dispatcher"
 				, "apps/common/View"
-				, "entities/Todo"
+				, "entities/Common"
 			]
 		}
 		, {

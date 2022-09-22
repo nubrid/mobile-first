@@ -33,7 +33,7 @@ define(
 			this.setState(attrs);
 		}
 		, componentDidMount: function () {
-			var entity = AppManager.request("entity", { url: "todos" });
+			var entity = AppManager.request("entity", { url: "todos", query: "{todos{id, title, completed}}" });
 			this.props.view.dispatcher = entity.dispatcher; // Need to set this so that the Controller can properly dispatch.
 			this.actionType = entity.actionType;
 

@@ -1,11 +1,12 @@
 # TODO Sample
 
-Hybrid Web + Mobile Framework v1.2.0 ~~using VS.Net~~ (NOV 13, 2015)
+Hybrid Web + Mobile Framework v1.3.0 ~~using VS.Net~~ (NOV 27, 2015)
 
 _For use in my company, Excent One, starting with NCC NOAH._
 
 ## Technologies Used
 
+- Babel
 - Backbone `iobind` `iosync` ~~`modelbinder`~~ `picky` `syphon`
 - CoffeeScript
 - Cordova `PhoneGap`
@@ -14,7 +15,8 @@ _For use in my company, Excent One, starting with NCC NOAH._
 - Faker
 - Famous
 - FLUX
-- Helmet
+- GraphQL
+- Helmet `CSRF protection`
 - jQuery, jQuery UI & jQuery Mobile
 - JSHint
 - JSON Server
@@ -28,6 +30,7 @@ _For use in my company, Excent One, starting with NCC NOAH._
 - OAuth
 - Passport `w/ Facebook, LinkedIn, Twitter SSO`
 - PhantomJS
+- PM2
 - PostgreSQL
 - ReactJS `react-dom` `JSX` `mixins` `subschema` `transformer` `transitions`
 - Recaptcha

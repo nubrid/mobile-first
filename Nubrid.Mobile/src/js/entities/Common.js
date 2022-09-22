@@ -3,7 +3,7 @@
 , "apps/common/Dispatcher"]
 , function (AppManager) {
 	"use strict";
-	var Common = AppManager.module("Entities.Common");
+	var Common = {};
 
 	Common.ActionType = function (name) {
 		name = name || "";
@@ -212,6 +212,8 @@
 					collection.fetch({
 						success: function (data) {
 							defer.resolve(data);
+						}, data: {
+							query: options.query
 						}
 					});
 				}
@@ -228,10 +230,14 @@
 
 	AppManager.reqres.setHandler("entity", function (options) {
 		return Common.API.getEntity(
-			Common.Collection.extend(_.extend({
+			Common.Collection.extend({
 				model: Common.Model.extend({
 					urlRoot: options.url
 				})
-			}, options)));
+				, url: options.url
+			})
+			, options);
 	});
+	
+	return Common;
 });

@@ -1,0 +1,12 @@
+{
+	"apps": [{
+		"name": "nubrid"
+		, "script": "./bin/app"
+		, "args": ["-s", "false"]
+		, "watch": ["app.js", "./bin/app"]
+		, "log_date_format": "YYYY-MM-DD HH:mm Z"
+		, "error_file": "./logs/pm2.error.log"
+		, "out_file": "./logs/pm2.out.log"
+		, "pid_file": "./logs/pm2.pid.log"
+	}]
+}

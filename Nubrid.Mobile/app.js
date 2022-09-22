@@ -1,4 +1,5 @@
-﻿(function(){
+﻿/* jshint maxcomplexity: false, maxstatements: false */
+(() => {
 "use strict";
 var argv = require("yargs")
 	.usage("Usage: $0 [options]")
@@ -37,41 +38,37 @@ var argv = require("yargs")
 
 var config = require("./app.config")
 	, cluster = require("cluster")
-	, protocol = argv.s ? "https" : "http"
-	, redirect = argv.r
-	, useCluster = argv.c ? argv.c : config.web.useCluster
 	, port = process.env.PORT
-		? process.env.PORT
-		: argv.p
-			? argv.p
-			: ((argv.s
+		|| argv.p
+		|| ((argv.s
 				? config.web.sslPort
 				: config.web.port));
 
-if (cluster.isMaster && useCluster) {
+if (cluster.isMaster && (argv.c || config.web.useCluster)) {
 	// Fork workers.
-	var numCPUs = require("os").cpus().length
+	for (let i = 0
+		, numCPUs = require("os").cpus().length
 		, multiplier = port < 100 ? 100 : (port < 1000 ? 10 : 1);
-	for (var i = 0; i < numCPUs; i++) {
+		i < numCPUs; i++) {
 		cluster.fork({ PORT: (i === 0 ? port : (port * multiplier) + i) });
 	}
 
-	cluster.on("exit", function (worker/*, code, signal*/) {
-		console.log("worker " + worker.process.pid + " died");
+	cluster.on("exit", (worker/*, code, signal*/) => {
+		console.log(`worker ${worker.process.pid} died`);
 	});
 	module.exports = null;
 }
 else {
-	var passport = require("passport")
+	let passport = require("passport")
 	, FacebookStrategy = require("passport-facebook").Strategy
 	, TwitterStrategy = require("passport-twitter").Strategy
 	, LinkedInStrategy = require("passport-linkedin").Strategy;
 
-	passport.serializeUser(function (user, done) {
+	passport.serializeUser((user, done) => {
 		done(null, user);
 	});
 
-	passport.deserializeUser(function (obj, done) {
+	passport.deserializeUser((obj, done) => {
 		done(null, obj);
 	});
 
@@ -81,15 +78,15 @@ else {
 			, clientSecret: config.fb.clientSecret
 			, callbackURL: "/auth/facebook/callback"
 		}
-		, function (accessToken, refreshToken, profile, done) {
+		, (accessToken, refreshToken, profile, done) => {
 			console.log(profile);
-			process.nextTick(function () {
-				return done(null, profile);
-				//User.findOrCreate(null, function (err, user) {
+			process.nextTick(() => done(null, profile));//{
+				//return done(null, profile);
+				//User.findOrCreate(null, (err, user) => {
 				//	if (err) { return done(err); }
 				//	done(null, user);
 				//});
-			});
+			//});
 		})
 	);
 
@@ -99,11 +96,11 @@ else {
 			, consumerSecret: config.twit.consumerSecret
 			, callbackURL: "/auth/twitter/callback"
 		}
-		, function (token, tokenSecret, profile, done) {
+		, (token, tokenSecret, profile, done) => {
 			console.log(profile);
 			return done(null, profile);
-			//process.nextTick(function () {
-				//User.findOrCreate(null, function(err, user) {
+			//process.nextTick(() => {
+				//User.findOrCreate(null, (err, user) => {
 				//	if (err) { return done(err); }
 				//	done(null, user);
 				//});
@@ -117,70 +114,94 @@ else {
 			, consumerSecret: config.linkedin.consumerSecret
 			, callbackURL: "/auth/linkedin/callback"
 		}
-		, function (token, tokenSecret, profile, done) {
+		, (token, tokenSecret, profile, done) => {
 			console.log(profile);
-			process.nextTick(function () {
-				return done(null, profile);
-				//User.findOrCreate({ linkedinId: profile.id }, function (err, user) {
+			process.nextTick(() => done(null, profile));//{
+				//return done(null, profile);
+				//User.findOrCreate({ linkedinId: profile.id }, (err, user) => {
 				//	return done(err, user);
 				//});
-			});
+			//});
 		})
 	);
 
-	var options = null;
+	let express = require("express")
+		, router = express.Router();
 
-	if (argv.s) {
-		var fs = require("fs");
-			//, constants = require("constants");
+	router.use((request, response, next) => {
+		let protocol = request.header("x-forwarded-proto") || request.protocol
+			, host = request.header("host");
 
-		options = {
-			ca: [fs.readFileSync(config.web.sslCa)]
-			, key: fs.readFileSync(config.web.sslKey)
-			, cert: fs.readFileSync(config.web.sslCrt)
-			// Default since v0.10.33, secureOptions: constants.SSL_OP_NO_SSLv3 | constants.SSL_OP_NO_SSLv2
-		};
-	}
+		if (argv.s && request.path.startsWith("/js/") && !request.path.endsWith(".map") && `${protocol}://${host}/` !== request.header("referrer")) {
+			console.log(`CSRF: ${request.path} ${request.headers["user-agent"]}`);
+			response.send("rainbows and unicorns!");
+			response.end();
+			return;
+		}
 
-	var express = require("express")
-		, app = express()
+		request.sessionOptions.maxAge = request.session.maxAge || request.sessionOptions.maxAge; // cookie-session
+		if (argv.r && argv.r !== protocol) {
+			response.writeHead(301, { "Location": `${argv.r}://${host}${request.url}` });
+			response.end();
+
+			return;
+		}
+
+		next();
+	});
+
+	//router.get("/*", (request, response, next) => {
+	//	serve(request, response, next);
+	//});
+
+	let passportRedirect = {
+		successRedirect: "/"
+		, failureRedirect: "/#failed"
+	};
+
+	router.get("/auth/facebook", passport.authenticate("facebook", {
+		//scope: [
+		//	"read_stream"
+		//	, "publish_actions"
+		//]
+	}));
+
+	router.get("/auth/facebook/callback", passport.authenticate("facebook", passportRedirect));
+
+	router.get("/auth/twitter", passport.authenticate("twitter", {
+		//scope: [
+		//	"read_stream"
+		//	, "publish_actions"
+		//]
+	}));
+
+	router.get("/auth/twitter/callback", passport.authenticate("twitter", passportRedirect));
+
+	router.get("/auth/linkedin", passport.authenticate("linkedin", {
+		//scope: [
+		//	"read_stream"
+		//	, "publish_actions"
+		//]
+	}));
+
+	router.get("/auth/linkedin/callback", passport.authenticate("linkedin", passportRedirect));
+
+	let app = express()
 		, compression = require("compression")
 		, cookieParser = require("cookie-parser")
 		, bodyParser = require("body-parser")
-		//, session = require("express-session")
 		, cookieSession = require("cookie-session")
-		, helmet = require("helmet")
-		, router = express.Router();
+		, helmet = require("helmet");
+		//, session = require("express-session")
 		//, cookie = { secure: false }; // session
-	var serve = null;
-
-	if (process.env.NODE_ENV === "production") {
-		serve = require("st")({
-			path: config.web.dir
-			, index: "index.html"
-			, cache: { content: { maxAge: config.web.maxAge } }
-			, gzip: true
-			, passthrough: true
-		});
-
-		app.set("trust proxy", 1);
-		//cookie.secure = true; // session
-	} else {
-		var serveStatic = require("serve-static");
-		serve = serveStatic(config.web.dir, {
-			//maxAge: config.web.maxAge
-			//, setHeaders: function (response, path) {
-			//	if (serveStatic.mime.lookup(path) === "text/html") response.setHeader("Cache-Control", "public, max-age=86400");
-			//}
-		});
-	}
 	
 	app.use(compression());
 	app.use(cookieParser());
 	app.use(bodyParser.urlencoded({ extended: false }));
 	app.use(bodyParser.json());
-	//app.use(session({ secret: "8AC782B6-0219-499B-A8EF-ABAE4325C513", resave: false, saveUninitialized: true, cookie: cookie }));
 	app.use(cookieSession({ secret: "8AC782B6-0219-499B-A8EF-ABAE4325C513" }));
+	//app.use(session({ secret: "8AC782B6-0219-499B-A8EF-ABAE4325C513", resave: false, saveUninitialized: true, cookie: cookie }));
+
 	app.use(passport.initialize());
 	app.use(passport.session());
 
@@ -204,9 +225,9 @@ else {
 	//	safari5: false // set to true if you want to force buggy CSP in Safari 5
 	//}));
 	// For helmet.contentSecurityPolicy()
-	//router.post("/report-violation", function (request, response) {
+	//router.post("/report-violation", (request, response) => {
 	//	if (request.body) {
-	//		console.log("CSP Violation: ", request.body);
+	//		console.log(`CSP Violation: ${request.body}`);
 	//	} else {
 	//		console.log("CSP Violation: No data received!");
 	//	}
@@ -214,178 +235,151 @@ else {
 	//	response.status(204).end();
 	//});
 
-	router.use(function (request, response, next) {
-		var protocol = request.headers["x-forwarded-proto"] ? request.headers["x-forwarded-proto"] : request.protocol
-			, host = request.header("host")
-			, referrer = request.header("referrer");
-
-		if (argv.s && request.path.indexOf("/js/") === 0 && request.path.substring(request.path.length - 4) !== ".map" && (protocol + "://" + host + "/") !== referrer) {
-			console.log("CSRF: ", request.path, request.headers["user-agent"]);
-			response.send("rainbows and unicorns!");
-			response.end();
-			return;
-		}
-
-		request.sessionOptions.maxAge = request.session.maxAge || request.sessionOptions.maxAge; // cookie-session
-		if (redirect && redirect !== protocol) {
-			response.writeHead(301, { "Location": redirect + "://" + host + request.url });
-			response.end();
-
-			return;
-		}
-
-		next();
-	});
-
-	//router.get("/*", function (request, response, next) {
-	//	serve(request, response, next);
-	//});
-
-	router.get("/auth/facebook", passport.authenticate("facebook", {
-		//scope: [
-		//	"read_stream"
-		//	, "publish_actions"
-		//]
-	}));
-
-	router.get("/auth/facebook/callback", passport.authenticate("facebook", {
-		successRedirect: "/",
-		failureRedirect: "/#failed"
-	}));
-
-	router.get("/auth/twitter", passport.authenticate("twitter", {
-		//scope: [
-		//	"read_stream"
-		//	, "publish_actions"
-		//]
-	}));
-
-	router.get("/auth/twitter/callback", passport.authenticate("twitter", {
-		successRedirect: "/",
-		failureRedirect: "/#failed"
-	}));
-
-	router.get("/auth/linkedin", passport.authenticate("linkedin", {
-		//scope: [
-		//	"read_stream"
-		//	, "publish_actions"
-		//]
-	}));
-
-	router.get("/auth/linkedin/callback", passport.authenticate("linkedin", {
-		successRedirect: "/",
-		failureRedirect: "/#failed"
-	}));
-
 	app.use("/", router);
+
+	let serve = null;
+
+	if (process.env.NODE_ENV === "production") {
+		serve = require("st")({
+			path: config.web.dir
+			, index: "index.html"
+			, cache: { content: { maxAge: config.web.maxAge } }
+			, gzip: true
+			, passthrough: true
+		});
+
+		app.set("trust proxy", 1);
+		//cookie.secure = true; // session
+	} else {
+		let serveStatic = require("serve-static");
+		serve = serveStatic(config.web.dir, {
+			//maxAge: config.web.maxAge
+			//, setHeaders: (response, path) => {
+			//	if (serveStatic.mime.lookup(path) === "text/html") response.setHeader("Cache-Control", "public, max-age=86400");
+			//}
+		});
+	}
+
 	app.use(serve);
 
-	/*
-	Temp DB
-	*/
-	var Seed = require("seed")
-		, guid = new Seed.ObjectId();
-	//	, App = {};
+	let options = null;
 
-	//App.Todo = Seed.Model.extend("todos", {
-	//	schema: new Seed.Schema({
-	//		title: String
-	//		, completed: Boolean
-	//	})
-	//});
+	if (argv.s) {
+		let fs = require("fs");
+			//, constants = require("constants");
 
-	//App.Todos = Seed.Graph.extend({
-	//	initialize: function () {
-	//		this.define(App.Todo);
-	//	}
-	//});
+		options = {
+			ca: [fs.readFileSync(config.web.sslCa)]
+			, key: fs.readFileSync(config.web.sslKey)
+			, cert: fs.readFileSync(config.web.sslCrt)
+			// Default since v0.10.33, secureOptions: constants.SSL_OP_NO_SSLv3 | constants.SSL_OP_NO_SSLv2
+		};
+	}
+	
+	let server = null
+		, primus = null
+		, client = null;
+	{
+		let http = require(argv.s ? "https" : "http");
+		http.globalAgent.maxSockets = config.web.maxSockets;
+		server = argv.s ? http.createServer(options, app) : http.createServer(app);
+	
+		let Primus = require("primus.io");
+		primus = new Primus(server, { transformer: config.primus.transformer });
 
-	//var db = new App.Todos();
-	/*
-	Temp DB
-	*/
-
-	var http = require(protocol)
-		, server = argv.s ? http.createServer(options, app) : http.createServer(app);
-
-	http.globalAgent.maxSockets = config.web.maxSockets;
-
-	var Primus = require("primus.io")
-		, primus = new Primus(server, { transformer: config.primus.transformer });
+		let Client = require("node-rest-client").Client;
+		client = new Client();
+	}
 
 	primus.use("broadcast", require("primus-broadcast"));
 
-	//var useragent = require("express-useragent");
-	var Client = require("node-rest-client").Client
-		, client = new Client();
+	require("babel-core/register");
+	let graphql = require("./data/graphql.js")
+		, Schema = require("./data/schema.js");
 
-	primus.on("connection", function (spark) {
-		var _operation = {
+	primus.on("connection", (spark) => {
+		let _operation = {
 			CREATE: "create"
 			, READ: "read"
 			, UPDATE: "update"
 			, DELETE: "delete"
 		};
 
-		function crud(event, data, url, callback) {
-			//var data = JSON.stringify(extend({}, data, useragent.parse(spark.headers["user-agent"])));
-			var args = {
-				data: JSON.stringify(data),
-				headers: { "Content-Type": "application/json" }
-			};
-
-			if (event === _operation.UPDATE || event === _operation.DELETE) url = url + "/" + data.id;
-
-			var _args = [
-				config.api.url + "/" + url
-				, function (data/*, response*/) {
-					data = JSON.parse(data);
-
-					if (event !== _operation.READ) {
-						event = url + ":" + event;
-						spark.send(event, data);
-						spark.broadcast(event, data);
-					}
-
-					callback(null, data);
-				}
-			];
-
-			if (event !== _operation.READ) _args.splice(1, 0, args);
-
-			switch (event) {
-				case _operation.CREATE:
-					client.post.apply(this, _args);
-					break;
-				case _operation.READ:
-					client.get.apply(this, _args);
-					break;
-				case _operation.UPDATE:
-					client.put.apply(this, _args);
-					break;
-				case _operation.DELETE:
-					client.delete.apply(this, _args);
-					break;
-			}
-		}
-
-		//function extend(target) {
-		//	var sources = [].slice.call(arguments, 1);
-		//	sources.forEach(function (source) {
-		//		for (var prop in source) {
+		//let extend = (target) => {
+		//	let sources = [].slice.call(arguments, 1);
+		//	sources.forEach((source) => {
+		//		for (let prop in source) {
 		//			if (source[prop]) target[prop] = source[prop];
 		//		}
 		//	});
 		//	return target;
 		//}
 
-		console.log("connected:", spark.address.ip);
+		//let useragent = require("express-useragent");
+		let crud = (event, data, url, callback) => {
+			let query = event === _operation.READ
+				? `${data.query}`
+				: `mutation Mutation {${event}}`;
+
+			if (event === _operation.UPDATE || event === _operation.DELETE) url = `${url}/${data.id}`;
+			let _args = [
+				`${config.api.url}/${url}`
+				, {
+					data: JSON.stringify(data),//JSON.stringify(extend({}, data, useragent.parse(spark.headers["user-agent"]))),
+					headers: { "Content-Type": "application/json" }
+				}
+			];
+
+			let _callback = result/*, response*/ => {
+				let data = event === _operation.READ
+					? result.data[url]
+					: JSON.parse(result.data[event]);
+
+				if (event !== _operation.READ) {
+					event = `${url}:${event}`;
+					spark.send(event, data);
+					spark.broadcast(event, data);
+				}
+
+				callback(null, data);
+			};
+
+			if (event === _operation.READ) _args.splice(1, 2);
+
+			graphql(Schema, query, {args: _args}).then(_callback);
+
+			// switch (event) {
+			// 	case _operation.CREATE:
+			// 		client.post.apply(this, _args);
+			// 		break;
+			// 	case _operation.READ:
+			// 		client.get.apply(this, _args);
+			// 		break;
+			// 	case _operation.UPDATE:
+			// 		client.put.apply(this, _args);
+			// 		break;
+			// 	case _operation.DELETE:
+			// 		client.delete.apply(this, _args);
+			// 		break;
+			// }
+		};
+
+		console.log(`connected: ${spark.address.ip}`);
+
+		/*
+		Temp DB
+		*/
+		let Seed = require("seed")
+			, guid = new Seed.ObjectId();
+		/*
+		Temp DB
+		*/
 
 		/*
 		Triggered when *.save() is called.
 		We listen on model namespace, but emit on the collection namespace.
 		*/
-		spark.on("*:" + _operation.CREATE, function (data, url, callback) {
+		spark.on(`*:${_operation.CREATE}`, (data, url, callback) => {
 			data.id = guid.gen();
 			crud(_operation.CREATE, data, url, callback);
 		});
@@ -393,46 +387,46 @@ else {
 		/*
 		Triggered when *.fetch() is called.
 		*/
-		spark.on("*:" + _operation.READ, function (data, url, callback) {
+		spark.on(`*:${_operation.READ}`, (data, url, callback) => {
 			crud(_operation.READ, data, url, callback);
 		});
 
 		/*
 		Triggered when *.save() is called.
 		*/
-		spark.on("*:" + _operation.UPDATE, function (data, url, callback) {
+		spark.on(`*:${_operation.UPDATE}`, (data, url, callback) => {
 			crud(_operation.UPDATE, data, url, callback);
 		});
 
 		/*
 		Triggered when *.destroy() is called.
 		*/
-		spark.on("*:" + _operation.DELETE, function (data, url, callback) {
+		spark.on(`*:${_operation.DELETE}`, (data, url, callback) => {
 			crud(_operation.DELETE, data, url, callback);
 		});
 
 		// TODO: Sample postgres
-		//spark.on("getById", function (userId, callback) {
-		//	var pg = require("pg");
-		//	var connString = "tcp://postgres:Password1@localhost:5432/ThreeDegree";
-		//	var client = new pg.Client(connString);
+		//spark.on("getById", (userId, callback) => {
+		//	let pg = require("pg");
+		//	let connString = "tcp://postgres:Password1@localhost:5432/ThreeDegree";
+		//	let client = new pg.Client(connString);
 		//	client.connect();
 
-		//	var query = client.query('SELECT "ID", "FirstName", "LastName", "Email" FROM "3"."User" WHERE "ID" = $1', [userId]);
+		//	let query = client.query('SELECT "ID", "FirstName", "LastName", "Email" FROM "3"."User" WHERE "ID" = $1', [userId]);
 
-		//	query.on("row", function (row) {
+		//	query.on("row", row => {
 		//		callback(row);
 		//	});
 
-		//	query.on("end", function () { client.end(); });
+		//	query.on("end", () => { client.end(); });
 		//});
 
-		spark.on("end", function () {
-			console.log("closed:", spark.address.ip);
+		spark.on("end", () => {
+			console.log(`closed: ${spark.address.ip}`);
 		});
 	});
 
-	process.on("uncaughtException", function (error) {
+	process.on("uncaughtException", error => {
 		console.log(error);
 	});
 
@@ -442,4 +436,4 @@ else {
 	app.set("server", server);
 	module.exports = app;
 }
-}());
+})();

@@ -6,6 +6,44 @@
 		? (window.isDEV ? "http:" : "https:")
 		: document.location.protocol;
 	window.host = "//" + (window.phonegap ? $("body").data("host") || document.location.host : document.location.host);
+
+	// HACK: Force websocket if available.
+	if (Modernizr.websockets) {
+		var _merge = Primus.prototype.merge;
+		Primus.prototype.merge = function () {
+			var target = _merge.apply(this, arguments);
+
+			return _.extend(target, {
+				transports: [
+					"websocket"
+				]
+			});
+		};
+	}
+
+	// HACK: For compatibility of primus with backbone.iobind.
+	var _emit = Primus.prototype.emit;
+	var _sendMethods = [
+	"*:create"
+	, "*:delete"
+	, "*:read"
+	, "*:update"
+	];
+	Primus.prototype.emit = function () {
+		var message = arguments[0];
+		var delimiterIndex = message.lastIndexOf(":");
+		var method = "*" + message.substring(delimiterIndex);
+		if (arguments.length === 3 && _.indexOf(_sendMethods, method) !== -1) {
+			var args = _.extend([], arguments);
+			args.splice(0, 1, method);
+			args.splice(2, 0, message.substring(0, delimiterIndex));
+			Primus.prototype.send.apply(this, args);
+		}
+		else {
+			_emit.apply(this, arguments);
+		}
+	};
+
 	var _appManager = new Marionette.Application({
 		BackboneMixin: Backbone.React.Component.mixin
 		, Config: {
@@ -41,20 +79,6 @@
 			return this.currentLayout.MainRegion.currentView;
 		}
 		, connect: function (options) {
-			// HACK: Force websocket if available.
-			if (Modernizr.websockets) {
-				var merge = Primus.prototype.merge;
-				Primus.prototype.merge = function () {
-					var target = merge.apply(this, arguments);
-
-					return _.extend(target, {
-						transports: [
-							"websocket"
-						]
-					});
-				};
-			}
-
 			if (_.isFunction(options)) {
 				options = { callback: options };
 			}
@@ -64,29 +88,6 @@
 				: new Primus(_appManager.Config.Url.IO.Root, options.closeOnOpen
 					? _.extend(_appManager.Config.IO.Options, { strategy: false })
 					: _appManager.Config.IO.Options);
-
-			// HACK: For compatibility of primus with backbone.iobind.
-			var emit = primus.emit;
-			var sendMethods = [
-			"*:create"
-			, "*:delete"
-			, "*:read"
-			, "*:update"
-			];
-			primus.emit = function () {
-				var message = arguments[0];
-				var delimiterIndex = message.lastIndexOf(":");
-				var method = "*" + message.substring(delimiterIndex);
-				if (arguments.length === 3 && _.indexOf(sendMethods, method) !== -1) {
-					var args = _.extend([], arguments);
-					args.splice(0, 1, method);
-					args.splice(2, 0, message.substring(0, delimiterIndex));
-					primus.send.apply(this, args);
-				}
-				else {
-					emit.apply(this, arguments);
-				}
-			};
 
 			function primus_onOpen() {
 				if (options.callback) options.callback();

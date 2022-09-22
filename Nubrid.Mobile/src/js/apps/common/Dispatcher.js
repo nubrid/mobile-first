@@ -1,6 +1,6 @@
 ﻿define(["apps/AppManager"], function (AppManager) {
 	"use strict";
-	var Common = AppManager.module("Common");
+	var Common = {};
 
 	Common.Dispatcher = Marionette.Object.extend({
 		initialize: function () {

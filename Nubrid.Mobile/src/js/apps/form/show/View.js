@@ -154,7 +154,7 @@ define(
 		, TodosList: _todosList
 	};
 
-	List.Form = _.extend(CommonView.Content, {
+	List.Form = CommonView.Content.extend({
 		ReactClass: List.React.Todos
 	});
 

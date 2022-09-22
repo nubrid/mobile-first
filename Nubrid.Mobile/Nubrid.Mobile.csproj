@@ -68,7 +68,6 @@
     <Content Include="app.js" />
     <Content Include="ReadMe.txt" />
     <Content Include="src\css\jquery.mobile.css" />
-    <Content Include="src\css\jquery.mobile.min.css" />
     <Content Include="src\css\styles.css" />
     <Content Include="src\favicon.ico" />
     <Content Include="src\img\ajax-loader.gif" />
